@@ -40,6 +40,13 @@ namespace Taboor_Domain.Interfaces.Repositories.IRepository
         Task InvalidateActiveAsync(string email, OtpPurpose purpose);
 
         /// <summary>
+        /// Marks the given OTP as verified and extends its validity window (for completing the flow).
+        /// </summary>
+        /// <param name="otp">The OTP to update.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task MarkVerifiedAsync(OtpCode otp);
+
+        /// <summary>
         /// Marks the given OTP as used.
         /// </summary>
         /// <param name="otp">The OTP to update.</param>

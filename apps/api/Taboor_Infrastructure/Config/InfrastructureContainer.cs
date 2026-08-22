@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Taboor_Domain.Entities;
 using Taboor_Domain.Interfaces.Repositories;
+using Taboor_Domain.Interfaces.Repositories.IRepository;
 using Taboor_Infrastructure.DB;
 using Taboor_Infrastructure.Persistence.Repositories;
 
@@ -50,6 +51,8 @@ namespace Taboor_Infrastructure.Config
       services.AddHttpContextAccessor();
 
       services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+      services.AddScoped<IOtpRepository, OtpRepository>();
       return services;
     }
   }

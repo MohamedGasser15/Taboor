@@ -94,6 +94,19 @@ namespace Taboor_Infrastructure.Persistence.Repositories
         }
 
         /// <summary>
+        /// Marks the given OTP as verified and extends its validity window (30 minutes).
+        /// </summary>
+        /// <param name="otp">The OTP to update.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task MarkVerifiedAsync(OtpCode otp)
+        {
+            otp.IsVerified = true;
+            otp.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
+            _context.OtpCodes.Update(otp);
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Marks the given OTP as used.
         /// </summary>
         /// <param name="otp">The OTP to update.</param>
