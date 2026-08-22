@@ -1,0 +1,32 @@
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.pdb
+*.dll
+
+## Rider / JetBrains
+.idea/
+*.DotSettings.user
+
+## VS Code
+.vscode/
+
+## .NET
+*.nupkg
+*.snupkg
+project.lock.json
+artifacts/
+
+## Environment / secrets
+*.env
+.env
+appsettings.*.local.json

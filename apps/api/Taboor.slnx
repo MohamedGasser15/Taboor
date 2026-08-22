@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Taboor_API/Taboor_API.csproj" />
+  <Project Path="Taboor_Application/Taboor_Application.csproj" />
+  <Project Path="Taboor_Domain/Taboor_Domain.csproj" />
+  <Project Path="Taboor_Infrastructure/Taboor_Infrastructure.csproj" />
+</Solution>
