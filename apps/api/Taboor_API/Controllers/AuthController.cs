@@ -158,6 +158,100 @@ namespace Taboor_API.Controllers
 
         #endregion
 
+        #region Forgot Password Endpoints
+
+        /// <summary>
+        /// Initiates the forgot password process by sending a reset code to the user email.
+        /// </summary>
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO dto)
+        {
+            try
+            {
+                _logger.LogInformation("Forgot password request for email: {Email}", dto?.Email);
+
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return BadRequest(ApiResponse<object>.FailResponse("Validation failed", errors));
+                }
+
+                var response = await _userService.ForgotPasswordAsync(dto!.Email);
+                return StatusCode((int)response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during forgot password");
+                return StatusCode(500, new ProblemDetails
+                {
+                    Title = "Internal server error",
+                    Detail = "An error occurred while processing your request."
+                });
+            }
+        }
+
+        /// <summary>
+        /// Verifies the password reset code.
+        /// </summary>
+        [HttpPost("verify-reset-code")]
+        public async Task<IActionResult> VerifyResetCode([FromBody] VerifyEmailDTO dto)
+        {
+            try
+            {
+                _logger.LogInformation("Reset code verification for email: {Email}", dto?.Email);
+
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return BadRequest(ApiResponse<object>.FailResponse("Validation failed", errors));
+                }
+
+                var response = await _userService.VerifyResetCodeAsync(dto!.Email, dto.Code);
+                return StatusCode((int)response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during reset code verification");
+                return StatusCode(500, new ProblemDetails
+                {
+                    Title = "Internal server error",
+                    Detail = "An error occurred while verifying the reset code."
+                });
+            }
+        }
+
+        /// <summary>
+        /// Resets the user's password using a verified reset code.
+        /// </summary>
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
+        {
+            try
+            {
+                _logger.LogInformation("Password reset for email: {Email}", dto?.Email);
+
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return BadRequest(ApiResponse<object>.FailResponse("Validation failed", errors));
+                }
+
+                var response = await _userService.ResetPasswordAsync(dto!);
+                return StatusCode((int)response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during password reset");
+                return StatusCode(500, new ProblemDetails
+                {
+                    Title = "Internal server error",
+                    Detail = "An error occurred while resetting your password."
+                });
+            }
+        }
+
+        #endregion
+
         #region Registration Endpoints
 
         /// <summary>

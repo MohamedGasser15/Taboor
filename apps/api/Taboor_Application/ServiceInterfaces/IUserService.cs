@@ -4,7 +4,8 @@ using Taboor_Application.DTOs.Auth;
 namespace Taboor_Application.ServiceInterfaces
 {
     /// <summary>
-    /// Service interface for user operations: registration and email OTP verification.
+    /// Service interface for user operations: registration, email OTP verification,
+    /// and password reset (forgot password).
     /// </summary>
     public interface IUserService
     {
@@ -30,5 +31,27 @@ namespace Taboor_Application.ServiceInterfaces
         /// <param name="preferredLanguage">The preferred language of the user.</param>
         /// <returns>An API response containing the created user.</returns>
         Task<ApiResponse<object>> Register(RegisterRequestDTO request, string? preferredLanguage = null);
+
+        /// <summary>
+        /// Initiates the forgot password process by sending a reset code to the user email.
+        /// </summary>
+        /// <param name="email">The user email.</param>
+        /// <returns>An API response indicating the result.</returns>
+        Task<ApiResponse<object>> ForgotPasswordAsync(string email);
+
+        /// <summary>
+        /// Verifies the password reset code.
+        /// </summary>
+        /// <param name="email">The user email.</param>
+        /// <param name="code">The reset code.</param>
+        /// <returns>An API response indicating the result.</returns>
+        Task<ApiResponse<object>> VerifyResetCodeAsync(string email, string code);
+
+        /// <summary>
+        /// Resets the user's password using a verified reset code.
+        /// </summary>
+        /// <param name="dto">The reset password data.</param>
+        /// <returns>An API response indicating the result.</returns>
+        Task<ApiResponse<object>> ResetPasswordAsync(ResetPasswordDTO dto);
     }
 }

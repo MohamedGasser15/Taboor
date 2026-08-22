@@ -88,4 +88,31 @@
   <data name="EmailAllRightsReserved" xml:space="preserve">
     <value>جميع الحقوق محفوظة</value>
   </data>
+  <data name="EmailPwdResetTitle" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="EmailPwdResetMsg" xml:space="preserve">
+    <value>لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بك. استخدم الكود التالي لتعيين كلمة مرور جديدة.</value>
+  </data>
+  <data name="EmailSecurityNote" xml:space="preserve">
+    <value>لأمانك، هذا الكود صالح لمدة 10 دقائق ويمكن استخدامه مرة واحدة فقط.</value>
+  </data>
+  <data name="EmailPwdResetWarning" xml:space="preserve">
+    <value>إذا لم تكن أنت من طلب إعادة تعيين كلمة المرور، يرجى تجاهل هذه الرسالة والتفكير في تغيير كلمة المرور.</value>
+  </data>
+  <data name="EmailNeverAskCode" xml:space="preserve">
+    <value>لن يطلب منك Taboor هذا الكود عبر الهاتف أو البريد الإلكتروني أبداً.</value>
+  </data>
+  <data name="EmailPwdChangedSuccessTitle" xml:space="preserve">
+    <value>تم تغيير كلمة المرور</value>
+  </data>
+  <data name="EmailCongratulations" xml:space="preserve">
+    <value>تهانينا!</value>
+  </data>
+  <data name="EmailPwdChangedSuccessMsg" xml:space="preserve">
+    <value>تم تغيير كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.</value>
+  </data>
+  <data name="EmailCanLoginNow" xml:space="preserve">
+    <value>إذا لم تقم بهذا التغيير، يرجى التواصل مع الدعم الفني فوراً.</value>
+  </data>
 </root>

@@ -118,11 +118,9 @@ namespace Taboor_Application.Services
                     );
                 }
 
-                // Mark as verified and extend the window for registration completion (30 minutes)
-                otp.IsUsed = true;
-                otp.IsVerified = true;
-                otp.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
-                await _otpRepository.MarkUsedAsync(otp);
+                // Mark as verified and extend the window for registration completion (30 minutes).
+                // IsUsed stays false so the verified OTP can be consumed by the next step.
+                await _otpRepository.MarkVerifiedAsync(otp);
 
                 return ApiResponse<object>.SuccessResponse(null, "Email confirmed successfully.");
             }
@@ -198,6 +196,146 @@ namespace Taboor_Application.Services
                 _logger.LogError(ex, "Error occurred while registering user: {Email}", request.Email);
                 return ApiResponse<object>.FailResponse(
                     "An error occurred during registration.",
+                    new List<string> { ex.Message }
+                );
+            }
+        }
+
+        #endregion
+
+        #region Forgot Password (Password Reset)
+
+        /// <summary>
+        /// Initiates the forgot password process by sending a reset code to the user email.
+        /// </summary>
+        public async Task<ApiResponse<object>> ForgotPasswordAsync(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    // For security reasons, don't reveal whether the email exists
+                    _logger.LogWarning("Forgot password attempt for non-existent email: {Email}", email);
+                    return ApiResponse<object>.SuccessResponse(
+                        "If this email is registered, a reset code has been sent to it.",
+                        "Request processed"
+                    );
+                }
+
+                // Invalidate any previous active reset codes for this email
+                await _otpRepository.InvalidateActiveAsync(email, OtpPurpose.PasswordReset);
+
+                var resetCode = GenerateRandomCode();
+                await _otpRepository.CreateAsync(new OtpCode
+                {
+                    Email = email,
+                    Code = resetCode,
+                    Purpose = OtpPurpose.PasswordReset,
+                    CreatedAt = DateTime.UtcNow,
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(10),
+                    IsUsed = false,
+                    IsVerified = false
+                });
+
+                var emailBody = _emailTemplateService.GeneratePasswordResetEmail(resetCode, user.PreferredLanguage ?? CultureInfo.CurrentUICulture.Name);
+                await _emailSender.SendEmailAsync(email, "Taboor - Password Reset", emailBody);
+
+                _logger.LogInformation("Password reset code sent to email: {Email}", email);
+                return ApiResponse<object>.SuccessResponse(
+                    "If this email is registered, a reset code has been sent to it.",
+                    "Reset code sent"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while sending password reset code to: {Email}", email);
+                return ApiResponse<object>.FailResponse(
+                    "An error occurred while sending the reset code.",
+                    new List<string> { ex.Message }
+                );
+            }
+        }
+
+        /// <summary>
+        /// Verifies the password reset code.
+        /// </summary>
+        public async Task<ApiResponse<object>> VerifyResetCodeAsync(string email, string code)
+        {
+            try
+            {
+                var otp = await _otpRepository.GetValidAsync(email, code, OtpPurpose.PasswordReset);
+                if (otp == null)
+                {
+                    return ApiResponse<object>.FailResponse(
+                        "The reset code is invalid or has expired.",
+                        new List<string> { "Code expired or invalid" }
+                    );
+                }
+
+                // Mark as verified and extend the window for password reset (30 minutes)
+                await _otpRepository.MarkVerifiedAsync(otp);
+
+                return ApiResponse<object>.SuccessResponse(null, "Code verified. You can now reset your password.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while verifying reset code for: {Email}", email);
+                return ApiResponse<object>.FailResponse(
+                    "An error occurred while verifying the code.",
+                    new List<string> { ex.Message }
+                );
+            }
+        }
+
+        /// <summary>
+        /// Resets the user's password using a verified reset code.
+        /// </summary>
+        public async Task<ApiResponse<object>> ResetPasswordAsync(ResetPasswordDTO dto)
+        {
+            try
+            {
+                if (!await _otpRepository.HasVerifiedAsync(dto.Email, OtpPurpose.PasswordReset))
+                {
+                    return ApiResponse<object>.FailResponse(
+                        "Please verify the reset code first.",
+                        new List<string> { "Code not verified" }
+                    );
+                }
+
+                var user = await _userManager.FindByEmailAsync(dto.Email);
+                if (user == null)
+                {
+                    return ApiResponse<object>.FailResponse(
+                        "User not found.",
+                        new List<string> { "User not found" }
+                    );
+                }
+
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, resetToken, dto.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    // Consume the verified code so it cannot be reused
+                    await _otpRepository.InvalidateActiveAsync(dto.Email, OtpPurpose.PasswordReset);
+
+                    var emailBody = _emailTemplateService.GeneratePasswordResetConfirmationEmail(user.PreferredLanguage ?? CultureInfo.CurrentUICulture.Name);
+                    await _emailSender.SendEmailAsync(dto.Email, "Taboor - Password Changed", emailBody);
+
+                    _logger.LogInformation("Password reset successful for email: {Email}", dto.Email);
+                    return ApiResponse<object>.SuccessResponse(null, "Password reset successfully. You can now log in.");
+                }
+
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                _logger.LogWarning("Password reset failed for email: {Email}: {Errors}", dto.Email, string.Join(", ", errors));
+                return ApiResponse<object>.FailResponse("Password reset failed.", errors);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while resetting password for: {Email}", dto.Email);
+                return ApiResponse<object>.FailResponse(
+                    "An error occurred while resetting the password.",
                     new List<string> { ex.Message }
                 );
             }
