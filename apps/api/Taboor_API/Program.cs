@@ -1,11 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text;
+using Taboor_API.MappingConfig;
 using Taboor_Application.Config;
+using Taboor_Domain.Entities;
 using Taboor_Infrastructure.Config;
+using Taboor_Infrastructure.DB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +19,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingConfig).Assembly);
+
+// Localization: register IStringLocalizer for SharedResources (resx files inside Taboor_Application)
+builder.Services.AddLocalization();
+
+// Localization: detect user language from Accept-Language header (Arabic/English)
+var supportedCultures = new[] { "ar", "en" };
+var requestLocalizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en"),
+    SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList(),
+    SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList(),
+    RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new AcceptLanguageHeaderRequestCultureProvider()
+    }
+};
 
 // =======================
 // JWT + External Login Authentication
@@ -117,7 +140,18 @@ builder.Services.AddOpenApi(options =>
 
 var app = builder.Build();
 
+// Seed database (apply migrations + roles)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    await DbInitializer.InitializeAsync(db, roleManager, userManager);
+}
+
 // Configure the HTTP request pipeline.
+app.UseRequestLocalization(requestLocalizationOptions);
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
