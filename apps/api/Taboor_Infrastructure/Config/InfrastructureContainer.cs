@@ -50,6 +50,8 @@ namespace Taboor_Infrastructure.Config
             services.AddHttpContextAccessor();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IOtpRepository, OtpRepository>();
 
             return services;
         }
