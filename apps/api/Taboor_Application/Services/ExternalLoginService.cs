@@ -2,12 +2,12 @@ using Taboor_Application.Common.Constants;
 using Taboor_Application.DTOs.Auth;
 using Taboor_Application.ServiceInterfaces;
 using Taboor_Domain.Entities;
-using Taboor_Domain.IRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Security.Claims;
+using Taboor_Domain.Interfaces.Repositories.IRepository;
 
 namespace Taboor_Application.Services
 {

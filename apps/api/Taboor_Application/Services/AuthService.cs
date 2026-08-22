@@ -3,11 +3,11 @@ using Taboor_Application.DTOs.Auth;
 using Taboor_Application.DTOs.Token;
 using Taboor_Application.ServiceInterfaces;
 using Taboor_Domain.Entities;
-using Taboor_Domain.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Taboor_Domain.Interfaces.Repositories.IRepository;
 
 namespace Taboor_Application.Services
 {

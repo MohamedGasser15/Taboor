@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Taboor_Domain.IRepository
+namespace Taboor_Domain.Interfaces.Repositories.IRepository
 {
   /// <summary>
   /// Generic repository interface providing common data access operations

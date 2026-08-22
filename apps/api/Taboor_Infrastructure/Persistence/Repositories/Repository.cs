@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
-using Taboor_Domain.IRepository;
+using Taboor_Domain.Interfaces.Repositories.IRepository;
 using Taboor_Infrastructure.DB;
 
 namespace Taboor_Infrastructure.Persistence.Repositories
