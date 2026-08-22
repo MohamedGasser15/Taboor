@@ -10,6 +10,7 @@ function Home() {
       <p className="mt-4 text-lg">
         Edit <code>src/routes/index.tsx</code> to get started.
       </p>
+      <Button>Something</Button>
     </div>
   )
 }
