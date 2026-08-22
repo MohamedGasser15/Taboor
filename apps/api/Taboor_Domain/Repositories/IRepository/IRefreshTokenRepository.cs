@@ -1,4 +1,4 @@
-namespace Taboor_Domain.Interfaces.Repositories.IRepository
+namespace Taboor_Domain.Repositories.IRepository
 {
     /// <summary>
     /// Repository interface for managing refresh tokens operations.

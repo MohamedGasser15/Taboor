@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
+using Taboor_Domain.Specifications;
 
-namespace Taboor_Domain.Interfaces.Repositories.IRepository
+namespace Taboor_Domain.Repositories.IRepository
 {
   /// <summary>
   /// Generic repository interface providing common data access operations
@@ -29,6 +30,30 @@ namespace Taboor_Domain.Interfaces.Repositories.IRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>True if a match exists, otherwise false</returns>
     Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Checks whether any entity matches the specified specification
+    /// </summary>
+    /// <param name="specification">Specification to evaluate</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>True if a match exists, otherwise false</returns>
+    Task<bool> AnyAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a filtered, ordered, and optionally paginated list of entities based on the specified specification
+    /// </summary>
+    /// <param name="specification">Specification to evaluate</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of entities</returns>
+    Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Counts the number of entities matching the specified specification
+    /// </summary>
+    /// <param name="specification">Specification to evaluate</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The number of matching entities</returns>
+    Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new entity

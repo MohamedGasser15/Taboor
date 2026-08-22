@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using Taboor_Domain.Interfaces.Repositories.IRepository;
+using Taboor_Domain.Repositories.IRepository;
 
 namespace Taboor_Application.Services
 {

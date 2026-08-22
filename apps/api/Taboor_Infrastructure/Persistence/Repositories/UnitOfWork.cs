@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
-using Taboor_Domain.Interfaces.Repositories;
-using Taboor_Domain.Interfaces.Repositories.IRepository;
+using Taboor_Domain.Repositories;
+using Taboor_Domain.Repositories.IRepository;
 using Taboor_Infrastructure.DB;
 
 namespace Taboor_Infrastructure.Persistence.Repositories

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using Taboor_Domain.Interfaces.Repositories.IRepository;
+using Taboor_Domain.Repositories.IRepository;
 
 namespace Taboor_Application.Services
 {

@@ -2,7 +2,7 @@ using Taboor_Domain.Entities;
 using Taboor_Infrastructure.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Taboor_Domain.Interfaces.Repositories.IRepository;
+using Taboor_Domain.Repositories.IRepository;
 
 namespace Taboor_Infrastructure.Persistence.Repositories
 {

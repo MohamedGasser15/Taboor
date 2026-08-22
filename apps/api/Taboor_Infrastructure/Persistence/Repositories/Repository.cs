@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
-using Taboor_Domain.Interfaces.Repositories.IRepository;
+using Taboor_Domain.Repositories.IRepository;
+using Taboor_Domain.Specifications;
 using Taboor_Infrastructure.DB;
+using Taboor_Infrastructure.Persistence.Specification;
 
 namespace Taboor_Infrastructure.Persistence.Repositories
 {
@@ -113,6 +115,8 @@ namespace Taboor_Infrastructure.Persistence.Repositories
     }
     #endregion
 
+    #region Filtering & Pagination Operation
+
     /// <summary>
     /// Checks if any entity satisfies the given condition
     /// </summary>
@@ -130,29 +134,100 @@ namespace Taboor_Infrastructure.Persistence.Repositories
 
       try
       {
-        _logger.LogDebug("Starting {OperationName} for entity type {EntityType}",
-            operationName, typeof(T).Name);
+        _logger.LogDebug($"Starting {operationName} for entity type {typeof(T).Name}");
 
-        var result = await _dbSet.AsNoTracking().AnyAsync(predicate, cancellationToken);
+        var result = await _dbSet.AnyAsync(predicate, cancellationToken);
 
-        _logger.LogInformation("Completed {OperationName} for entity type {EntityType} with result: {Result}",
-            operationName, typeof(T).Name, result);
+        _logger.LogInformation($"Completed {operationName} for entity type {typeof(T).Name} with result: {result}");
 
         return result;
       }
       catch (OperationCanceledException)
       {
-        _logger.LogWarning("Operation {OperationName} was cancelled for entity type {EntityType}",
-            operationName, typeof(T).Name);
+        _logger.LogWarning($"Operation {operationName} was cancelled for entity type {typeof(T).Name}");
         throw;
       }
       catch (Exception ex)
       {
-        _logger.LogError(ex, "Error occurred in {OperationName} for entity type {EntityType}",
-            operationName, typeof(T).Name);
+        _logger.LogError(ex, $"Error occurred in {operationName} for entity type {typeof(T).Name}");
         throw;
       }
     }
+
+    public async Task<bool> AnyAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    {
+      const string operationName = "AnyAsync";
+      try
+      {
+        _logger.LogDebug($"Starting {operationName} for entity type {typeof(T).Name}");
+
+        var result = await ApplySpecification(specification).AnyAsync(cancellationToken);
+
+        _logger.LogInformation($"Completed {operationName} for entity type {typeof(T).Name} with result: {result}");
+        return result;
+      }
+      catch (OperationCanceledException)
+      {
+        _logger.LogWarning($"Operation {operationName} was cancelled for entity type {typeof(T).Name}");
+        throw;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, $"Error occurred in {operationName} for entity type {typeof(T).Name}");
+        throw;
+      }
+    }
+
+    public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    {
+      const string operationName = "ListAsync";
+
+      try
+      {
+        _logger.LogDebug($"Starting {operationName} for entity type {typeof(T).Name}");
+
+        var result = await ApplySpecification(specification).ToListAsync(cancellationToken);
+
+        _logger.LogInformation($"Completed {operationName} for entity type {typeof(T).Name} with result count: {result.Count}");
+        return result;
+      }
+      catch (OperationCanceledException)
+      {
+        _logger.LogWarning($"Operation {operationName} was cancelled for entity type {typeof(T).Name}");
+        throw;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, $"Error occurred in {operationName} for entity type {typeof(T).Name}");
+        throw;
+      }
+    }
+
+    public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    {
+      const string operationName = "CountAsync";
+      try
+      {
+        _logger.LogDebug($"Starting {operationName} for entity type {typeof(T).Name}");
+
+        var count = await ApplySpecification(specification).CountAsync(cancellationToken);
+
+        _logger.LogInformation($"Completed {operationName} for entity type {typeof(T).Name} with count: {count}");
+        return count;
+      }
+      catch (OperationCanceledException)
+      {
+        _logger.LogWarning($"Operation {operationName} was cancelled for entity type {typeof(T).Name}");
+        throw;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, $"Error occurred in {operationName} for entity type {typeof(T).Name}");
+        throw;
+      }
+    }
+
+    #endregion
 
     #region Create Operations
     /// <summary>
@@ -224,14 +299,6 @@ namespace Taboor_Infrastructure.Persistence.Repositories
       }
     }
     #endregion
-
-    #region Delete Operations
-    /// <summary>
-    /// Deletes an entity from the database
-    /// </summary>
-    /// <param name="entity">Entity to delete</param>
-    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
-    /// <returns>Task representing the asynchronous operation</returns>
 
     #region Update Operations
 
@@ -367,6 +434,8 @@ namespace Taboor_Infrastructure.Persistence.Repositories
       }
     }
     #endregion
+
+    private IQueryable<T> ApplySpecification(ISpecification<T> specification)
+     => SpecificationEvaluator<T>.GetQuery(_dbSet.AsQueryable(), specification);
   }
-    #endregion
 }
