@@ -24,6 +24,7 @@ namespace Taboor_Application.Services
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly IOtpRepository _otpRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IEmailSender _emailSender;
         private readonly IEmailTemplateService _emailTemplateService;
         private readonly ILogger<UserService> _logger;
@@ -40,6 +41,7 @@ namespace Taboor_Application.Services
             RoleManager<ApplicationRole> roleManager,
             IMapper mapper,
             IOtpRepository otpRepository,
+            IRefreshTokenRepository refreshTokenRepository,
             IEmailSender emailSender,
             IEmailTemplateService emailTemplateService,
             ILogger<UserService> logger)
@@ -48,6 +50,7 @@ namespace Taboor_Application.Services
             _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _otpRepository = otpRepository ?? throw new ArgumentNullException(nameof(otpRepository));
+            _refreshTokenRepository = refreshTokenRepository ?? throw new ArgumentNullException(nameof(refreshTokenRepository));
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _emailTemplateService = emailTemplateService ?? throw new ArgumentNullException(nameof(emailTemplateService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -319,6 +322,9 @@ namespace Taboor_Application.Services
                 {
                     // Consume the verified code so it cannot be reused
                     await _otpRepository.InvalidateActiveAsync(dto.Email, OtpPurpose.PasswordReset);
+
+                    // Invalidate all existing sessions so a password change logs out everywhere
+                    await _refreshTokenRepository.RevokeAllRefreshTokensAsync(user.Id);
 
                     var emailBody = _emailTemplateService.GeneratePasswordResetConfirmationEmail(user.PreferredLanguage ?? CultureInfo.CurrentUICulture.Name);
                     await _emailSender.SendEmailAsync(dto.Email, "Taboor - Password Changed", emailBody);

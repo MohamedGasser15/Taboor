@@ -154,11 +154,33 @@ namespace Taboor_Application.Services
                 if (string.IsNullOrEmpty(userId))
                     throw new SecurityTokenException("Invalid token: User identifier not found");
 
-                var isValidRefreshToken = await _refreshTokenRepository.ValidateRefreshTokenAsync(userId, request.RefreshToken);
-                if (!isValidRefreshToken)
+                var storedToken = await _refreshTokenRepository.GetRefreshTokenAsync(userId, request.RefreshToken);
+                if (storedToken == null)
                 {
                     _logger.LogWarning("Invalid refresh token for user {UserId}", userId);
                     throw new SecurityTokenException("Invalid refresh token");
+                }
+
+                // Reuse detection: a token that was already used to mint a new token is
+                // being presented again -> genuine replay/theft, revoke the whole family.
+                if (storedToken.IsUsed)
+                {
+                    _logger.LogWarning("Refresh token reuse detected for user {UserId}; revoking all tokens", userId);
+                    await _refreshTokenRepository.RevokeAllRefreshTokensAsync(userId);
+                    throw new SecurityTokenException("Refresh token reuse detected");
+                }
+
+                // Revoked (e.g. logout or password reset) but never used -> simply reject.
+                if (storedToken.IsRevoked)
+                {
+                    _logger.LogWarning("Refresh token revoked for user {UserId}", userId);
+                    throw new SecurityTokenException("Refresh token revoked");
+                }
+
+                if (storedToken.Expiry <= DateTime.UtcNow)
+                {
+                    _logger.LogWarning("Refresh token expired for user {UserId}", userId);
+                    throw new SecurityTokenException("Refresh token expired");
                 }
 
                 var user = await _userManager.FindByIdAsync(userId);
@@ -168,14 +190,16 @@ namespace Taboor_Application.Services
                     throw new SecurityTokenException("User not found");
                 }
 
+                // Revoke the presented token so it can never be used again (single-use rotation).
+                await _refreshTokenRepository.MarkTokenUsedAsync(storedToken);
+
                 // Generate new tokens
                 var newAccessToken = await _tokenService.GenerateAccessToken(user);
                 var newRefreshToken = _tokenService.GenerateRefreshToken();
                 var newRefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
-                // Update refresh token in database
-                await _refreshTokenRepository.UpdateRefreshTokenAsync(
-                    userId, request.RefreshToken, newRefreshToken, newRefreshTokenExpiry);
+                // Save the new refresh token in database
+                await _refreshTokenRepository.SaveRefreshTokenAsync(userId, newRefreshToken, newRefreshTokenExpiry);
 
                 _logger.LogInformation("Tokens refreshed successfully for user {UserId}", userId);
 

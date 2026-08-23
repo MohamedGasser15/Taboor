@@ -3,6 +3,7 @@ using Taboor_Infrastructure.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Taboor_Domain.Repositories.IRepository;
+using Taboor_Infrastructure.Security;
 
 namespace Taboor_Infrastructure.Persistence.Repositories
 {
@@ -55,10 +56,11 @@ namespace Taboor_Infrastructure.Persistence.Repositories
                 var token = new RefreshToken
                 {
                     UserId = userId,
-                    Token = refreshToken,
+                    Token = RefreshTokenHasher.Hash(refreshToken),
                     Expiry = expiry,
                     CreatedAt = DateTime.UtcNow,
-                    IsRevoked = false
+                    IsRevoked = false,
+                    IsUsed = false
                 };
 
                 _context.RefreshTokens.Add(token);
@@ -84,13 +86,13 @@ namespace Taboor_Infrastructure.Persistence.Repositories
         }
 
         /// <summary>
-        /// Validates whether a refresh token is valid for the specified user.
+        /// Retrieves the stored refresh token record for the user, regardless of its state.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
-        /// <param name="refreshToken">The refresh token to validate.</param>
-        /// <returns>True if the token is valid; otherwise, false.</returns>
+        /// <param name="refreshToken">The raw refresh token value to look up.</param>
+        /// <returns>The matching token record, or null when not found.</returns>
         /// <exception cref="ArgumentException">Thrown when input parameters are invalid.</exception>
-        public async Task<bool> ValidateRefreshTokenAsync(string userId, string refreshToken)
+        public async Task<RefreshToken?> GetRefreshTokenAsync(string userId, string refreshToken)
         {
             try
             {
@@ -101,97 +103,59 @@ namespace Taboor_Infrastructure.Persistence.Repositories
                 if (string.IsNullOrEmpty(refreshToken))
                     throw new ArgumentException("Refresh token cannot be null or empty.", nameof(refreshToken));
 
-                _logger.LogInformation("Validating refresh token for user {UserId}", userId);
+                _logger.LogInformation("Looking up refresh token for user {UserId}", userId);
 
-                var token = await _context.RefreshTokens
-                    .Where(rt => rt.UserId == userId &&
-                                rt.Token == refreshToken &&
-                                rt.Expiry > DateTime.UtcNow &&
-                                !rt.IsRevoked)
+                var hashedToken = RefreshTokenHasher.Hash(refreshToken);
+                return await _context.RefreshTokens
+                    .Where(rt => rt.UserId == userId && rt.Token == hashedToken)
                     .FirstOrDefaultAsync();
-
-                bool isValid = token != null;
-
-                _logger.LogInformation("Refresh token validation for user {UserId}: {IsValid}", userId, isValid);
-
-                return isValid;
             }
             catch (ArgumentException ex)
             {
-                _logger.LogWarning(ex, "Invalid argument while validating refresh token for user {UserId}", userId);
+                _logger.LogWarning(ex, "Invalid argument while looking up refresh token for user {UserId}", userId);
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error occurred while validating refresh token for user {UserId}", userId);
+                _logger.LogError(ex, "Unexpected error occurred while looking up refresh token for user {UserId}", userId);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Marks a token record as used so it cannot be reused (single-use rotation).
+        /// </summary>
+        /// <param name="token">The token record to mark as used.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the token is null.</exception>
+        public async Task MarkTokenUsedAsync(RefreshToken token)
+        {
+            try
+            {
+                if (token == null)
+                    throw new ArgumentNullException(nameof(token));
+
+                token.IsUsed = true;
+                _context.RefreshTokens.Update(token);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Refresh token marked as used for user {UserId}", token.UserId);
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex, "Token was null while marking as used");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while marking refresh token as used for user {UserId}", token?.UserId);
                 throw;
             }
         }
 
         #endregion
 
-        #region Token Update and Revocation Methods
-
-        /// <summary>
-        /// Updates an existing refresh token with a new one.
-        /// </summary>
-        /// <param name="userId">The unique identifier of the user.</param>
-        /// <param name="oldRefreshToken">The old refresh token to be revoked.</param>
-        /// <param name="newRefreshToken">The new refresh token.</param>
-        /// <param name="newExpiry">The expiration date and time of the new token.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        /// <exception cref="ArgumentException">Thrown when input parameters are invalid.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when old token is not found.</exception>
-        public async Task UpdateRefreshTokenAsync(string userId, string oldRefreshToken, string newRefreshToken, DateTime newExpiry)
-        {
-            try
-            {
-                // Validate input parameters
-                if (string.IsNullOrEmpty(userId))
-                    throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
-
-                if (string.IsNullOrEmpty(oldRefreshToken))
-                    throw new ArgumentException("Old refresh token cannot be null or empty.", nameof(oldRefreshToken));
-
-                if (string.IsNullOrEmpty(newRefreshToken))
-                    throw new ArgumentException("New refresh token cannot be null or empty.", nameof(newRefreshToken));
-
-                if (newExpiry <= DateTime.UtcNow)
-                    throw new ArgumentException("New expiry date must be in the future.", nameof(newExpiry));
-
-                _logger.LogInformation("Updating refresh token for user {UserId}", userId);
-
-
-                var newToken = new RefreshToken
-                {
-                    UserId = userId,
-                    Token = newRefreshToken,
-                    Expiry = newExpiry,
-                    CreatedAt = DateTime.UtcNow,
-                    IsRevoked = false
-                };
-
-                _context.RefreshTokens.Add(newToken);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Refresh token updated successfully for user {UserId}", userId);
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogWarning(ex, "Invalid argument while updating refresh token for user {UserId}", userId);
-                throw;
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.LogError(ex, "Database update failed while updating refresh token for user {UserId}", userId);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error occurred while updating refresh token for user {UserId}", userId);
-                throw;
-            }
-        }
+        #region Token Revocation Methods
 
         /// <summary>
         /// Revokes a specific refresh token for the specified user.
@@ -213,8 +177,9 @@ namespace Taboor_Infrastructure.Persistence.Repositories
 
                 _logger.LogInformation("Revoking refresh token for user {UserId}", userId);
 
+                var hashedToken = RefreshTokenHasher.Hash(refreshToken);
                 var token = await _context.RefreshTokens
-                    .Where(rt => rt.UserId == userId && rt.Token == refreshToken)
+                    .Where(rt => rt.UserId == userId && rt.Token == hashedToken)
                     .FirstOrDefaultAsync();
 
                 if (token != null)

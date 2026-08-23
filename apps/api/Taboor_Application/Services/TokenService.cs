@@ -92,7 +92,7 @@ namespace Taboor_Application.Services
 
                 var accessTokenExpiryMinutes = _config.GetValue<int?>("JWT:AccessTokenExpiryMinutes")
                     ?? (_config.GetValue<int?>("JWT:AccessTokenExpiryDays") * 1440)
-                    ?? 10080;
+                    ?? 15;
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {

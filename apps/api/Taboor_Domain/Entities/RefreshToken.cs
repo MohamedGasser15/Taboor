@@ -19,6 +19,12 @@ namespace Taboor_Domain.Entities
 
         public bool IsRevoked { get; set; }
 
+        /// <summary>
+        /// Indicates the token has already been used to obtain a new token.
+        /// Used for single-use rotation and reuse (theft) detection.
+        /// </summary>
+        public bool IsUsed { get; set; }
+
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; } = null!;
     }

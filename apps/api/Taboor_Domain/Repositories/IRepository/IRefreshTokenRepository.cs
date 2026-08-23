@@ -1,5 +1,7 @@
 namespace Taboor_Domain.Repositories.IRepository
 {
+    using Taboor_Domain.Entities;
+
     /// <summary>
     /// Repository interface for managing refresh tokens operations.
     /// </summary>
@@ -15,22 +17,19 @@ namespace Taboor_Domain.Repositories.IRepository
         Task SaveRefreshTokenAsync(string userId, string refreshToken, DateTime expiry);
 
         /// <summary>
-        /// Validates whether a refresh token is valid for the specified user.
+        /// Retrieves the stored refresh token record for the user, regardless of its state.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
-        /// <param name="refreshToken">The refresh token to validate.</param>
-        /// <returns>True if the token is valid; otherwise, false.</returns>
-        Task<bool> ValidateRefreshTokenAsync(string userId, string refreshToken);
+        /// <param name="refreshToken">The raw refresh token value to look up.</param>
+        /// <returns>The matching token record, or null when not found.</returns>
+        Task<RefreshToken?> GetRefreshTokenAsync(string userId, string refreshToken);
 
         /// <summary>
-        /// Updates an existing refresh token with a new one.
+        /// Marks a token record as used so it cannot be reused (single-use rotation).
         /// </summary>
-        /// <param name="userId">The unique identifier of the user.</param>
-        /// <param name="oldRefreshToken">The old refresh token to be revoked.</param>
-        /// <param name="newRefreshToken">The new refresh token.</param>
-        /// <param name="newExpiry">The expiration date and time of the new token.</param>
+        /// <param name="token">The token record to mark as used.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task UpdateRefreshTokenAsync(string userId, string oldRefreshToken, string newRefreshToken, DateTime newExpiry);
+        Task MarkTokenUsedAsync(RefreshToken token);
 
         /// <summary>
         /// Revokes a specific refresh token for the specified user.
