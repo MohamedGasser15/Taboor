@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taboor/core/services/theme_service.dart';
+import 'package:taboor/core/services/locale_service.dart';
 import 'package:taboor/core/themes/app_theme.dart';
 import 'package:taboor/core/utils/navigation_service.dart';
 import 'package:taboor/core/utils/shared_prefs.dart';
 import 'package:taboor/features/splash/presentation/screens/splash_screen.dart';
+import 'package:taboor/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,14 +36,22 @@ class TaboorApp extends StatelessWidget {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: ThemeService.themeNotifier,
       builder: (context, themeMode, child) {
-        return MaterialApp(
-          title: 'Taboor',
-          debugShowCheckedModeBanner: false,
-          navigatorKey: NavigationService.navigatorKey,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: themeMode,
-          home: const SplashScreen(),
+        return ValueListenableBuilder<Locale>(
+          valueListenable: LocaleService.localeNotifier,
+          builder: (context, locale, child) {
+            return MaterialApp(
+              title: 'Taboor',
+              debugShowCheckedModeBanner: false,
+              navigatorKey: NavigationService.navigatorKey,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeMode,
+              locale: locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              home: const SplashScreen(),
+            );
+          },
         );
       },
     );
