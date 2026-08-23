@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Internet access for the API -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Allow detecting network state, e.g. when offline -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
         android:label="taboor"
         android:name="${applicationName}"
