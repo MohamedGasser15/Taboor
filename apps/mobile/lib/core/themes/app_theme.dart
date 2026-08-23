@@ -14,7 +14,7 @@ class AppTheme {
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppColors.primary),
         titleTextStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 20,
           fontWeight: FontWeight.w700,
           color: AppColors.primary,
@@ -23,42 +23,42 @@ class AppTheme {
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.accent,
-        surface: AppColors.primaryWhite,
+        surface: AppColors.surface,
         error: AppColors.accentRed,
       ),
       textTheme: TextTheme(
         displayLarge: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 32,
           fontWeight: FontWeight.w700,
           color: AppColors.primary,
         ),
         displayMedium: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: AppColors.primary,
         ),
         displaySmall: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.primary,
         ),
         bodyLarge: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: AppColors.gray900,
         ),
         bodyMedium: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.gray700,
         ),
         bodySmall: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: AppColors.gray600,
@@ -103,7 +103,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           textStyle: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Tajawal',
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -119,7 +119,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           textStyle: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Tajawal',
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -129,14 +129,14 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
           textStyle: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Tajawal',
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
       cardTheme: CardThemeData(
-        color: AppColors.primaryWhite,
+        color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -157,7 +157,7 @@ class AppTheme {
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppColors.primaryWhite),
         titleTextStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 20,
           fontWeight: FontWeight.w700,
           color: AppColors.primaryWhite,
@@ -171,37 +171,37 @@ class AppTheme {
       ),
       textTheme: TextTheme(
         displayLarge: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 32,
           fontWeight: FontWeight.w700,
           color: AppColors.primaryWhite,
         ),
         displayMedium: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: AppColors.primaryWhite,
         ),
         displaySmall: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.primaryWhite,
         ),
         bodyLarge: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: AppColors.gray200,
         ),
         bodyMedium: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.gray300,
         ),
         bodySmall: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Tajawal',
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: AppColors.gray400,
@@ -246,7 +246,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           textStyle: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Tajawal',
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -262,7 +262,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           textStyle: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Tajawal',
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -272,7 +272,7 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.accent,
           textStyle: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Tajawal',
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),

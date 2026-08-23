@@ -10,7 +10,7 @@ class AppTextStyles {
     Color? color,
     double? height,
   }) => TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'Tajawal',
         fontSize: size,
         fontWeight: weight,
         color: color,
@@ -22,7 +22,7 @@ class AppTextStyles {
     Color color = AppColors.primary,
     FontWeight weight = FontWeight.bold,
   }) => TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'Tajawal',
         fontSize: size,
         fontWeight: weight,
         color: color,
@@ -33,7 +33,7 @@ class AppTextStyles {
     FontWeight weight = FontWeight.w500,
     Color? color,
   }) => TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'Tajawal',
         fontSize: size,
         fontWeight: weight,
         color: color,
@@ -44,7 +44,7 @@ class AppTextStyles {
     Color color = Colors.white,
     FontWeight weight = FontWeight.bold,
   }) => TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'Tajawal',
         fontSize: size,
         fontWeight: weight,
         color: color,
@@ -54,7 +54,7 @@ class AppTextStyles {
     Color color = AppColors.primary,
     double size = 14,
   }) => TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'Tajawal',
         fontSize: size,
         fontWeight: FontWeight.w600,
         color: color,
@@ -64,7 +64,7 @@ class AppTextStyles {
     Color color = AppColors.error,
     double size = 13,
   }) => TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'Tajawal',
         color: color,
         fontSize: size,
         fontWeight: FontWeight.w500,

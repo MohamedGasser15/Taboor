@@ -2,11 +2,22 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Colors
-  static const Color primary = Color(0xFF1D5358);
-  static const Color primaryDark = Color(0xFF153F43);
-  static const Color accent = Color(0xFFEFA253);
-  static const Color background = Color(0xFFF7F5EC);
+  // ===== Taboor Brand Palette =====
+  static const Color ink = Color(0xFF0B4C56);
+  static const Color deepTeal = Color(0xFF103F4B);
+  static const Color teal = Color(0xFF159F99);
+  static const Color softTeal = Color(0xFFE3F3EE);
+  static const Color indigo = Color(0xFF6B72CD);
+  static const Color amber = Color(0xFFF6A253);
+  static const Color cream = Color(0xFFF5F0E7);
+  static const Color paper = Color(0xFFFFFDF8);
+
+  // ===== Semantic aliases (kept for backwards compatibility) =====
+  static const Color primary = ink;
+  static const Color primaryDark = deepTeal;
+  static const Color accent = amber;
+  static const Color background = cream;
+  static const Color surface = paper;
   static const Color primaryBlack = Color(0xFF000000);
   static const Color primaryWhite = Color(0xFFFFFFFF);
 
@@ -22,7 +33,7 @@ class AppColors {
   static const Color gray900 = Color(0xFF212121);
 
   // Accent Colors
-  static const Color accentBlue = Color(0xFF2962FF);
+  static const Color accentBlue = indigo;
   static const Color accentGreen = Color(0xFF00C853);
   static const Color accentRed = Color(0xFFD32F2F);
   static const Color accentYellow = Color(0xFFFFD600);

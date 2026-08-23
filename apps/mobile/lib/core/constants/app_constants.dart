@@ -2,7 +2,7 @@
 class AppConstants {
   static const String appName = 'taboor';
   static const String appVersion = '1.0.0';
-  static const String appTagline = 'سبح باسم ربك';
+  static const String appTagline = 'وِفر وقتك، ومتعيشش في الطابور';
 
   // Shared Preferences Keys
   static const String isFirstTimeKey = 'isFirstTime';
