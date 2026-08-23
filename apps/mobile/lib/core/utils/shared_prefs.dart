@@ -58,4 +58,39 @@ class SharedPrefs {
   static Future<void> removeSecureKey(String key) async {
     await _secure.delete(key: key);
   }
+
+  // ===== Auth Session =====
+  static const String authTokenKey = 'auth_token';
+  static const String refreshTokenKey = 'refresh_token';
+  static const String userDataKey = 'user_data';
+
+  static Future<void> setAuthToken(String token) async {
+    await _secure.write(key: authTokenKey, value: token);
+  }
+
+  static Future<String?> getAuthToken() async {
+    return await _secure.read(key: authTokenKey);
+  }
+
+  static Future<void> setRefreshToken(String token) async {
+    await _secure.write(key: refreshTokenKey, value: token);
+  }
+
+  static Future<String?> getRefreshToken() async {
+    return await _secure.read(key: refreshTokenKey);
+  }
+
+  static Future<void> setUserData(String json) async {
+    await _secure.write(key: userDataKey, value: json);
+  }
+
+  static Future<String?> getUserData() async {
+    return await _secure.read(key: userDataKey);
+  }
+
+  static Future<void> clearAuth() async {
+    await _secure.delete(key: authTokenKey);
+    await _secure.delete(key: refreshTokenKey);
+    await _secure.delete(key: userDataKey);
+  }
 }

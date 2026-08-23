@@ -5,51 +5,61 @@ class TaboorLogo extends StatelessWidget {
   const TaboorLogo({
     super.key,
     this.scale = 1.0,
+    this.showWordmark = true,
   });
 
   final double scale;
+  final bool showWordmark;
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: scale,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const _LogoIcon(),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Transform.scale(
+        scale: scale,
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const _LogoIcon(),
 
-          const SizedBox(width: 24),
+              if (showWordmark) ...[
+                const SizedBox(width: 24),
 
-          RichText(
-            text: const TextSpan(
-              children: [
-                TextSpan(
-                  text: 'taboor',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 72,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -2.5,
-                    height: 1,
-                    color: AppColors.primary,
-                  ),
-                ),
-                TextSpan(
-                  text: '.',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 72,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -2.5,
-                    height: 1,
-                    color: AppColors.accent,
+                RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'taboor',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 72,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -2.5,
+                          height: 1,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '.',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 72,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -2.5,
+                          height: 1,
+                          color: AppColors.accent,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

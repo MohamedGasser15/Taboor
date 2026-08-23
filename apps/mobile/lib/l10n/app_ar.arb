@@ -1,0 +1,115 @@
+{
+  "@@locale": "ar",
+  "appTitle": "طابور",
+  "appTagline": "وِفر وقتك، ومتعيشش في الطابور",
+  "back": "رجوع",
+  "or": "أو",
+
+  "emailLabel": "البريد الإلكتروني",
+  "emailHint": "you@example.com",
+  "passwordLabel": "كلمة المرور",
+  "passwordHint": "••••••••••",
+
+  "loginWelcomeTitle": "أهلًا بيك من جديد",
+  "loginWelcomeSubtitle": "سجّل دخولك واستكمل طلبك في الطابور",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "loginButton": "تسجيل الدخول",
+  "noAccountYet": "مش عندك حساب؟",
+  "createAccount": "أنشئ حسابًا",
+
+  "createYourAccount": "أنشئ حسابك",
+  "registerSubtitle": "ابدأ بالبريد الإلكتروني\nوهنبعث لك كود التحقق",
+  "alreadyHaveAccount": "عندك حساب بالفعل؟",
+
+  "sendCode": "إرسال الكود",
+
+  "otpTitle": "كود التحقق",
+  "otpDescription": "أدخل الكود المكون من 6 أرقام\nأُرسل إلى {email}",
+  "@otpDescription": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "yourEmailFallback": "بريدك الإلكتروني",
+  "resendPrompt": "لم يصلك الكود؟",
+  "resend": "إعادة الإرسال",
+  "verify": "تحقق",
+
+  "completeDetails": "كمل بياناتك",
+  "detailsSubtitle": "الاسم وهاتفك وكلمة المرور عشان تكمّل",
+  "fullNameLabel": "الاسم الكامل",
+  "fullNameHint": "مثال: محمد أحمد",
+  "phoneLabel": "رقم الموبايل",
+  "phoneHint": "01xxxxxxxxx",
+  "confirmPasswordLabel": "تأكيد كلمة المرور",
+  "passwordMismatch": "كلمتا المرور غير متطابقتين",
+  "createAccountSubmit": "إنشاء الحساب",
+
+  "forgotTitle": "نسيت كلمة المرور؟",
+  "forgotSubtitle": "اكتب بريدك الإلكتروني\nوهنبعث لك كود التحقق",
+  "rememberPassword": "فتكرت كلمة المرور؟",
+
+  "newPasswordTitle": "كلمة مرور جديدة",
+  "newPasswordSubtitle": "اكتب كلمة مرورة جديدة وتأكد منها",
+  "newPasswordLabel": "كلمة المرور الجديدة",
+  "savePassword": "حفظ كلمة المرور",
+
+  "networkError": "مشكلة في الاتصال. تأكد من النت.",
+  "genericRequestError": "حصلت مشكلة. جرب تاني.",
+  "invalidEmail": "اكتب إيميل صحيح.",
+  "emailRequired": "اكتب إيميلك.",
+  "codeRequired": "اكتب كود التحقق.",
+  "fullNameRequired": "اكتب اسمك بالكامل.",
+  "phoneRequired": "اكتب رقم موبايلك.",
+  "passwordRequired": "اكتب كلمة المرور.",
+  "invalidCredentials": "الإيميل أو كلمة المرور غلط.",
+  "emailAlreadyExists": "الإيميل ده مسجل بالفعل.",
+  "phoneAlreadyExists": "رقم الموبايل ده مسجل بالفعل.",
+  "emailNotConfirmed": "أكّد إيميلك بكود التحقق الأول.",
+  "invalidCode": "كود التحقق غلط أو انتهى.",
+  "verificationSent": "ابتعثنا كود التحقق لإيميلك.",
+  "emailConfirmed": "تم تأكيد الإيميل.",
+  "registrationSuccess": "تم إنشاء الحساب بنجاح.",
+  "loginSuccess": "تم تسجيل الدخول بنجاح.",
+  "passwordResetNotAvailable": "استعادة كلمة المرور قريباً.",
+  "countrySelectTitle": "اختار الدولة",
+  "countrySearchHint": "دوّر على دولة أو كود...",
+  "resetCodeSent": "لو الإيميل مسجل، بعتنا كود استعادة.",
+  "resetCodeVerified": "تم التحقق من الكود. تقدر تغير كلمة المرور.",
+  "resetSuccess": "تم تغيير كلمة المرور. تقدر تسجل دخولك.",
+  "resetCodeInvalid": "كود الاستعادة غلط أو انتهى.",
+  "newPasswordShort": "كلمة المرور لازم تكون 6 أحرف على الأقل.",
+  "passwordWeak": "كلمة المرور لازم تكون 8 أحرف + رقم + حرف كبير.",
+  "passwordWeakLabel": "ضعيفة",
+  "passwordMediumLabel": "متوسطة",
+  "passwordStrongLabel": "قوية",
+  "passwordVeryStrongLabel": "قوية جداً",
+  "passwordMatchOk": "كلمتا المرور متطابقتين",
+  "latinOnly": "اكتب بإنجليزي (حروف وأرقام انجليزية بس).",
+  "tryingText": "اللحظات...",
+
+  "onboardingOneTitle": "استنى وأنت في بيتك",
+  "onboardingOneSubtitle": "سجّل مكانك من أي مكان\nواحصل على رقمك الفوري مجاناً",
+  "onboardingTwoTitle": "دورك.. لحظة بلحظة",
+  "onboardingTwoSubtitle": "تابع ترتيبك في الطابور مباشر\nمع عداد واضح ومؤشر تقدم",
+  "onboardingThreeTitle": "هننبهك قبل ما يجي دورك",
+  "onboardingThreeSubtitle": "اشعارات ذكية تقولك امتى تخرج\n\"وقت الخروج - قدامك اتنين بس!\"",
+
+  "ticketNumberLabel": "رقمك",
+  "ticketSitRelax": "مجلسك وريح",
+  "liveAhead": "أمامك",
+  "liveTurnNear": "دورك قرب",
+  "alertNow": "الآن",
+  "alertLeaveTitle": "وقت الخروج!",
+  "alertOnlyTwo": "قدامك 2 فقط",
+
+  "next": "التالي",
+  "startNow": "ابدأ الآن",
+
+  "homeTitle": "اطلب دورك من أي مكان",
+  "homeSoon": "الصفحة الرئيسية قريباً",
+  "homeCta": "عرفني على طابور",
+  "welcomeBack": "أهلًا من جديد،"
+}
