@@ -3,6 +3,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { QueryClient } from '@tanstack/react-query'
 import AppProviders from './providers/AppProviders'
+import 'unfonts.css'
 
 const query = new QueryClient()
 const router = createRouter({

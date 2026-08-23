@@ -5,6 +5,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import Fonts from 'unplugin-fonts/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
@@ -13,6 +14,18 @@ const config = defineConfig({
     tailwindcss(),
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     viteReact(),
+    Fonts({
+      fontsource: {
+        families: [
+          {
+            name: 'Inter Variable',
+            styles: ['normal'],
+            subset: 'latin',
+            variable: true
+          }
+        ],
+      },
+    }),
   ],
 })
 
