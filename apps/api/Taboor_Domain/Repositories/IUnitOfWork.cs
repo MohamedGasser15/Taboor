@@ -1,10 +1,8 @@
-﻿using Taboor_Domain.Repositories.IRepository;
-
-namespace Taboor_Domain.Repositories
+﻿namespace Taboor_Domain.Repositories
 {
   public interface IUnitOfWork : IDisposable
   {
-    IRepository<T> Repository<T>() where T : class;
+    TRepository Repository<TRepository>() where TRepository : class;
     Task SaveAsync();
   }
 }

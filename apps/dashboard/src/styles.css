@@ -21,6 +21,14 @@ body {
   --font-heading: var(--font-sans);
   --font-sans:
     'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --color-ink: #0b4c56;
+  --color-deep-teal: #103f4b;
+  --color-teal: #159f99;
+  --color-soft-teal: #e3f3ee;
+  --color-indigo: #6b72cd;
+  --color-amber: #f6a253;
+  --color-cream: #f5f0e7;
+  --color-paper: #fffdf8;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

@@ -5,7 +5,7 @@ namespace Taboor_Domain.Repositories.IRepository
     /// <summary>
     /// Repository interface for managing OTP codes.
     /// </summary>
-    public interface IOtpRepository
+    public interface IOtpRepository : IRepository<OtpCode>
     {
         /// <summary>
         /// Retrieves the first valid (not used, not expired) OTP matching the given criteria.

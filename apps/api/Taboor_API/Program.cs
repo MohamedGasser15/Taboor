@@ -21,6 +21,31 @@ builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingConfig).Assembly);
 
+// CORS for the web dashboard (cross-origin cookies require explicit origins + credentials)
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("Dashboard", policy =>
+  {
+    var origins = builder.Configuration.GetSection("Dashboard:AllowedOrigins").Get<string[]>()
+        ?? new[] { builder.Configuration["Dashboard:Origin"]! };
+
+    policy.WithOrigins(origins)
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials();
+  });
+});
+
+// CSRF protection (double-submit cookie) for cookie-authenticated web requests
+builder.Services.AddAntiforgery(options =>
+{
+  options.HeaderName = "X-XSRF-TOKEN";
+  options.Cookie.Name = "XSRF-TOKEN";
+  options.Cookie.HttpOnly = false; // JS must read it to echo back in the header
+  options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+  options.Cookie.SameSite = SameSiteMode.None;
+});
+
 // Localization: register IStringLocalizer for SharedResources (resx files inside Taboor_Application)
 builder.Services.AddLocalization();
 
@@ -153,6 +178,8 @@ using (var scope = app.Services.CreateScope())
 app.UseRequestLocalization(requestLocalizationOptions);
 
 app.UseHttpsRedirection();
+
+app.UseCors("Dashboard");
 
 app.UseAuthorization();
 
