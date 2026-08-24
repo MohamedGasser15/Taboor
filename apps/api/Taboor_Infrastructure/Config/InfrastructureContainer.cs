@@ -51,8 +51,20 @@ namespace Taboor_Infrastructure.Config
       services.AddHttpContextAccessor();
 
       services.AddScoped<IUnitOfWork, UnitOfWork>();
-      services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-      services.AddScoped<IOtpRepository, OtpRepository>();
+
+      // Auto-register all specialized repositories from the Infrastructure assembly.
+      // Matches concrete classes that implement a closed IRepository<T> (directly or
+      // via a specialized interface such as IRefreshTokenRepository), excluding the
+      // generic Repository<T> base class.
+      services.Scan(scan => scan
+          .FromAssembliesOf(typeof(RefreshTokenRepository))
+          .AddClasses(classes => classes
+              .Where(type =>
+                  !type.IsGenericTypeDefinition &&
+                  type.GetInterfaces().Any(i =>
+                      i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRepository<>))))
+          .AsImplementedInterfaces()
+          .WithScopedLifetime());
       return services;
     }
   }

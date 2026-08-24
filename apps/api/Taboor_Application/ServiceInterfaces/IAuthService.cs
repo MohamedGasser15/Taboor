@@ -23,6 +23,14 @@ namespace Taboor_Application.ServiceInterfaces
         Task<TokenResponseDTO> RefreshToken(RefreshTokenRequestDTO request);
 
         /// <summary>
+        /// Refreshes an access token using a refresh token supplied via cookie (web clients),
+        /// where no expired access token is available to derive the user.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token value read from the HttpOnly cookie.</param>
+        /// <returns>A token response containing new access and refresh tokens.</returns>
+        Task<TokenResponseDTO> RefreshTokenByCookieAsync(string refreshToken);
+
+        /// <summary>
         /// Revokes a specific refresh token for a user.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>

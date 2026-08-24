@@ -2,6 +2,7 @@ using Taboor_Application.Common;
 using Taboor_Application.DTOs.Auth;
 using Taboor_Application.DTOs.Token;
 using Taboor_Application.ServiceInterfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -18,21 +19,82 @@ namespace Taboor_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private const string RefreshTokenCookieName = "refreshToken";
+        private const string XsrfCookieName = "XSRF-TOKEN";
+        private const string XsrfHeaderName = "X-XSRF-TOKEN";
+        private const string ClientTypeHeader = "X-Client-Type";
+        private const string WebClientType = "web";
+
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
         private readonly IExternalLoginService _externalLoginService;
+        private readonly IAntiforgery _antiforgery;
         private readonly ILogger<AuthController> _logger;
 
         public AuthController(
             IAuthService authService,
             IUserService userService,
             IExternalLoginService externalLoginService,
+            IAntiforgery antiforgery,
             ILogger<AuthController> logger)
         {
             _authService = authService ?? throw new ArgumentNullException(nameof(authService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _externalLoginService = externalLoginService ?? throw new ArgumentNullException(nameof(externalLoginService));
+            _antiforgery = antiforgery ?? throw new ArgumentNullException(nameof(antiforgery));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// Determines whether the current request comes from the web dashboard client.
+        /// Absence of the header (or any other value) is treated as the mobile flow.
+        /// </summary>
+        private bool IsWebClient() => Request.Headers[ClientTypeHeader] == WebClientType;
+
+        /// <summary>
+        /// Sets the HttpOnly refresh-token cookie for web clients.
+        /// </summary>
+        private void SetRefreshTokenCookie(string refreshToken)
+        {
+            Response.Cookies.Append(RefreshTokenCookieName, refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/api/Auth",
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
+            });
+        }
+
+        /// <summary>
+        /// Clears the HttpOnly refresh-token cookie for web clients.
+        /// </summary>
+        private void ClearRefreshTokenCookie()
+        {
+            Response.Cookies.Delete(RefreshTokenCookieName, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/api/Auth"
+            });
+        }
+
+        /// <summary>
+        /// Validates the anti-forgery token for state-changing web requests (refresh/revoke).
+        /// </summary>
+        private async Task<bool> ValidateCsrfTokenAsync()
+        {
+            try
+            {
+                await _antiforgery.ValidateRequestAsync(HttpContext);
+                return true;
+            }
+            catch (AntiforgeryValidationException)
+            {
+                _logger.LogWarning("Anti-forgery token validation failed");
+                return false;
+            }
         }
 
         #region Authentication Endpoints
@@ -65,6 +127,14 @@ namespace Taboor_API.Controllers
                 }
 
                 _logger.LogInformation("Login successful for email: {Email}", model!.Email);
+
+                if (IsWebClient())
+                {
+                    SetRefreshTokenCookie(response.RefreshToken!);
+                    response.RefreshToken = null;
+                    return Ok(ApiResponse<LoginResponseDTO>.SuccessResponse(response, "Login successful"));
+                }
+
                 return Ok(ApiResponse<LoginResponseDTO>.SuccessResponse(response, "Login successful"));
             }
             catch (Exception ex)
@@ -82,25 +152,50 @@ namespace Taboor_API.Controllers
         /// Refreshes an access token using a valid refresh token.
         /// </summary>
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO request)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO? request)
         {
             try
             {
                 _logger.LogInformation("Refresh token request received");
 
-                if (!ModelState.IsValid)
+                var isWebClient = IsWebClient();
+
+                // Web clients authenticate via the HttpOnly cookie and must pass CSRF validation.
+                if (isWebClient)
+                {
+                    if (!await ValidateCsrfTokenAsync())
+                    {
+                        return BadRequest(ApiResponse<object>.FailResponse("Invalid CSRF token"));
+                    }
+                }
+
+                if (!isWebClient && !ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                     return BadRequest(ApiResponse<object>.FailResponse("Validation failed", errors));
                 }
 
-                var result = await _authService.RefreshToken(request);
-                if (result == null)
+                var incomingRefreshToken = isWebClient
+                    ? Request.Cookies[RefreshTokenCookieName]
+                    : request?.RefreshToken;
+
+                if (string.IsNullOrEmpty(incomingRefreshToken))
                 {
-                    return Unauthorized(ApiResponse<object>.FailResponse("Invalid or expired refresh token"));
+                    return Unauthorized(ApiResponse<object>.FailResponse("Refresh token missing"));
                 }
 
+                var result = isWebClient
+                    ? await _authService.RefreshTokenByCookieAsync(incomingRefreshToken)
+                    : await _authService.RefreshToken(request!);
+
                 _logger.LogInformation("Token refresh successful");
+
+                if (isWebClient)
+                {
+                    SetRefreshTokenCookie(result.RefreshToken!);
+                    result.RefreshToken = null;
+                }
+
                 return Ok(ApiResponse<TokenResponseDTO>.SuccessResponse(result, "Token refreshed successfully"));
             }
             catch (SecurityTokenException ex)
@@ -124,15 +219,21 @@ namespace Taboor_API.Controllers
         /// </summary>
         [HttpPost("revoke")]
         [Authorize]
-        public async Task<IActionResult> RevokeToken([FromBody] string refreshToken)
+        public async Task<IActionResult> RevokeToken([FromBody] string? refreshToken)
         {
             try
             {
                 _logger.LogInformation("Revoke token request received");
 
-                if (string.IsNullOrEmpty(refreshToken))
+                var isWebClient = IsWebClient();
+
+                // Web clients authenticate via the HttpOnly cookie and must pass CSRF validation.
+                if (isWebClient)
                 {
-                    return BadRequest(ApiResponse<object>.FailResponse("Refresh token is required"));
+                    if (!await ValidateCsrfTokenAsync())
+                    {
+                        return BadRequest(ApiResponse<object>.FailResponse("Invalid CSRF token"));
+                    }
                 }
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -141,7 +242,22 @@ namespace Taboor_API.Controllers
                     return Unauthorized(ApiResponse<object>.FailResponse("User not authenticated"));
                 }
 
-                await _authService.RevokeRefreshToken(userId, refreshToken);
+                var incomingRefreshToken = isWebClient
+                    ? Request.Cookies[RefreshTokenCookieName]
+                    : refreshToken;
+
+                if (string.IsNullOrEmpty(incomingRefreshToken))
+                {
+                    return BadRequest(ApiResponse<object>.FailResponse("Refresh token is required"));
+                }
+
+                await _authService.RevokeRefreshToken(userId, incomingRefreshToken);
+
+                if (isWebClient)
+                {
+                    ClearRefreshTokenCookie();
+                }
+
                 _logger.LogInformation("Refresh token revoked successfully for user {UserId}", userId);
                 return Ok(ApiResponse<object>.SuccessResponse(new { message = "Token revoked successfully" }, "Token revoked"));
             }
@@ -154,6 +270,20 @@ namespace Taboor_API.Controllers
                     Detail = "An error occurred while revoking your token."
                 });
             }
+        }
+
+        /// <summary>
+        /// Returns an anti-forgery request token for web clients (double-submit cookie pattern).
+        /// The response also sets a non-HttpOnly XSRF-TOKEN cookie that the frontend must echo back
+        /// in the X-XSRF-TOKEN header on state-changing requests (refresh/revoke).
+        /// </summary>
+        [HttpGet("csrf-token")]
+        public IActionResult GetCsrfToken()
+        {
+            var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
+            return Ok(ApiResponse<object>.SuccessResponse(
+                new { csrfToken = tokens.RequestToken },
+                "CSRF token generated"));
         }
 
         #endregion

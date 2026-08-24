@@ -9,7 +9,7 @@ namespace Taboor_Infrastructure.Persistence.Repositories
   /// <summary>
   /// Repository implementation for managing OTP codes in the database.
   /// </summary>
-  public class OtpRepository : IOtpRepository
+  public class OtpRepository : Repository<OtpCode>, IOtpRepository
   {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<OtpRepository> _logger;
@@ -18,11 +18,11 @@ namespace Taboor_Infrastructure.Persistence.Repositories
     /// Initializes a new instance of the <see cref="OtpRepository"/> class.
     /// </summary>
     /// <param name="context">The application database context.</param>
-    /// <param name="logger">The logger instance.</param>
-    public OtpRepository(ApplicationDbContext context, ILogger<OtpRepository> logger)
+    /// <param name="loggerFactory">The logger factory.</param>
+    public OtpRepository(ApplicationDbContext context, ILoggerFactory loggerFactory) : base(context, loggerFactory.CreateLogger<Repository<OtpCode>>())
     {
       _context = context ?? throw new ArgumentNullException(nameof(context));
-      _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+      _logger = loggerFactory.CreateLogger<OtpRepository>();
     }
 
     /// <summary>
@@ -67,7 +67,6 @@ namespace Taboor_Infrastructure.Persistence.Repositories
     public async Task CreateAsync(OtpCode otp)
     {
       _context.OtpCodes.Add(otp);
-      await _context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -86,11 +85,6 @@ namespace Taboor_Infrastructure.Persistence.Repositories
       {
         otp.IsUsed = true;
       }
-
-      if (active.Count > 0)
-      {
-        await _context.SaveChangesAsync();
-      }
     }
 
     /// <summary>
@@ -103,7 +97,6 @@ namespace Taboor_Infrastructure.Persistence.Repositories
       otp.IsVerified = true;
       otp.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
       _context.OtpCodes.Update(otp);
-      await _context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -115,7 +108,6 @@ namespace Taboor_Infrastructure.Persistence.Repositories
     {
       otp.IsUsed = true;
       _context.OtpCodes.Update(otp);
-      await _context.SaveChangesAsync();
     }
   }
 }

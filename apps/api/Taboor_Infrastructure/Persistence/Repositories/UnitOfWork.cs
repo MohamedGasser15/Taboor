@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Taboor_Domain.Repositories;
-using Taboor_Domain.Repositories.IRepository;
 using Taboor_Infrastructure.DB;
 
 namespace Taboor_Infrastructure.Persistence.Repositories
@@ -10,28 +9,40 @@ namespace Taboor_Infrastructure.Persistence.Repositories
   {
     private readonly ApplicationDbContext _context;
     private readonly ILoggerFactory _loggerFactory;
-    private readonly ConcurrentDictionary<Type, object> _repositories = new();
+    private readonly IServiceProvider _serviceProvider;
+    private Dictionary<Type, object> _repositories = new();
     private bool _disposed = false;
 
-    public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
+    //private IRefreshTokenRepository? _refreshTokens;
+    //private IOtpRepository? _otpCodes;
+
+    public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
     {
       _context = context;
       _loggerFactory = loggerFactory;
+      _serviceProvider = serviceProvider;
     }
 
-    public IRepository<T> Repository<T>() where T : class
+    //public IRefreshTokenRepository RefreshTokens
+    //    => _refreshTokens ??= new RefreshTokenRepository(_context, _loggerFactory);
+
+    //public IOtpRepository OtpCodes
+    //    => _otpCodes ??= new OtpRepository(_context, _loggerFactory);
+
+    public TRepository Repository<TRepository>() where TRepository : class
     {
-      var type = typeof(T);
+      var type = typeof(TRepository);
 
-      if (_repositories.TryGetValue(type, out var existingRepo))
-        return (IRepository<T>)existingRepo;
+      if (_repositories.TryGetValue(type, out var existing))
+        return (TRepository)existing;
 
-      var newRepo = CreateRepository<T>();
-      _repositories[type] = newRepo;
-      return newRepo;
+      // بيتحل من DI، وده اللي بيضمن إنه ياخد نفس الـ ApplicationDbContext
+      // المشترك طول ما الـ repo مسجل Scoped
+      var repo = _serviceProvider.GetRequiredService<TRepository>();
+      _repositories[type] = repo;
+      return repo;
     }
 
-    protected virtual IRepository<T> CreateRepository<T>() where T : class => new Repository<T>(_context, _loggerFactory.CreateLogger<Repository<T>>());
 
     public async Task SaveAsync() => await _context.SaveChangesAsync();
 
@@ -52,7 +63,5 @@ namespace Taboor_Infrastructure.Persistence.Repositories
 
       _disposed = true;
     }
-
-
   }
 }
