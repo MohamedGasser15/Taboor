@@ -649,6 +649,582 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Welcome back,'**
   String get welcomeBack;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'My Queue'**
+  String get navQueue;
+
+  /// No description provided for @navAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get navAlerts;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
+  /// No description provided for @homeGoodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get homeGoodMorning;
+
+  /// No description provided for @homeGoodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get homeGoodAfternoon;
+
+  /// No description provided for @homeGoodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get homeGoodEvening;
+
+  /// No description provided for @homeSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search clinics, salons, garages...'**
+  String get homeSearchHint;
+
+  /// No description provided for @homeLiveTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Your live ticket'**
+  String get homeLiveTicket;
+
+  /// No description provided for @homeNoTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'No active ticket'**
+  String get homeNoTicket;
+
+  /// No description provided for @homeJoinQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a queue'**
+  String get homeJoinQueue;
+
+  /// No description provided for @homeNearby.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby services'**
+  String get homeNearby;
+
+  /// No description provided for @homePopularNearYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular near you'**
+  String get homePopularNearYou;
+
+  /// No description provided for @homeSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get homeSeeAll;
+
+  /// No description provided for @categoryClinics.
+  ///
+  /// In en, this message translates to:
+  /// **'Clinics'**
+  String get categoryClinics;
+
+  /// No description provided for @categorySalons.
+  ///
+  /// In en, this message translates to:
+  /// **'Salons'**
+  String get categorySalons;
+
+  /// No description provided for @categoryGarages.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto repair'**
+  String get categoryGarages;
+
+  /// No description provided for @categoryOffices.
+  ///
+  /// In en, this message translates to:
+  /// **'Offices'**
+  String get categoryOffices;
+
+  /// No description provided for @peopleWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} waiting'**
+  String peopleWaiting(int count);
+
+  /// No description provided for @distanceAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{km} km away'**
+  String distanceAway(String km);
+
+  /// No description provided for @joinNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get joinNow;
+
+  /// No description provided for @queueEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No active queue yet'**
+  String get queueEmptyTitle;
+
+  /// No description provided for @queueEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a nearby service and grab your number'**
+  String get queueEmptySubtitle;
+
+  /// No description provided for @queueNowServing.
+  ///
+  /// In en, this message translates to:
+  /// **'Now serving'**
+  String get queueNowServing;
+
+  /// No description provided for @queuePeopleAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ahead of you'**
+  String queuePeopleAhead(int count);
+
+  /// No description provided for @queueEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. wait'**
+  String get queueEstimate;
+
+  /// No description provided for @queueMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min'**
+  String queueMinutes(int count);
+
+  /// No description provided for @alertsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up'**
+  String get alertsEmptyTitle;
+
+  /// No description provided for @alertsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart alerts about your turn will show up here'**
+  String get alertsEmptySubtitle;
+
+  /// No description provided for @profileAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get profileAccount;
+
+  /// No description provided for @profileFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get profileFullName;
+
+  /// No description provided for @profileEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profileEmail;
+
+  /// No description provided for @profilePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profilePhone;
+
+  /// No description provided for @profileLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get profileLanguage;
+
+  /// No description provided for @profileSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get profileSignOut;
+
+  /// No description provided for @profileSignOutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account?'**
+  String get profileSignOutConfirm;
+
+  /// No description provided for @profileCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get profileCancel;
+
+  /// No description provided for @profileSignOutOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get profileSignOutOk;
+
+  /// No description provided for @profileAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get profileAppearance;
+
+  /// No description provided for @profileTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get profileTheme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @profileSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get profileSecurity;
+
+  /// No description provided for @profileBiometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock with biometrics'**
+  String get profileBiometric;
+
+  /// No description provided for @profileBiometricSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Face ID or fingerprint to sign in'**
+  String get profileBiometricSubtitle;
+
+  /// No description provided for @profileChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get profileChangePassword;
+
+  /// No description provided for @profileChangePasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your account password'**
+  String get profileChangePasswordSubtitle;
+
+  /// No description provided for @profileAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get profileAbout;
+
+  /// No description provided for @profileVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get profileVersion;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get profileSettings;
+
+  /// No description provided for @biometricUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometrics aren\'t available on this device.'**
+  String get biometricUnavailable;
+
+  /// No description provided for @biometricAuthRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm to enable'**
+  String get biometricAuthRequired;
+
+  /// No description provided for @biometricEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric unlock enabled.'**
+  String get biometricEnabled;
+
+  /// No description provided for @biometricDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric unlock disabled.'**
+  String get biometricDisabled;
+
+  /// No description provided for @appLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'App language'**
+  String get appLanguage;
+
+  /// No description provided for @languageArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get languageArabic;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit account'**
+  String get editProfile;
+
+  /// No description provided for @editProfileSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get editProfileSave;
+
+  /// No description provided for @editProfileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Account updated.'**
+  String get editProfileSaved;
+
+  /// No description provided for @oldPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get oldPasswordLabel;
+
+  /// No description provided for @oldPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current password'**
+  String get oldPasswordHint;
+
+  /// No description provided for @newPasswordLabel2.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPasswordLabel2;
+
+  /// No description provided for @changePasswordDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully.'**
+  String get changePasswordDone;
+
+  /// No description provided for @forgotPasswordHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPasswordHere;
+
+  /// No description provided for @serviceChooseBranch.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a branch'**
+  String get serviceChooseBranch;
+
+  /// No description provided for @serviceBranches.
+  ///
+  /// In en, this message translates to:
+  /// **'Branches'**
+  String get serviceBranches;
+
+  /// No description provided for @serviceOpenNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Open now'**
+  String get serviceOpenNow;
+
+  /// No description provided for @serviceClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get serviceClosed;
+
+  /// No description provided for @serviceWaitingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} waiting now'**
+  String serviceWaitingNow(Object count);
+
+  /// No description provided for @serviceEstWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. wait'**
+  String get serviceEstWait;
+
+  /// No description provided for @serviceJoinQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Join this queue'**
+  String get serviceJoinQueue;
+
+  /// No description provided for @serviceAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About this service'**
+  String get serviceAbout;
+
+  /// No description provided for @serviceWorkingHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Working hours'**
+  String get serviceWorkingHours;
+
+  /// No description provided for @serviceTapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view details'**
+  String get serviceTapHint;
+
+  /// No description provided for @branchMain.
+  ///
+  /// In en, this message translates to:
+  /// **'Main branch'**
+  String get branchMain;
+
+  /// No description provided for @branchDowntown.
+  ///
+  /// In en, this message translates to:
+  /// **'Downtown branch'**
+  String get branchDowntown;
+
+  /// No description provided for @branchNorth.
+  ///
+  /// In en, this message translates to:
+  /// **'North branch'**
+  String get branchNorth;
+
+  /// No description provided for @branchAirport.
+  ///
+  /// In en, this message translates to:
+  /// **'Airport branch'**
+  String get branchAirport;
+
+  /// No description provided for @branchWest.
+  ///
+  /// In en, this message translates to:
+  /// **'West branch'**
+  String get branchWest;
+
+  /// No description provided for @allServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Services near you'**
+  String get allServicesTitle;
+
+  /// No description provided for @allServicesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live queues around you'**
+  String get allServicesSubtitle;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @popService.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get popService;
+
+  /// No description provided for @mapLocate.
+  ///
+  /// In en, this message translates to:
+  /// **'Locate me'**
+  String get mapLocate;
+
+  /// No description provided for @mapLocating.
+  ///
+  /// In en, this message translates to:
+  /// **'Locating…'**
+  String get mapLocating;
+
+  /// No description provided for @mapLocationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off or permission is denied.'**
+  String get mapLocationUnavailable;
+
+  /// No description provided for @mapYouAreHere.
+  ///
+  /// In en, this message translates to:
+  /// **'You are here'**
+  String get mapYouAreHere;
+
+  /// No description provided for @mapDistanceAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{km} away'**
+  String mapDistanceAway(Object km);
+
+  /// No description provided for @mapDriveTime.
+  ///
+  /// In en, this message translates to:
+  /// **'~{min} min drive'**
+  String mapDriveTime(Object min);
+
+  /// No description provided for @mapOpenInGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Google Maps'**
+  String get mapOpenInGoogleMaps;
+
+  /// No description provided for @mapOpenInAppleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Apple Maps'**
+  String get mapOpenInAppleMaps;
+
+  /// No description provided for @mapDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Directions'**
+  String get mapDirections;
+
+  /// No description provided for @geoFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Current location'**
+  String get geoFrom;
+
+  /// No description provided for @geoTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch'**
+  String get geoTo;
 }
 
 class _AppLocalizationsDelegate

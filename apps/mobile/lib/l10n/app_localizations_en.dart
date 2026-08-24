@@ -295,4 +295,310 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get welcomeBack => 'Welcome back,';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navQueue => 'My Queue';
+
+  @override
+  String get navAlerts => 'Alerts';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String get homeGoodMorning => 'Good morning';
+
+  @override
+  String get homeGoodAfternoon => 'Good afternoon';
+
+  @override
+  String get homeGoodEvening => 'Good evening';
+
+  @override
+  String get homeSearchHint => 'Search clinics, salons, garages...';
+
+  @override
+  String get homeLiveTicket => 'Your live ticket';
+
+  @override
+  String get homeNoTicket => 'No active ticket';
+
+  @override
+  String get homeJoinQueue => 'Join a queue';
+
+  @override
+  String get homeNearby => 'Nearby services';
+
+  @override
+  String get homePopularNearYou => 'Popular near you';
+
+  @override
+  String get homeSeeAll => 'See all';
+
+  @override
+  String get categoryClinics => 'Clinics';
+
+  @override
+  String get categorySalons => 'Salons';
+
+  @override
+  String get categoryGarages => 'Auto repair';
+
+  @override
+  String get categoryOffices => 'Offices';
+
+  @override
+  String peopleWaiting(int count) {
+    return '$count waiting';
+  }
+
+  @override
+  String distanceAway(String km) {
+    return '$km km away';
+  }
+
+  @override
+  String get joinNow => 'Join';
+
+  @override
+  String get queueEmptyTitle => 'No active queue yet';
+
+  @override
+  String get queueEmptySubtitle => 'Find a nearby service and grab your number';
+
+  @override
+  String get queueNowServing => 'Now serving';
+
+  @override
+  String queuePeopleAhead(int count) {
+    return '$count ahead of you';
+  }
+
+  @override
+  String get queueEstimate => 'Est. wait';
+
+  @override
+  String queueMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get alertsEmptyTitle => 'You\'re all caught up';
+
+  @override
+  String get alertsEmptySubtitle =>
+      'Smart alerts about your turn will show up here';
+
+  @override
+  String get profileAccount => 'Account';
+
+  @override
+  String get profileFullName => 'Full name';
+
+  @override
+  String get profileEmail => 'Email';
+
+  @override
+  String get profilePhone => 'Phone';
+
+  @override
+  String get profileLanguage => 'Language';
+
+  @override
+  String get profileSignOut => 'Sign out';
+
+  @override
+  String get profileSignOutConfirm => 'Sign out of your account?';
+
+  @override
+  String get profileCancel => 'Cancel';
+
+  @override
+  String get profileSignOutOk => 'Sign out';
+
+  @override
+  String get profileAppearance => 'Appearance';
+
+  @override
+  String get profileTheme => 'Theme';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get profileSecurity => 'Security';
+
+  @override
+  String get profileBiometric => 'Unlock with biometrics';
+
+  @override
+  String get profileBiometricSubtitle =>
+      'Use Face ID or fingerprint to sign in';
+
+  @override
+  String get profileChangePassword => 'Change password';
+
+  @override
+  String get profileChangePasswordSubtitle => 'Update your account password';
+
+  @override
+  String get profileAbout => 'About';
+
+  @override
+  String get profileVersion => 'Version';
+
+  @override
+  String get profileSettings => 'Settings';
+
+  @override
+  String get biometricUnavailable =>
+      'Biometrics aren\'t available on this device.';
+
+  @override
+  String get biometricAuthRequired => 'Confirm to enable';
+
+  @override
+  String get biometricEnabled => 'Biometric unlock enabled.';
+
+  @override
+  String get biometricDisabled => 'Biometric unlock disabled.';
+
+  @override
+  String get appLanguage => 'App language';
+
+  @override
+  String get languageArabic => 'العربية';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get editProfile => 'Edit account';
+
+  @override
+  String get editProfileSave => 'Save changes';
+
+  @override
+  String get editProfileSaved => 'Account updated.';
+
+  @override
+  String get oldPasswordLabel => 'Current password';
+
+  @override
+  String get oldPasswordHint => 'Enter your current password';
+
+  @override
+  String get newPasswordLabel2 => 'New password';
+
+  @override
+  String get changePasswordDone => 'Password changed successfully.';
+
+  @override
+  String get forgotPasswordHere => 'Forgot password?';
+
+  @override
+  String get serviceChooseBranch => 'Choose a branch';
+
+  @override
+  String get serviceBranches => 'Branches';
+
+  @override
+  String get serviceOpenNow => 'Open now';
+
+  @override
+  String get serviceClosed => 'Closed';
+
+  @override
+  String serviceWaitingNow(Object count) {
+    return '$count waiting now';
+  }
+
+  @override
+  String get serviceEstWait => 'Est. wait';
+
+  @override
+  String get serviceJoinQueue => 'Join this queue';
+
+  @override
+  String get serviceAbout => 'About this service';
+
+  @override
+  String get serviceWorkingHours => 'Working hours';
+
+  @override
+  String get serviceTapHint => 'Tap to view details';
+
+  @override
+  String get branchMain => 'Main branch';
+
+  @override
+  String get branchDowntown => 'Downtown branch';
+
+  @override
+  String get branchNorth => 'North branch';
+
+  @override
+  String get branchAirport => 'Airport branch';
+
+  @override
+  String get branchWest => 'West branch';
+
+  @override
+  String get allServicesTitle => 'Services near you';
+
+  @override
+  String get allServicesSubtitle => 'Live queues around you';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get popService => 'Popular';
+
+  @override
+  String get mapLocate => 'Locate me';
+
+  @override
+  String get mapLocating => 'Locating…';
+
+  @override
+  String get mapLocationUnavailable =>
+      'Location is off or permission is denied.';
+
+  @override
+  String get mapYouAreHere => 'You are here';
+
+  @override
+  String mapDistanceAway(Object km) {
+    return '$km away';
+  }
+
+  @override
+  String mapDriveTime(Object min) {
+    return '~$min min drive';
+  }
+
+  @override
+  String get mapOpenInGoogleMaps => 'Open in Google Maps';
+
+  @override
+  String get mapOpenInAppleMaps => 'Open in Apple Maps';
+
+  @override
+  String get mapDirections => 'Directions';
+
+  @override
+  String get geoFrom => 'Current location';
+
+  @override
+  String get geoTo => 'Branch';
 }

@@ -289,4 +289,306 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get welcomeBack => 'أهلًا من جديد،';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navQueue => 'طابوري';
+
+  @override
+  String get navAlerts => 'التنبيهات';
+
+  @override
+  String get navProfile => 'حسابي';
+
+  @override
+  String get homeGoodMorning => 'صباح الخير';
+
+  @override
+  String get homeGoodAfternoon => 'مساء الخير';
+
+  @override
+  String get homeGoodEvening => 'مساء الخير';
+
+  @override
+  String get homeSearchHint => 'دوّر على عيادة، كوافير، ورشة...';
+
+  @override
+  String get homeLiveTicket => 'تذكرتك الحية';
+
+  @override
+  String get homeNoTicket => 'مفيش طلب شغال';
+
+  @override
+  String get homeJoinQueue => 'ادخل طابور';
+
+  @override
+  String get homeNearby => 'خدمات قريبة منك';
+
+  @override
+  String get homePopularNearYou => 'الأكثر طلباً عندك';
+
+  @override
+  String get homeSeeAll => 'شوف الكل';
+
+  @override
+  String get categoryClinics => 'عيادات';
+
+  @override
+  String get categorySalons => 'كوافيرات';
+
+  @override
+  String get categoryGarages => 'ورش السيارات';
+
+  @override
+  String get categoryOffices => 'مكاتب';
+
+  @override
+  String peopleWaiting(int count) {
+    return '$count ناس مستنيين';
+  }
+
+  @override
+  String distanceAway(String km) {
+    return 'على بعد $km كم';
+  }
+
+  @override
+  String get joinNow => 'ادخل';
+
+  @override
+  String get queueEmptyTitle => 'لسه مفيش طابور شغال';
+
+  @override
+  String get queueEmptySubtitle => 'اختار خدمة قريبة وخد رقمك';
+
+  @override
+  String get queueNowServing => 'بيستقبل دلوقتي';
+
+  @override
+  String queuePeopleAhead(int count) {
+    return 'قدامك $count';
+  }
+
+  @override
+  String get queueEstimate => 'وقت الانتظار التقريبي';
+
+  @override
+  String queueMinutes(int count) {
+    return '$count دقيقة';
+  }
+
+  @override
+  String get alertsEmptyTitle => 'كله تمام';
+
+  @override
+  String get alertsEmptySubtitle => 'تنبيهات دورك الذكية هتظهر هنا';
+
+  @override
+  String get profileAccount => 'الحساب';
+
+  @override
+  String get profileFullName => 'الاسم الكامل';
+
+  @override
+  String get profileEmail => 'البريد الإلكتروني';
+
+  @override
+  String get profilePhone => 'رقم الموبايل';
+
+  @override
+  String get profileLanguage => 'اللغة';
+
+  @override
+  String get profileSignOut => 'تسجيل الخروج';
+
+  @override
+  String get profileSignOutConfirm => 'تسجل خروجك من الحساب؟';
+
+  @override
+  String get profileCancel => 'إلغاء';
+
+  @override
+  String get profileSignOutOk => 'تسجيل الخروج';
+
+  @override
+  String get profileAppearance => 'المظهر';
+
+  @override
+  String get profileTheme => 'الوضع';
+
+  @override
+  String get themeSystem => 'النظام';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeDark => 'داكن';
+
+  @override
+  String get profileSecurity => 'الأمان';
+
+  @override
+  String get profileBiometric => 'فتح بالبصمة';
+
+  @override
+  String get profileBiometricSubtitle => 'استخدم الفيس أو البصمة للدخول';
+
+  @override
+  String get profileChangePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get profileChangePasswordSubtitle => 'حدّث كلمة مرور حسابك';
+
+  @override
+  String get profileAbout => 'عن التطبيق';
+
+  @override
+  String get profileVersion => 'الإصدار';
+
+  @override
+  String get profileSettings => 'الإعدادات';
+
+  @override
+  String get biometricUnavailable => 'البصمة مش متاحة على الجهاز ده.';
+
+  @override
+  String get biometricAuthRequired => 'أكّد عشان تفعّل';
+
+  @override
+  String get biometricEnabled => 'تم تفعيل فتح البصمة.';
+
+  @override
+  String get biometricDisabled => 'تم إلغاء فتح البصمة.';
+
+  @override
+  String get appLanguage => 'لغة التطبيق';
+
+  @override
+  String get languageArabic => 'العربية';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get editProfile => 'تعديل الحساب';
+
+  @override
+  String get editProfileSave => 'حفظ التغييرات';
+
+  @override
+  String get editProfileSaved => 'تم تحديث الحساب.';
+
+  @override
+  String get oldPasswordLabel => 'كلمة المرور الحالية';
+
+  @override
+  String get oldPasswordHint => 'اكتب كلمة مرورك الحالية';
+
+  @override
+  String get newPasswordLabel2 => 'كلمة المرور الجديدة';
+
+  @override
+  String get changePasswordDone => 'تم تغيير كلمة المرور بنجاح.';
+
+  @override
+  String get forgotPasswordHere => 'نسيت كلمة المرور؟';
+
+  @override
+  String get serviceChooseBranch => 'اختار الفرع';
+
+  @override
+  String get serviceBranches => 'الفروع';
+
+  @override
+  String get serviceOpenNow => 'مفتوح دلوقتي';
+
+  @override
+  String get serviceClosed => 'مغلق';
+
+  @override
+  String serviceWaitingNow(Object count) {
+    return '$count ناس مستنيين دلوقتي';
+  }
+
+  @override
+  String get serviceEstWait => 'وقت الانتظار';
+
+  @override
+  String get serviceJoinQueue => 'ادخل في الطابور';
+
+  @override
+  String get serviceAbout => 'عن الخدمة';
+
+  @override
+  String get serviceWorkingHours => 'ساعات العمل';
+
+  @override
+  String get serviceTapHint => 'اضغط للتفاصيل';
+
+  @override
+  String get branchMain => 'الفرع الرئيسي';
+
+  @override
+  String get branchDowntown => 'فرع وسط البلد';
+
+  @override
+  String get branchNorth => 'فرع الشمال';
+
+  @override
+  String get branchAirport => 'فرع المطار';
+
+  @override
+  String get branchWest => 'فرع الغرب';
+
+  @override
+  String get allServicesTitle => 'خدمات قريبة منك';
+
+  @override
+  String get allServicesSubtitle => 'طوابير مباشرة حواليك';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get popService => 'الأكثر طلباً';
+
+  @override
+  String get mapLocate => 'حدد مكاني';
+
+  @override
+  String get mapLocating => 'بيحدد مكانك…';
+
+  @override
+  String get mapLocationUnavailable => 'الموقع مقفول أو الإذن مرفوض.';
+
+  @override
+  String get mapYouAreHere => 'إنت هنا';
+
+  @override
+  String mapDistanceAway(Object km) {
+    return 'على بعد $km';
+  }
+
+  @override
+  String mapDriveTime(Object min) {
+    return '~$min دقيقة';
+  }
+
+  @override
+  String get mapOpenInGoogleMaps => 'افتح في خرائط جوجل';
+
+  @override
+  String get mapOpenInAppleMaps => 'افتح في خرائط أبل';
+
+  @override
+  String get mapDirections => 'الاتجاهات';
+
+  @override
+  String get geoFrom => 'مكاني الحالي';
+
+  @override
+  String get geoTo => 'الفرع';
 }
