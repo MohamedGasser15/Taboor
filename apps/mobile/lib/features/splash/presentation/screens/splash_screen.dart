@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:taboor/core/services/biometric_service.dart';
+import 'package:taboor/core/services/location_service.dart';
 import 'package:taboor/core/services/session_manager.dart';
 import 'package:taboor/core/themes/app_colors.dart';
 import 'package:taboor/core/utils/app_responsive.dart';
@@ -49,6 +51,12 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     _navigationTimer = Timer(const Duration(milliseconds: 2000), _navigate);
+
+    // Ask for location permission in the background on first launch so the
+    // map screens can locate the user instantly later.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LocationService.requestPermissionIfNeeded();
+    });
   }
 
   Future<void> _navigate() async {
@@ -63,6 +71,11 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     if (loggedIn) {
+      // If biometric unlock is on, verify identity before showing Home.
+      final unlocked = await BiometricService.authenticateToUnlock();
+      if (!mounted) return;
+      if (!unlocked) return;
+
       final user = await SessionManager.getUser();
       if (!mounted) return;
       _goTo(HomeScreen(userName: user?.fullName));
