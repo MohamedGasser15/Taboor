@@ -26,6 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Taboor uses Face ID to unlock the app quickly and securely.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Taboor uses your location to show nearby services and estimate travel time.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
