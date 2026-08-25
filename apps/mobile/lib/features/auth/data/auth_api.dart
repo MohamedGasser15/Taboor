@@ -208,6 +208,26 @@ class AuthApi {
     }
   }
 
+  /// Validates a Google ID token and returns session tokens.
+  Future<ApiResponse<TokenResponse>> externalLogin(String idToken) async {
+    try {
+      final res = await _client
+          .post(
+            ApiEndpoints.uri(ApiEndpoints.externalLogin),
+            headers: _headers(),
+            body: jsonEncode({'idToken': idToken}),
+          )
+          .timeout(_timeout);
+
+      return _parse(res, TokenResponse.fromJson);
+    } on Exception {
+      return const ApiResponse(
+        success: false,
+        error: 'Network error. Please check your connection.',
+      );
+    }
+  }
+
   /// Revokes a refresh token for the authenticated user.
   Future<ApiResponse<void>> revokeToken(String refreshToken) async {
     try {

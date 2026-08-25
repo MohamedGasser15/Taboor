@@ -1,4 +1,4 @@
-package com.example.taboor
+package com.taboor.app
 
 import io.flutter.embedding.android.FlutterActivity
 
