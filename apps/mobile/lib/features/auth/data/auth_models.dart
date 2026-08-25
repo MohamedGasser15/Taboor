@@ -112,3 +112,29 @@ class TokenResponse {
     );
   }
 }
+
+class ExternalLoginResponse {
+  final String? email;
+  final bool isNewUser;
+  final bool hasPassword;
+  final String token;
+  final String refreshToken;
+
+  const ExternalLoginResponse({
+    this.email,
+    this.isNewUser = false,
+    this.hasPassword = false,
+    this.token = '',
+    this.refreshToken = '',
+  });
+
+  factory ExternalLoginResponse.fromJson(Map<String, dynamic> json) {
+    return ExternalLoginResponse(
+      email: json['email'] as String?,
+      isNewUser: json['isNewUser'] == true,
+      hasPassword: json['hasPassword'] == true,
+      token: json['token'] as String? ?? '',
+      refreshToken: json['refreshToken'] as String? ?? '',
+    );
+  }
+}

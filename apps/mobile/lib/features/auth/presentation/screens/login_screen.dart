@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (!res.success || res.data?.accessToken.isEmpty != false) {
+    if (!res.success || res.data?.token.isEmpty != false) {
       MessageService.showError(
         context: context,
         message: res.error ?? l10n.genericRequestError,
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
       message: l10n.loginSuccess,
     );
     await SessionManager.saveLogin(LoginResponse(
-      token: res.data?.accessToken,
+      token: res.data?.token,
       refreshToken: res.data?.refreshToken,
     ));
     if (!mounted) return;

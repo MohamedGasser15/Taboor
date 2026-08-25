@@ -1,7 +1,13 @@
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Taboor_Application.Common.Constants;
 using Taboor_Application.DTOs.Auth;
@@ -17,12 +23,18 @@ namespace Taboor_Application.Services
   /// </summary>
   public class ExternalLoginService : IExternalLoginService
   {
+    private static readonly ConfigurationManager<OpenIdConnectConfiguration> _facebookConfigManager =
+        new ConfigurationManager<OpenIdConnectConfiguration>(
+            "https://www.facebook.com/.well-known/openid-configuration/",
+            new OpenIdConnectConfigurationRetriever());
+
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ILogger<ExternalLoginService> _logger;
     private readonly ITokenService _tokenService;
     private readonly IUnitOfWork _uow;
+    private readonly IConfiguration _configuration;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExternalLoginService"/> class.
@@ -33,7 +45,8 @@ namespace Taboor_Application.Services
         RoleManager<ApplicationRole> roleManager,
         ILogger<ExternalLoginService> logger,
         ITokenService tokenService,
-        IUnitOfWork uow)
+        IUnitOfWork uow,
+        IConfiguration configuration)
     {
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
       _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
@@ -41,6 +54,7 @@ namespace Taboor_Application.Services
       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
       _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
       _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+      _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     #region External Authentication Methods
@@ -227,6 +241,194 @@ namespace Taboor_Application.Services
 
     #endregion
 
+    #region Mobile External Login Methods
+
+    /// <summary>
+    /// Handles Google login from a mobile app by validating the Google ID token.
+    /// </summary>
+    /// <param name="idToken">The Google ID token issued to the mobile client.</param>
+    /// <returns>An external login callback result containing authentication information.</returns>
+    public async Task<ExternalLoginCallbackResultDTO> HandleGoogleMobileLoginAsync(string idToken)
+    {
+      if (string.IsNullOrEmpty(idToken))
+        return new ExternalLoginCallbackResultDTO { Message = "idToken is required." };
+
+      try
+      {
+        var googleClientId = _configuration["Authentication:Google:ClientId"];
+        var settings = new GoogleJsonWebSignature.ValidationSettings();
+
+        if (!string.IsNullOrEmpty(googleClientId) && googleClientId != "YOUR_GOOGLE_CLIENT_ID")
+          settings.Audience = new[] { googleClientId };
+
+        var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+
+        var email = payload.Email;
+        var name = payload.Name ?? email;
+        var providerKey = payload.Subject;
+
+        _logger.LogInformation("Google mobile login attempt for email: {Email}", email);
+
+        var user = await _userManager.FindByLoginAsync("Google", providerKey);
+        if (user != null)
+        {
+          return await BuildAuthResultAsync(user, false, null);
+        }
+
+        if (!string.IsNullOrEmpty(email))
+        {
+          var existingUser = await _userManager.FindByEmailAsync(email);
+          if (existingUser != null)
+          {
+            _logger.LogInformation("Email {Email} already exists. Linking Google login.", email);
+            await _userManager.AddLoginAsync(existingUser, new UserLoginInfo("Google", providerKey, "Google"));
+            return await BuildAuthResultAsync(existingUser, false, null);
+          }
+        }
+
+        var newUser = new ApplicationUser
+        {
+          FullName = name ?? string.Empty,
+          Email = email,
+          UserName = email,
+          EmailConfirmed = !string.IsNullOrEmpty(email),
+          PreferredLanguage = CultureInfo.CurrentUICulture.Name,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        var createResult = await _userManager.CreateAsync(newUser);
+        if (!createResult.Succeeded)
+        {
+          _logger.LogError("Google user creation failed for email {Email}: {Errors}", email, string.Join(", ", createResult.Errors.Select(e => e.Description)));
+          return new ExternalLoginCallbackResultDTO { Message = "User creation failed" };
+        }
+
+        if (!await _roleManager.RoleExistsAsync(SD.User))
+        {
+          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+        }
+        await _userManager.AddToRoleAsync(newUser, SD.User);
+        await _userManager.AddLoginAsync(newUser, new UserLoginInfo("Google", providerKey, "Google"));
+
+        return await BuildAuthResultAsync(newUser, true, null);
+      }
+      catch (InvalidJwtException ex)
+      {
+        _logger.LogError(ex, "Invalid Google idToken: {Message}", ex.Message);
+        return new ExternalLoginCallbackResultDTO { Message = "Invalid Google token." };
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Unexpected error during Google mobile login");
+        return new ExternalLoginCallbackResultDTO { Message = "Google login failed." };
+      }
+    }
+
+    /// <summary>
+    /// Handles Facebook login from a mobile app by validating the Facebook access token.
+    /// </summary>
+    /// <param name="accessToken">The Facebook access token issued to the mobile client.</param>
+    /// <returns>An external login callback result containing authentication information.</returns>
+    public async Task<ExternalLoginCallbackResultDTO> HandleFacebookMobileLoginAsync(string accessToken)
+    {
+      if (string.IsNullOrEmpty(accessToken))
+        return new ExternalLoginCallbackResultDTO { Message = "Access token is required." };
+
+      try
+      {
+        var appId = _configuration["Authentication:Facebook:AppId"];
+
+        var discoveryDocument = await _facebookConfigManager.GetConfigurationAsync();
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var validationParameters = new TokenValidationParameters
+        {
+          ValidateIssuer = true,
+          ValidIssuer = "https://www.facebook.com",
+          ValidateAudience = true,
+          ValidAudience = appId,
+          ValidateLifetime = true,
+          IssuerSigningKeys = discoveryDocument.SigningKeys,
+          NameClaimType = "name",
+          RoleClaimType = "role"
+        };
+
+        var principal = tokenHandler.ValidateToken(accessToken, validationParameters, out var validatedToken);
+
+        var fbId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                   ?? principal.FindFirst("sub")?.Value;
+        var fbEmail = principal.FindFirst("email")?.Value
+                      ?? principal.FindFirst(ClaimTypes.Email)?.Value;
+        var fbName = principal.FindFirst("name")?.Value
+                     ?? principal.FindFirst(ClaimTypes.Name)?.Value;
+
+        if (string.IsNullOrEmpty(fbId))
+          return new ExternalLoginCallbackResultDTO { Message = "Failed to retrieve Facebook user info." };
+
+        var email = fbEmail;
+        var name = fbName ?? email;
+        var providerKey = fbId;
+
+        _logger.LogInformation("Facebook mobile login attempt for email: {Email}", email);
+
+        var user = await _userManager.FindByLoginAsync("Facebook", providerKey);
+        if (user != null)
+        {
+          return await BuildAuthResultAsync(user, false, null);
+        }
+
+        if (!string.IsNullOrEmpty(email))
+        {
+          var existingUser = await _userManager.FindByEmailAsync(email);
+          if (existingUser != null)
+          {
+            _logger.LogInformation("Email {Email} already exists. Linking Facebook login.", email);
+            await _userManager.AddLoginAsync(existingUser, new UserLoginInfo("Facebook", providerKey, "Facebook"));
+            return await BuildAuthResultAsync(existingUser, false, null);
+          }
+        }
+
+        var newUser = new ApplicationUser
+        {
+          FullName = name ?? email ?? "Facebook User",
+          Email = email,
+          UserName = email ?? $"fb_{providerKey}",
+          EmailConfirmed = email != null,
+          PreferredLanguage = CultureInfo.CurrentUICulture.Name,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        var createResult = await _userManager.CreateAsync(newUser);
+        if (!createResult.Succeeded)
+        {
+          var errors = string.Join("; ", createResult.Errors.Select(e => $"{e.Code}: {e.Description}"));
+          _logger.LogError("Facebook user creation failed: {Errors}", errors);
+          return new ExternalLoginCallbackResultDTO { Message = $"User creation failed: {errors}" };
+        }
+
+        if (!await _roleManager.RoleExistsAsync(SD.User))
+        {
+          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+        }
+        await _userManager.AddToRoleAsync(newUser, SD.User);
+        await _userManager.AddLoginAsync(newUser, new UserLoginInfo("Facebook", providerKey, "Facebook"));
+
+        return await BuildAuthResultAsync(newUser, true, null);
+      }
+      catch (SecurityTokenException ex)
+      {
+        _logger.LogError(ex, "Invalid Facebook JWT token");
+        return new ExternalLoginCallbackResultDTO { Message = "Invalid Facebook token." };
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Facebook login error");
+        return new ExternalLoginCallbackResultDTO { Message = "Facebook login failed." };
+      }
+    }
+
+    #endregion
+
     #region Private Helper Methods
 
     /// <summary>
@@ -252,7 +454,8 @@ namespace Taboor_Application.Services
         ReturnUrl = returnUrl,
         Token = accessToken,
         RefreshToken = refreshToken,
-        RefreshTokenExpiry = refreshTokenExpiry
+        RefreshTokenExpiry = refreshTokenExpiry,
+        HasPassword = await _userManager.HasPasswordAsync(user)
       };
     }
 

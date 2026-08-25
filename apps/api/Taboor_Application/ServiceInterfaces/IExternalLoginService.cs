@@ -30,5 +30,19 @@ namespace Taboor_Application.ServiceInterfaces
         /// <param name="model">The external login confirmation data.</param>
         /// <returns>An external login callback result.</returns>
         Task<ExternalLoginCallbackResultDTO> ConfirmExternalUserAsync(ExternalLoginConfirmationDto model);
+
+        /// <summary>
+        /// Handles Google login from a mobile app by validating the Google ID token.
+        /// </summary>
+        /// <param name="idToken">The Google ID token issued to the mobile client.</param>
+        /// <returns>An external login callback result containing authentication information.</returns>
+        Task<ExternalLoginCallbackResultDTO> HandleGoogleMobileLoginAsync(string idToken);
+
+        /// <summary>
+        /// Handles Facebook login from a mobile app by validating the Facebook access token.
+        /// </summary>
+        /// <param name="accessToken">The Facebook access token issued to the mobile client.</param>
+        /// <returns>An external login callback result containing authentication information.</returns>
+        Task<ExternalLoginCallbackResultDTO> HandleFacebookMobileLoginAsync(string accessToken);
     }
 }
