@@ -209,17 +209,17 @@ class AuthApi {
   }
 
   /// Validates a Google ID token and returns session tokens.
-  Future<ApiResponse<TokenResponse>> externalLogin(String idToken) async {
+  Future<ApiResponse<ExternalLoginResponse>> externalLogin(String idToken) async {
     try {
       final res = await _client
           .post(
-            ApiEndpoints.uri(ApiEndpoints.externalLogin),
+            ApiEndpoints.uri(ApiEndpoints.googleMobile),
             headers: _headers(),
             body: jsonEncode({'idToken': idToken}),
           )
           .timeout(_timeout);
 
-      return _parse(res, TokenResponse.fromJson);
+      return _parse(res, ExternalLoginResponse.fromJson);
     } on Exception {
       return const ApiResponse(
         success: false,

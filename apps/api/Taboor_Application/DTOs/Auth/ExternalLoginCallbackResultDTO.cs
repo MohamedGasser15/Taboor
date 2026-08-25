@@ -9,5 +9,6 @@ namespace Taboor_Application.DTOs.Auth
         public string? Token { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiry { get; set; }
+        public bool HasPassword { get; set; }
     }
 }

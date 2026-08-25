@@ -26,6 +26,8 @@ class ApiEndpoints {
       '$_authRoot/ExternalLoginCallback';
   static const String externalLoginConfirmation =
       '$_authRoot/ExternalLoginConfirmation';
+  static const String googleMobile = '$_authRoot/GoogleMobile';
+  static const String facebookMobile = '$_authRoot/FacebookMobile';
 
   static Uri uri(String path) => Uri.parse('$baseUrl$path');
 }
