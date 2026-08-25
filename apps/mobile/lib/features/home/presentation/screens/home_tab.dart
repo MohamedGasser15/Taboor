@@ -1,5 +1,9 @@
 // features/home/presentation/screens/home_tab.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:taboor/core/services/location_service.dart';
 import 'package:taboor/core/themes/app_colors.dart';
 import 'package:taboor/core/themes/app_text_styles.dart';
 import 'package:taboor/core/utils/app_responsive.dart';
@@ -24,6 +28,45 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   final TextEditingController _searchController = TextEditingController();
+  String _location = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLocation();
+  }
+
+  /// Gets the real device position and resolves it to a city/area name.
+  Future<void> _fetchLocation() async {
+    final position = await LocationService.getCurrentPosition();
+    if (position == null || !mounted) {
+      if (mounted) setState(() => _location = '');
+      return;
+    }
+
+    try {
+      final res = await http.get(
+        Uri.parse(
+          'https://nominatim.openstreetmap.org/reverse'
+          '?lat=${position.latitude}&lon=${position.longitude}'
+          '&format=json'
+          '&accept-language=${Localizations.localeOf(context).languageCode}',
+        ),
+        headers: {'User-Agent': 'TaboorApp/1.0'},
+      );
+      final data = jsonDecode(res.body) as Map<String, dynamic>;
+      final address = data['address'] as Map<String, dynamic>?;
+      final name = address?['city'] ??
+          address?['town'] ??
+          address?['village'] ??
+          address?['suburb'] ??
+          address?['county'];
+      if (!mounted) return;
+      setState(() => _location = name?.toString() ?? '');
+    } catch (_) {
+      if (mounted) setState(() => _location = '');
+    }
+  }
 
   @override
   void dispose() {
@@ -68,7 +111,7 @@ class _HomeTabState extends State<HomeTab> {
               child: _HomeHeader(
                 greeting: _greeting(l10n),
                 userName: name,
-                location: 'Cairo, Egypt',
+                location: _location,
               ),
             ),
           ),
@@ -228,21 +271,35 @@ class _HomeHeader extends StatelessWidget {
     final displayName = (userName == null || userName!.isEmpty)
         ? l10n.navProfile
         : userName!;
+    final initial = displayName.trim().isEmpty
+        ? '؟'
+        : displayName.trim().characters.first.toUpperCase();
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // User avatar: first letter on a soft gradient — clean, not a hospital.
         Container(
           width: 52,
           height: 52,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.softTeal,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.teal, AppColors.deepTeal],
+            ),
             borderRadius: BorderRadius.circular(18),
           ),
-          child: Icon(
-            Icons.local_hospital_rounded,
-            color: AppColors.teal,
-            size: 28,
+          child: Text(
+            initial,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: AppColors.paper,
+              height: 1,
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -281,6 +338,7 @@ class _LocationChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loading = location.isEmpty;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -291,7 +349,17 @@ class _LocationChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.location_on_outlined, color: AppColors.teal, size: 16),
+          loading
+              ? const SizedBox(
+                  width: 12,
+                  height: 12,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.teal,
+                  ),
+                )
+              : const Icon(Icons.location_on_outlined,
+                  color: AppColors.teal, size: 16),
           const SizedBox(width: 4),
           Text(
             location,

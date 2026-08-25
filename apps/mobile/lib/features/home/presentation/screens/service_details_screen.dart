@@ -45,8 +45,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // Auto-locate on entry so the user sees their blue dot right away.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _locateMe());
+    // Deliberately do NOT auto-locate: keep the map on the primary branch.
   }
 
   String _branchLabel(AppLocalizations l10n, String key) {
@@ -171,82 +170,144 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
       defaultTargetPlatform == TargetPlatform.macOS;
 
   LatLng get _initialCenter {
-    final withCoords =
-        _place.branches.where((b) => b.lat != null && b.lng != null).toList();
-    if (withCoords.isEmpty) return const LatLng(30.0444, 31.2357);
-    final lat = withCoords.map((b) => b.lat!).reduce((a, b) => a + b) /
-        withCoords.length;
-    final lng = withCoords.map((b) => b.lng!).reduce((a, b) => a + b) /
-        withCoords.length;
-    return LatLng(lat, lng);
-  }
-
-  Future<void> _addBranchPins() async {
-    final controller = _controller;
-    if (controller == null) return;
-
-    // Numbered branch pins.
-    for (var i = 0; i < _place.branches.length; i++) {
-      final b = _place.branches[i];
-      if (b.lat == null || b.lng == null) continue;
-
-      // Render a small numbered circle as a PNG so the symbol shows a pin.
-      final bytes = await _renderPinBytes(i + 1);
-      await controller.addImage('branch_pin_$i', bytes);
-
-      await controller.addSymbol(
-        SymbolOptions(
-          geometry: LatLng(b.lat!, b.lng!),
-          iconImage: 'branch_pin_$i',
-          iconSize: 0.32,
-          iconAnchor: 'center',
-        ),
-      );
+    // Open on the primary (first) branch — not the average of everything.
+    final primary = _place.branches.firstOrNull;
+    if (primary?.lat == null || primary?.lng == null) {
+      final any = _place.branches
+          .where((b) => b.lat != null && b.lng != null)
+          .firstOrNull;
+      if (any != null) return LatLng(any.lat!, any.lng!);
+      return const LatLng(30.0444, 31.2357);
     }
+    return LatLng(primary!.lat!, primary.lng!);
   }
+Future<void> _addBranchPins() async {
+  final controller = _controller;
+  if (controller == null) return;
+  final l10n = AppLocalizations.of(context);
+
+  for (var i = 0; i < _place.branches.length; i++) {
+    final b = _place.branches[i];
+    if (b.lat == null || b.lng == null) continue;
+
+    final bytes = await _renderPinBytes(i + 1);
+    await controller.addImage('branch_pin_$i', bytes);
+
+    final branchName = _branchLabel(l10n, b.label);
+
+    await controller.addSymbol(
+      SymbolOptions(
+        geometry: LatLng(b.lat!, b.lng!),
+        iconImage: 'branch_pin_$i',
+        iconSize: 1.8,
+        iconAnchor: 'bottom',
+        
+        // ===== النص عسى يمين الدبوس بمسافة قريبة جداً =====
+        textField: branchName,
+        textSize: 13.0,
+        textColor: '#000000',
+        textHaloColor: '#FFFFFF',
+        textHaloWidth: 1.5,
+        textAnchor: 'top', // يبدأ النص من يساره ممتداً لليمين
+        textOffset: const Offset(0, -1), // إزاحة خفيفة بين النص والدبوس
+        fontNames: ['Open Sans Bold', 'Arial Unicode MS Bold'],
+      ),
+    );
+  }
+}
 
   Future<Uint8List> _renderPinBytes(int number) async {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
-    const size = 64.0;
-    final color = _place.color;
 
-    // Outer white ring.
-    canvas.drawCircle(
-      const Offset(32, 32),
-      30,
-      Paint()..color = Colors.white,
+    const double width = 110.0;
+    const double height = 140.0;
+    final pinColor = _place.color;
+
+    // 1. الظل الأسفل (Shadow)
+    final shadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.25)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7);
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: const Offset(width / 2, height - 12),
+        width: 40.0,
+        height: 12.0,
+      ),
+      shadowPaint,
     );
-    // Filled colored circle.
-    canvas.drawCircle(
-      const Offset(32, 32),
-      26,
-      Paint()..color = color,
+
+    const double circleRadius = 40.0;
+    const Offset circleCenter = Offset(width / 2, circleRadius + 10);
+    const double triangleHeight = 65.0;
+
+    // 2. إنشاء المسارات الدائرية والمثلثة
+    final circlePath = Path()
+      ..addOval(Rect.fromCircle(center: circleCenter, radius: circleRadius));
+
+    final trianglePath = Path()
+      ..moveTo(circleCenter.dx - 36.5, circleCenter.dy + 15)
+      ..lineTo(width / 2, circleCenter.dy + triangleHeight)
+      ..lineTo(circleCenter.dx + 36.5, circleCenter.dy + 15)
+      ..close();
+
+    // 💡 السر هنا: دمج المسارين في شكل واحد ممتد عشان نلغي أي خطوط تقاطع نهائياً
+    final unifiedPinPath = Path.combine(
+      PathOperation.union,
+      circlePath,
+      trianglePath,
     );
-    // Number.
+
+    // 3. رسم الدبوس المدمج قطعة واحدة
+    final markerPaint = Paint()
+      ..color = pinColor
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = true;
+
+    canvas.drawPath(unifiedPinPath, markerPaint);
+
+    // 4. إطار ناعم خارجي فقط حول الشكل المدمج (اختياري للشكل الإحترافي)
+    final borderPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..isAntiAlias = true;
+    canvas.drawPath(unifiedPinPath, borderPaint);
+
+    // 5. الدائرة البيضاء الداخلية (Badge)
+    final whiteBadgePaint = Paint()
+      ..color = AppColors.paper
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = true;
+    canvas.drawCircle(circleCenter, 20.0, whiteBadgePaint);
+
+    // 6. كتابة الرقم بلون الـ Teal
     final textPainter = TextPainter(
       text: TextSpan(
         text: '$number',
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Inter',
-          fontSize: 30,
-          fontWeight: FontWeight.w800,
-          color: Colors.white,
+          fontSize: 26,
+          fontWeight: FontWeight.w900,
+          color: pinColor,
         ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
+
     textPainter.paint(
       canvas,
-      Offset(32 - textPainter.width / 2, 32 - textPainter.height / 2),
+      Offset(
+        circleCenter.dx - textPainter.width / 2,
+        circleCenter.dy - textPainter.height / 2,
+      ),
     );
 
     final picture = recorder.endRecording();
-    final image = await picture.toImage(size.toInt(), size.toInt());
+    final image = await picture.toImage(width.toInt(), height.toInt());
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     return data!.buffer.asUint8List();
   }
-
   void _onUserLocationUpdated(UserLocation location) {
     if (mounted) {
       setState(() {
@@ -281,14 +342,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
             child: MapLibreMap(
               initialCameraPosition: CameraPosition(
                 target: _initialCenter,
-                zoom: 13,
+                zoom: 15.2,
               ),
               onMapCreated: (controller) => _controller = controller,
               onStyleLoadedCallback: _addBranchPins,
               styleString: _kMapStyleExplore,
               myLocationEnabled: true,
               myLocationRenderMode: MyLocationRenderMode.normal,
-              myLocationTrackingMode: MyLocationTrackingMode.tracking,
+              // Keep the map centred on the branch; only show the blue dot
+              // without auto-tracking the user's position.
+              myLocationTrackingMode: MyLocationTrackingMode.none,
               onUserLocationUpdated: _onUserLocationUpdated,
               compassEnabled: true,
               logoEnabled: true,
@@ -358,16 +421,23 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
             snapSizes: const [0.42, 0.62, 0.85],
             builder: (context, scrollController) {
               return Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.paper,
-                  borderRadius: BorderRadius.vertical(
+                  borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(28),
                   ),
                   boxShadow: [
+                    // Soft neutral elevation; no colored tint.
                     BoxShadow(
-                      color: AppColors.deepTeal,
-                      blurRadius: 30,
-                      offset: Offset(0, -10),
+                      color: Colors.black.withValues(alpha: 0.10),
+                      blurRadius: 18,
+                      offset: const Offset(0, -6),
+                      spreadRadius: -4,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 6,
+                      offset: const Offset(0, -2),
                     ),
                   ],
                 ),
@@ -375,8 +445,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   children: [
                     const SizedBox(height: 10),
                     Container(
-                      width: 46,
-                      height: 5,
+                      width: 52,
+                      height: 6,
                       decoration: BoxDecoration(
                         color: AppColors.gray300,
                         borderRadius: BorderRadius.circular(4),
@@ -392,25 +462,77 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           MediaQuery.of(context).padding.bottom + 12,
                         ),
                         children: [
-                          Text(
-                            place.name,
-                            style: AppTextStyles.heading(
-                              size: isTablet ? 24 : 20,
-                            ),
+                          // ===== Sheet header: service icon + name =====
+                          Row(
+                            children: [
+                              Container(
+                                width: 52,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  color: place.color.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Icon(
+                                  place.icon,
+                                  color: place.color,
+                                  size: 26,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      place.name,
+                                      style: AppTextStyles.heading(
+                                        size: isTablet ? 22 : 18,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      '${l10n.serviceWaitingNow(place.totalWaiting)} • '
+                                      '${place.branches.length} ${l10n.serviceBranches}',
+                                      style: AppTextStyles.body(
+                                        color: AppColors.gray600,
+                                        size: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${l10n.serviceWaitingNow(place.totalWaiting)} • '
-                            '${place.branches.length} ${l10n.serviceBranches}',
-                            style: AppTextStyles.body(
-                              color: AppColors.gray600,
-                              size: 13,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.serviceChooseBranch,
-                            style: AppTextStyles.heading(size: 16),
+                          const SizedBox(height: 18),
+
+                          // ===== Choose a branch label + counter =====
+                          Row(
+                            children: [
+                              Text(
+                                l10n.serviceChooseBranch,
+                                style: AppTextStyles.heading(size: 16),
+                              ),
+                              const Spacer(),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 9,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.softTeal,
+                                  borderRadius: BorderRadius.circular(9),
+                                ),
+                                child: Text(
+                                  '${_selectedBranch + 1} / '
+                                  '${place.branches.length}',
+                                  style: AppTextStyles.label(
+                                    color: AppColors.teal,
+                                    weight: FontWeight.w800,
+                                    size: 11,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 10),
                           for (var i = 0; i < place.branches.length; i++) ...[
@@ -430,7 +552,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                               const SizedBox(height: 8),
                           ],
                           if (place.about != null) ...[
-                            const SizedBox(height: 20),
+                            const _SheetDivider(),
+                            const SizedBox(height: 18),
                             Text(
                               l10n.serviceAbout,
                               style: AppTextStyles.heading(size: 16),
@@ -447,20 +570,51 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           ],
                           if (place.workingHours != null) ...[
                             const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                const Icon(Icons.schedule_rounded,
-                                    color: AppColors.teal, size: 18),
-                                const SizedBox(width: 8),
-                                Text(
-                                  place.workingHours!,
-                                  style: AppTextStyles.body(
-                                    color: AppColors.ink,
-                                    weight: FontWeight.w600,
-                                    size: 13,
+                            Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: AppColors.softTeal.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 38,
+                                    height: 38,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.paper,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(
+                                      Icons.schedule_rounded,
+                                      color: AppColors.teal,
+                                      size: 20,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10n.serviceWorkingHours,
+                                        style: AppTextStyles.label(
+                                          color: AppColors.gray500,
+                                          size: 10,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        place.workingHours!,
+                                        style: AppTextStyles.body(
+                                          color: AppColors.ink,
+                                          weight: FontWeight.w600,
+                                          size: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                           const SizedBox(height: 20),
@@ -744,6 +898,20 @@ class _BranchCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// A light divider used to separate sheet sections.
+class _SheetDivider extends StatelessWidget {
+  const _SheetDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 1,
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      color: AppColors.gray200,
     );
   }
 }
