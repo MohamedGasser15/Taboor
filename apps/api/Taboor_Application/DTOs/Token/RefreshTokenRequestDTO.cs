@@ -1,13 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Taboor_Application.DTOs.Token
 {
     public class RefreshTokenRequestDTO
     {
-        [Required]
-        public string AccessToken { get; set; } = string.Empty;
+        public string? AccessToken { get; set; }
 
-        [Required]
-        public string RefreshToken { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; }
     }
 }

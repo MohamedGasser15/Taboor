@@ -5,23 +5,25 @@ type LogoProps = {
   /** tone='dark' for light backgrounds, tone='light' for dark/branded backgrounds */
   tone?: 'dark' | 'light'
   /** Base size of the icon box (lg is the maximum at 150px) */
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   /** Multiplier for the SVG icon inside the box, default 1. Use to make the glyph larger. */
   scale?: number
 }
 
-const BASE_BOX = { sm: 48, md: 95, lg: 150 } as const
-const BASE_SVG = { sm: 34, md: 68, lg: 108 } as const
+const BASE_BOX = { xs: 32, sm: 48, md: 95, lg: 150 } as const
+const BASE_SVG = { xs: 22, sm: 34, md: 68, lg: 108 } as const
+const BASE_OFFSET = { xs: 5, sm: 15, md: 15, lg: 15 } as const
 const WORD_RATIO = 72 / 95
-const BOX_OFFSET = 15
 
 function TaboorMark({
   box,
   svg,
+  offset,
   tone,
 }: {
   box: number
   svg: number
+  offset: number
   tone: NonNullable<LogoProps['tone']>
 }) {
   const front = tone === 'light' ? '#159F99' : '#0B4C56'
@@ -29,7 +31,7 @@ function TaboorMark({
   return (
     <div
       className="relative shrink-0"
-      style={{ width: box + BOX_OFFSET, height: box + BOX_OFFSET }}
+      style={{ width: box + offset, height: box + offset }}
       aria-hidden="true"
     >
       <div
@@ -89,12 +91,13 @@ export function Logo({
 }: LogoProps) {
   const box = BASE_BOX[size]
   const svg = Math.min(Math.round(BASE_SVG[size] * scale), box - 4)
+  const offset = BASE_OFFSET[size]
   const word = Math.round(box * WORD_RATIO)
   const wordColor = tone === 'light' ? '#FFFDF8' : '#0B4C56'
 
   return (
-    <div className={cn('flex items-center gap-4 sm:gap-6', className)}>
-      <TaboorMark box={box} svg={svg} tone={tone} />
+    <div className={cn('flex items-center gap-2', className)}>
+      <TaboorMark box={box} svg={svg} offset={offset} tone={tone} />
       <span
         className="font-black tracking-[-0.035em] leading-none whitespace-nowrap"
         style={{ fontSize: word, color: wordColor }}
