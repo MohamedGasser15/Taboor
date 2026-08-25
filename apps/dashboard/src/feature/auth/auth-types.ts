@@ -3,7 +3,7 @@ export type UserRole = "User" | "Customer" | "Admin"
 export interface AppUser {
   id: string,
   email: string;
-  fullname: string;
+  fullName: string;
   role: UserRole;
 }
 
@@ -20,6 +20,7 @@ export interface LoginResponse {
 
 export interface RefreshResponse {
   accessToken: string;
+  user: AppUser;
 }
 
 export interface ApiResponse<T> {

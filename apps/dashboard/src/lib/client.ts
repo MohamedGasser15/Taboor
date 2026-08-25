@@ -91,9 +91,9 @@ async function refreshAccessToken(): Promise<string> {
     try {
       const response = await postRefreshRequest()
 
-      const newAccessToken = response.data.data.accessToken
+      const { accessToken: newAccessToken, user } = response.data.data
 
-      useAuthStore.getState().setAccessToken(newAccessToken)
+      useAuthStore.getState().setAccessToken(newAccessToken, user)
 
       return newAccessToken
     } catch (error) {

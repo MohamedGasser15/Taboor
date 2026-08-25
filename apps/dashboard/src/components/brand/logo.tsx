@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { Link } from '@tanstack/react-router'
 
 type LogoProps = {
   className?: string
@@ -93,17 +94,23 @@ export function Logo({
   const svg = Math.min(Math.round(BASE_SVG[size] * scale), box - 4)
   const offset = BASE_OFFSET[size]
   const word = Math.round(box * WORD_RATIO)
-  const wordColor = tone === 'light' ? '#FFFDF8' : '#0B4C56'
 
   return (
-    <div className={cn('flex items-center gap-2', className)}>
-      <TaboorMark box={box} svg={svg} offset={offset} tone={tone} />
-      <span
-        className="font-black tracking-[-0.035em] leading-none whitespace-nowrap"
-        style={{ fontSize: word, color: wordColor }}
-      >
-        taboor<span style={{ color: '#F6A253' }}>.</span>
-      </span>
-    </div>
+    <Link to="/dashboard">
+      <div className={cn('flex items-center gap-2', className)}>
+        <TaboorMark box={box} svg={svg} offset={offset} tone={tone} />
+        <span
+          className={cn(
+            'font-black tracking-[-0.035em] leading-none whitespace-nowrap transition-colors duration-300 ease-out',
+            tone === 'light'
+              ? 'text-paper hover:text-amber'
+              : 'text-ink hover:text-amber',
+          )}
+          style={{ fontSize: word }}
+        >
+          taboor<span style={{ color: '#F6A253' }}>.</span>
+        </span>
+      </div>
+    </Link>
   )
 }
