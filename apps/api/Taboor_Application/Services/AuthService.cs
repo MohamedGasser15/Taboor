@@ -247,6 +247,11 @@ namespace Taboor_Application.Services
       // Revoke the presented token so it can never be used again (single-use rotation).
       await _uow.Repository<IRefreshTokenRepository>().MarkTokenUsedAsync(storedToken);
 
+      // Build the user DTO (mirrors the login flow) so the client can restore the
+      // authenticated user on session restore without an extra round trip.
+      var userDTO = _mapper.Map<UserDTO>(user);
+      userDTO.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? string.Empty;
+
       // Generate new tokens
       var newAccessToken = await _tokenService.GenerateAccessToken(user);
       var newRefreshToken = _tokenService.GenerateRefreshToken();
@@ -262,7 +267,8 @@ namespace Taboor_Application.Services
       {
         AccessToken = newAccessToken,
         RefreshToken = newRefreshToken,
-        RefreshTokenExpiry = newRefreshTokenExpiry
+        RefreshTokenExpiry = newRefreshTokenExpiry,
+        User = userDTO
       };
     }
 

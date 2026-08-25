@@ -1,3 +1,5 @@
+using Taboor_Application.DTOs.Auth;
+
 namespace Taboor_Application.DTOs.Token
 {
     public class TokenResponseDTO
@@ -5,5 +7,6 @@ namespace Taboor_Application.DTOs.Token
         public string AccessToken { get; set; } = string.Empty;
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiry { get; set; }
+        public UserDTO? User { get; set; }
     }
 }
