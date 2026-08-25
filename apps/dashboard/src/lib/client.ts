@@ -29,6 +29,12 @@ interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
 }
 
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    skipAuthRefresh?: boolean
+  }
+}
+
 export async function getCsrfToken(): Promise<string> {
   if (csrfToken) {
     return csrfToken
@@ -143,7 +149,8 @@ apiClient.interceptors.response.use(
     if (
       error.response?.status !== 401 ||
       !originalRequest ||
-      originalRequest._retry
+      originalRequest._retry ||
+      originalRequest.skipAuthRefresh
     ) {
       return Promise.reject(error)
     }

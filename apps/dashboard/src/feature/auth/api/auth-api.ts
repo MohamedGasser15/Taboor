@@ -6,13 +6,13 @@ export const authApi = {
     const response = await apiClient.post<ApiResponse<LoginResponse>>(
       '/auth/login',
       credentials,
+      { skipAuthRefresh: true },
     )
-    
-    console.log(response.data.data.user)
+
     return response.data.data
   },
 
   logout: async (): Promise<void> => {
-    await apiClient.post('/auth/revoke')
+    await apiClient.post('/auth/revoke', undefined, { skipAuthRefresh: true })
   },
 }

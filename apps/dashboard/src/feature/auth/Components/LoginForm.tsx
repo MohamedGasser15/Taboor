@@ -67,7 +67,7 @@ export default function LoginForm() {
                   <Input
                     {...field}
                     id={field.name}
-                    type="email"
+                    // type="email"
                     autoComplete="email"
                     placeholder="you@business.com"
                     className="h-11 text-base"
