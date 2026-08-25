@@ -21,12 +21,12 @@ const refreshClient = axios.create({
   },
 })
 
-let csrfToken: string | null = null
 let refreshPromise: Promise<string> | null = null
 let authInitPromise: Promise<void> | null = null
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
+  _csrfRetry?: boolean
 }
 
 declare module 'axios' {
@@ -35,11 +35,16 @@ declare module 'axios' {
   }
 }
 
-export async function getCsrfToken(): Promise<string> {
-  if (csrfToken) {
-    return csrfToken
-  }
+function isCsrfError(error: unknown): boolean {
+  const axiosError = error as AxiosError | undefined
+  const data = axiosError?.response?.data
+  if (!data || typeof data !== 'object') return false
+  const record = data as Record<string, unknown>
+  const message = record.message ?? record.error
+  return typeof message === 'string' && message.toLowerCase().includes('csrf')
+}
 
+export async function getCsrfToken(): Promise<string> {
   const response = await refreshClient.get('/Auth/csrf-token')
 
   const token = response.data.data.csrfToken
@@ -49,6 +54,34 @@ export async function getCsrfToken(): Promise<string> {
   return token
 }
 
+async function postRefreshRequest() {
+  const token = await getCsrfToken()
+
+  const send = (csrfTokenValue: string) =>
+    refreshClient.post(
+      '/Auth/refresh',
+      {},
+      {
+        headers: {
+          'X-XSRF-TOKEN': csrfTokenValue,
+        },
+      },
+    )
+
+  try {
+    return await send(token)
+  } catch (error) {
+    // The server may have regenerated the XSRF-TOKEN cookie (e.g. after a restart).
+    // Re-fetch a fresh token and retry once.
+    if (isCsrfError(error)) {
+      const freshToken = await getCsrfToken()
+      return send(freshToken)
+    }
+
+    throw error
+  }
+}
+
 async function refreshAccessToken(): Promise<string> {
   if (refreshPromise) {
     return refreshPromise
@@ -56,17 +89,7 @@ async function refreshAccessToken(): Promise<string> {
 
   refreshPromise = (async () => {
     try {
-      const token = await getCsrfToken()
-
-      const response = await refreshClient.post(
-        '/Auth/refresh',
-        {},
-        {
-          headers: {
-            'X-XSRF-TOKEN': token,
-          },
-        },
-      )
+      const response = await postRefreshRequest()
 
       const newAccessToken = response.data.data.accessToken
 
@@ -74,7 +97,6 @@ async function refreshAccessToken(): Promise<string> {
 
       return newAccessToken
     } catch (error) {
-      csrfToken = null
       useAuthStore.getState().clearAuth()
 
       throw error
@@ -146,9 +168,23 @@ apiClient.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as RetryableRequestConfig | undefined
 
+    if (!originalRequest) {
+      return Promise.reject(error)
+    }
+
+    // The server may have regenerated the XSRF-TOKEN cookie (e.g. after a restart).
+    // Re-fetch a fresh token and retry once.
+    if (
+      error.response?.status === 400 &&
+      !originalRequest._csrfRetry &&
+      isCsrfError(error)
+    ) {
+      originalRequest._csrfRetry = true
+      return apiClient(originalRequest)
+    }
+
     if (
       error.response?.status !== 401 ||
-      !originalRequest ||
       originalRequest._retry ||
       originalRequest.skipAuthRefresh
     ) {

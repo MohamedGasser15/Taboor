@@ -4,7 +4,7 @@ import type { ApiResponse, LoginRequest, LoginResponse } from '../auth-types'
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post<ApiResponse<LoginResponse>>(
-      '/auth/login',
+      '/Auth/login',
       credentials,
       { skipAuthRefresh: true },
     )
@@ -13,6 +13,6 @@ export const authApi = {
   },
 
   logout: async (): Promise<void> => {
-    await apiClient.post('/auth/revoke', undefined, { skipAuthRefresh: true })
+    await apiClient.post('/Auth/logout')
   },
 }

@@ -296,6 +296,29 @@ namespace Taboor_Application.Services
       }
     }
 
+    /// <summary>
+    /// Web logout: revokes the refresh token carried in the HttpOnly cookie by looking it
+    /// up by hash alone, so no access token or user claims are required.
+    /// </summary>
+    /// <param name="refreshToken">The refresh token value read from the HttpOnly cookie.</param>
+    public async Task LogoutWebAsync(string refreshToken)
+    {
+      if (string.IsNullOrEmpty(refreshToken))
+        return;
+
+      var stored = await _uow.Repository<IRefreshTokenRepository>().GetRefreshTokenByHashAsync(refreshToken);
+      if (stored == null)
+      {
+        _logger.LogWarning("No stored refresh token found during web logout");
+        return;
+      }
+
+      await _uow.Repository<IRefreshTokenRepository>().RevokeRefreshTokenAsync(stored.UserId, refreshToken);
+      await _uow.SaveAsync();
+
+      _logger.LogInformation("Refresh token revoked during web logout for user {UserId}", stored.UserId);
+    }
+
     #endregion
   }
 }

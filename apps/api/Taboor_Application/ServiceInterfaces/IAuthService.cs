@@ -37,5 +37,13 @@ namespace Taboor_Application.ServiceInterfaces
         /// <param name="refreshToken">The refresh token to revoke.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task RevokeRefreshToken(string userId, string refreshToken);
+
+        /// <summary>
+        /// Revokes a refresh token supplied via cookie (web clients), looking the token
+        /// up by hash alone so logout does not depend on a valid access token or claims.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token value read from the HttpOnly cookie.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task LogoutWebAsync(string refreshToken);
     }
 }

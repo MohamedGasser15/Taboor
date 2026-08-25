@@ -56,6 +56,16 @@ namespace Taboor_API.Controllers
         /// </summary>
         private void SetRefreshTokenCookie(string refreshToken)
         {
+            // Remove any legacy cookie at a broader path first so it can't
+            // accumulate alongside the canonical one and resurrect a session.
+            Response.Cookies.Delete(RefreshTokenCookieName, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/api"
+            });
+
             Response.Cookies.Append(RefreshTokenCookieName, refreshToken, new CookieOptions
             {
                 HttpOnly = true,
@@ -77,6 +87,16 @@ namespace Taboor_API.Controllers
                 Secure = true,
                 SameSite = SameSiteMode.None,
                 Path = "/api/Auth"
+            });
+
+            // Also clear any legacy cookie set at the broader path so logout
+            // can't be undone by a surviving cookie.
+            Response.Cookies.Delete(RefreshTokenCookieName, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/api"
             });
         }
 
@@ -270,6 +290,38 @@ namespace Taboor_API.Controllers
                     Detail = "An error occurred while revoking your token."
                 });
             }
+        }
+
+        /// <summary>
+        /// Web logout: clears the HttpOnly refresh-token cookie and revokes the token by
+        /// looking it up from the cookie alone. Does NOT require a valid access token,
+        /// user claims, or CSRF — logout is low-risk (worst case a forced logout) and the
+        /// CORS policy already restricts this endpoint to the dashboard origin. The cookie
+        /// is cleared unconditionally so the client is always logged out.
+        /// </summary>
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutWeb()
+        {
+            var incomingRefreshToken = Request.Cookies[RefreshTokenCookieName];
+
+            // Revoke best-effort: even if the DB lookup/update fails, the cookie is
+            // still cleared so the client is always logged out.
+            try
+            {
+                if (!string.IsNullOrEmpty(incomingRefreshToken))
+                {
+                    await _authService.LogoutWebAsync(incomingRefreshToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to revoke refresh token during web logout");
+            }
+
+            ClearRefreshTokenCookie();
+
+            _logger.LogInformation("Web logout completed");
+            return Ok(ApiResponse<object>.SuccessResponse(new { message = "Logged out successfully" }, "Logged out"));
         }
 
         /// <summary>

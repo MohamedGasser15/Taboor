@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+
+// Persist Data Protection keys so antiforgery/CSRF tokens survive restarts and deploys.
+// Without this, every restart regenerates the key ring and invalidates all outstanding
+// XSRF-TOKEN cookies, breaking refresh/revoke with "Invalid CSRF token".
+var dataProtectionKeyPath = builder.Configuration["DataProtection:KeyPath"];
+if (string.IsNullOrEmpty(dataProtectionKeyPath))
+{
+    dataProtectionKeyPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Taboor",
+        "DataProtection-Keys");
+}
+Directory.CreateDirectory(dataProtectionKeyPath);
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeyPath));
+
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingConfig).Assembly);
 
