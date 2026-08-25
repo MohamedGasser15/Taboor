@@ -15,6 +15,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema } from '../auth-schema'
 import type { LoginFormValues } from '../auth-schema'
+import { Spinner } from '#/components/ui/spinner'
 
 export default function LoginForm() {
   const navigate = useNavigate()
@@ -141,7 +142,14 @@ export default function LoginForm() {
             className="h-12 w-full text-base"
             disabled={login.isPending}
           >
-            {login.isPending ? 'Signing in…' : 'Sign in'}
+            {login.isPending ? (
+              <>
+                Signing in
+                <Spinner />
+              </>
+            ) : (
+              'Sign in'
+            )}
           </Button>
 
           {login.isError && (
