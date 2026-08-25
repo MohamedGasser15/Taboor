@@ -21,19 +21,28 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 // Persist Data Protection keys so antiforgery/CSRF tokens survive restarts and deploys.
-// Without this, every restart regenerates the key ring and invalidates all outstanding
-// XSRF-TOKEN cookies, breaking refresh/revoke with "Invalid CSRF token".
+// Defensive: on hosts where the key path isn't writable (e.g. IIS app pools), fall back
+// to default key storage instead of crashing at startup (HTTP 500.30).
 var dataProtectionKeyPath = builder.Configuration["DataProtection:KeyPath"];
-if (string.IsNullOrEmpty(dataProtectionKeyPath))
+try
 {
-    dataProtectionKeyPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "Taboor",
-        "DataProtection-Keys");
+    if (string.IsNullOrEmpty(dataProtectionKeyPath))
+    {
+        dataProtectionKeyPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Taboor",
+            "DataProtection-Keys");
+    }
+    Directory.CreateDirectory(dataProtectionKeyPath);
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeyPath));
 }
-Directory.CreateDirectory(dataProtectionKeyPath);
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeyPath));
+catch (Exception ex)
+{
+    // Unwritable key path on the host -> use default key storage so startup never fails.
+    builder.Services.AddDataProtection();
+    Console.Error.WriteLine($"DataProtection key path unavailable, using default key storage: {ex.Message}");
+}
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingConfig).Assembly);
