@@ -7,6 +7,8 @@ import 'package:taboor/core/themes/app_colors.dart';
 import 'package:taboor/core/utils/app_responsive.dart';
 import 'package:taboor/core/utils/input_formatters.dart';
 import 'package:taboor/features/auth/data/auth_api.dart';
+import 'package:taboor/features/auth/data/auth_models.dart';
+import 'package:taboor/features/auth/data/google_auth_service.dart';
 import 'package:taboor/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:taboor/features/auth/presentation/screens/register_screen.dart';
 import 'package:taboor/features/home/presentation/screens/home_screen.dart';
@@ -89,6 +91,51 @@ class _LoginScreenState extends State<LoginScreen> {
       PageRouteBuilder(
         pageBuilder: (_, _, _) =>
             HomeScreen(userName: res.data?.user?.fullName),
+        transitionsBuilder: (_, animation, _, child) =>
+            FadeTransition(opacity: animation, child: child),
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+    );
+  }
+
+  Future<void> _googleLogin() async {
+    if (_isLoading) return;
+    final l10n = AppLocalizations.of(context);
+    setState(() => _isLoading = true);
+
+    final idToken = await GoogleAuthService.signInWithGoogle();
+    if (!mounted) return;
+
+    if (idToken == null) {
+      setState(() => _isLoading = false);
+      return; // User cancelled.
+    }
+
+    // Send the ID token to our backend.
+    final res = await _authApi.externalLogin(idToken);
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (!res.success || res.data?.accessToken.isEmpty != false) {
+      MessageService.showError(
+        context: context,
+        message: res.error ?? l10n.genericRequestError,
+      );
+      return;
+    }
+
+    MessageService.showSuccess(
+      context: context,
+      message: l10n.loginSuccess,
+    );
+    await SessionManager.saveLogin(LoginResponse(
+      token: res.data?.accessToken,
+      refreshToken: res.data?.refreshToken,
+    ));
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (_, _, _) => const HomeScreen(),
         transitionsBuilder: (_, animation, _, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 400),
@@ -260,7 +307,7 @@ void _clearErrors() {
                               icon: Icons.g_mobiledata_rounded,
                               iconColor: Colors.red.shade400,
                               label: 'Google',
-                              onPressed: _isLoading ? null : () {},
+                              onPressed: _isLoading ? null : _googleLogin,
                             ),
                           ),
                           const SizedBox(width: 12),

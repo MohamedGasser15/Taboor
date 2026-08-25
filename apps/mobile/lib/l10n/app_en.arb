@@ -111,5 +111,140 @@
   "homeTitle": "Get your turn from anywhere",
   "homeSoon": "Home page coming soon",
   "homeCta": "Take a tour of Taboor",
-  "welcomeBack": "Welcome back,"
+  "welcomeBack": "Welcome back,",
+
+  "navHome": "Home",
+  "navQueue": "My Queue",
+  "navAlerts": "Alerts",
+  "navProfile": "Profile",
+
+  "homeGoodMorning": "Good morning",
+  "homeGoodAfternoon": "Good afternoon",
+  "homeGoodEvening": "Good evening",
+  "homeSearchHint": "Search clinics, salons, garages...",
+  "homeLiveTicket": "Your live ticket",
+  "homeNoTicket": "No active ticket",
+  "homeJoinQueue": "Join a queue",
+  "homeNearby": "Nearby services",
+  "homePopularNearYou": "Popular near you",
+  "homeSeeAll": "See all",
+
+  "categoryClinics": "Clinics",
+  "categorySalons": "Salons",
+  "categoryGarages": "Auto repair",
+  "categoryOffices": "Offices",
+  "peopleWaiting": "{count} waiting",
+  "@peopleWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "distanceAway": "{km} km away",
+  "@distanceAway": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "joinNow": "Join",
+
+  "queueEmptyTitle": "No active queue yet",
+  "queueEmptySubtitle": "Find a nearby service and grab your number",
+  "queueNowServing": "Now serving",
+  "queuePeopleAhead": "{count} ahead of you",
+  "@queuePeopleAhead": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEstimate": "Est. wait",
+  "queueMinutes": "{count} min",
+  "@queueMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "alertsEmptyTitle": "You're all caught up",
+  "alertsEmptySubtitle": "Smart alerts about your turn will show up here",
+
+  "profileAccount": "Account",
+  "profileFullName": "Full name",
+  "profileEmail": "Email",
+  "profilePhone": "Phone",
+  "profileLanguage": "Language",
+  "profileSignOut": "Sign out",
+  "profileSignOutConfirm": "Sign out of your account?",
+  "profileCancel": "Cancel",
+  "profileSignOutOk": "Sign out",
+
+  "profileAppearance": "Appearance",
+  "profileTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "profileSecurity": "Security",
+  "profileBiometric": "Unlock with biometrics",
+  "profileBiometricSubtitle": "Use Face ID or fingerprint to sign in",
+  "profileChangePassword": "Change password",
+  "profileChangePasswordSubtitle": "Update your account password",
+  "profileAbout": "About",
+  "profileVersion": "Version",
+  "profileSettings": "Settings",
+  "biometricUnavailable": "Biometrics aren't available on this device.",
+  "biometricAuthRequired": "Confirm to enable",
+  "biometricEnabled": "Biometric unlock enabled.",
+  "biometricDisabled": "Biometric unlock disabled.",
+  "appLanguage": "App language",
+  "languageArabic": "العربية",
+  "languageEnglish": "English",
+
+  "editProfile": "Edit account",
+  "editProfileSave": "Save changes",
+  "editProfileSaved": "Account updated.",
+  "oldPasswordLabel": "Current password",
+  "oldPasswordHint": "Enter your current password",
+  "newPasswordLabel2": "New password",
+  "changePasswordDone": "Password changed successfully.",
+  "forgotPasswordHere": "Forgot password?",
+
+  "serviceChooseBranch": "Choose a branch",
+  "serviceBranches": "Branches",
+  "serviceOpenNow": "Open now",
+  "serviceClosed": "Closed",
+  "serviceWaitingNow": "{count} waiting now",
+  "serviceEstWait": "Est. wait",
+  "serviceJoinQueue": "Join this queue",
+  "serviceAbout": "About this service",
+  "serviceWorkingHours": "Working hours",
+  "serviceTapHint": "Tap to view details",
+  "branchMain": "Main branch",
+  "branchDowntown": "Downtown branch",
+  "branchNorth": "North branch",
+  "branchAirport": "Airport branch",
+  "branchWest": "West branch",
+
+  "allServicesTitle": "Services near you",
+  "allServicesSubtitle": "Live queues around you",
+  "filterAll": "All",
+  "popService": "Popular",
+
+  "mapLocate": "Locate me",
+  "mapLocating": "Locating…",
+  "mapLocationUnavailable": "Location is off or permission is denied.",
+  "mapYouAreHere": "You are here",
+  "mapDistanceAway": "{km} away",
+  "mapDriveTime": "~{min} min drive",
+  "mapOpenInGoogleMaps": "Open in Google Maps",
+  "mapOpenInAppleMaps": "Open in Apple Maps",
+  "mapDirections": "Directions",
+  "geoFrom": "Current location",
+  "geoTo": "Branch"
 }

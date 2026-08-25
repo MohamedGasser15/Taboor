@@ -1,28 +1,31 @@
 // core/constants/api_endpoints.dart
 //
-// All backend endpoints mirror the ASP.NET API (Taboor_API).
-// Controllers found: AuthController -> api/Auth
+// Central place for every backend endpoint.
+// All paths mirror the ASP.NET API (Taboor_API / AuthController).
 
 class ApiEndpoints {
   ApiEndpoints._();
 
-  /// Production API base URL (hosted on ASP.NET).
-  static const String baseUrl = 'https://taboorapi.runasp.net';
+  /// Production API base URL.
+  static const String baseUrl = 'https://taboorapi.runasp.net/api/';
+
+  static const String _authRoot = 'Auth';
 
   // ===== Auth =====
-  static const String login = '/api/Auth/Login';
-  static const String register = '/api/Auth/Register';
-  static const String sendCode = '/api/Auth/send-code';
-  static const String verifyEmail = '/api/Auth/verify-email';
-  static const String forgotPassword = '/api/Auth/forgot-password';
-  static const String verifyResetCode = '/api/Auth/verify-reset-code';
-  static const String resetPassword = '/api/Auth/reset-password';
-  static const String refreshToken = '/api/Auth/refresh';
-  static const String revokeToken = '/api/Auth/revoke';
-  static const String externalLogin = '/api/Auth/ExternalLogin';
-  static const String externalLoginCallback = '/api/Auth/ExternalLoginCallback';
+  static const String login = '$_authRoot/Login';
+  static const String register = '$_authRoot/Register';
+  static const String sendCode = '$_authRoot/send-code';
+  static const String verifyEmail = '$_authRoot/verify-email';
+  static const String forgotPassword = '$_authRoot/forgot-password';
+  static const String verifyResetCode = '$_authRoot/verify-reset-code';
+  static const String resetPassword = '$_authRoot/reset-password';
+  static const String refreshToken = '$_authRoot/refresh';
+  static const String revokeToken = '$_authRoot/revoke';
+  static const String externalLogin = '$_authRoot/ExternalLogin';
+  static const String externalLoginCallback =
+      '$_authRoot/ExternalLoginCallback';
   static const String externalLoginConfirmation =
-      '/api/Auth/ExternalLoginConfirmation';
+      '$_authRoot/ExternalLoginConfirmation';
 
   static Uri uri(String path) => Uri.parse('$baseUrl$path');
 }

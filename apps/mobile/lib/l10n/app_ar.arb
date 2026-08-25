@@ -111,5 +111,140 @@
   "homeTitle": "اطلب دورك من أي مكان",
   "homeSoon": "الصفحة الرئيسية قريباً",
   "homeCta": "عرفني على طابور",
-  "welcomeBack": "أهلًا من جديد،"
+  "welcomeBack": "أهلًا من جديد،",
+
+  "navHome": "الرئيسية",
+  "navQueue": "طابوري",
+  "navAlerts": "التنبيهات",
+  "navProfile": "حسابي",
+
+  "homeGoodMorning": "صباح الخير",
+  "homeGoodAfternoon": "مساء الخير",
+  "homeGoodEvening": "مساء الخير",
+  "homeSearchHint": "دوّر على عيادة، كوافير، ورشة...",
+  "homeLiveTicket": "تذكرتك الحية",
+  "homeNoTicket": "مفيش طلب شغال",
+  "homeJoinQueue": "ادخل طابور",
+  "homeNearby": "خدمات قريبة منك",
+  "homePopularNearYou": "الأكثر طلباً عندك",
+  "homeSeeAll": "شوف الكل",
+
+  "categoryClinics": "عيادات",
+  "categorySalons": "كوافيرات",
+  "categoryGarages": "ورش السيارات",
+  "categoryOffices": "مكاتب",
+  "peopleWaiting": "{count} ناس مستنيين",
+  "@peopleWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "distanceAway": "على بعد {km} كم",
+  "@distanceAway": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "joinNow": "ادخل",
+
+  "queueEmptyTitle": "لسه مفيش طابور شغال",
+  "queueEmptySubtitle": "اختار خدمة قريبة وخد رقمك",
+  "queueNowServing": "بيستقبل دلوقتي",
+  "queuePeopleAhead": "قدامك {count}",
+  "@queuePeopleAhead": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueEstimate": "وقت الانتظار التقريبي",
+  "queueMinutes": "{count} دقيقة",
+  "@queueMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "alertsEmptyTitle": "كله تمام",
+  "alertsEmptySubtitle": "تنبيهات دورك الذكية هتظهر هنا",
+
+  "profileAccount": "الحساب",
+  "profileFullName": "الاسم الكامل",
+  "profileEmail": "البريد الإلكتروني",
+  "profilePhone": "رقم الموبايل",
+  "profileLanguage": "اللغة",
+  "profileSignOut": "تسجيل الخروج",
+  "profileSignOutConfirm": "تسجل خروجك من الحساب؟",
+  "profileCancel": "إلغاء",
+  "profileSignOutOk": "تسجيل الخروج",
+
+  "profileAppearance": "المظهر",
+  "profileTheme": "الوضع",
+  "themeSystem": "النظام",
+  "themeLight": "فاتح",
+  "themeDark": "داكن",
+  "profileSecurity": "الأمان",
+  "profileBiometric": "فتح بالبصمة",
+  "profileBiometricSubtitle": "استخدم الفيس أو البصمة للدخول",
+  "profileChangePassword": "تغيير كلمة المرور",
+  "profileChangePasswordSubtitle": "حدّث كلمة مرور حسابك",
+  "profileAbout": "عن التطبيق",
+  "profileVersion": "الإصدار",
+  "profileSettings": "الإعدادات",
+  "biometricUnavailable": "البصمة مش متاحة على الجهاز ده.",
+  "biometricAuthRequired": "أكّد عشان تفعّل",
+  "biometricEnabled": "تم تفعيل فتح البصمة.",
+  "biometricDisabled": "تم إلغاء فتح البصمة.",
+  "appLanguage": "لغة التطبيق",
+  "languageArabic": "العربية",
+  "languageEnglish": "English",
+
+  "editProfile": "تعديل الحساب",
+  "editProfileSave": "حفظ التغييرات",
+  "editProfileSaved": "تم تحديث الحساب.",
+  "oldPasswordLabel": "كلمة المرور الحالية",
+  "oldPasswordHint": "اكتب كلمة مرورك الحالية",
+  "newPasswordLabel2": "كلمة المرور الجديدة",
+  "changePasswordDone": "تم تغيير كلمة المرور بنجاح.",
+  "forgotPasswordHere": "نسيت كلمة المرور؟",
+
+  "serviceChooseBranch": "اختار الفرع",
+  "serviceBranches": "الفروع",
+  "serviceOpenNow": "مفتوح دلوقتي",
+  "serviceClosed": "مغلق",
+  "serviceWaitingNow": "{count} ناس مستنيين دلوقتي",
+  "serviceEstWait": "وقت الانتظار",
+  "serviceJoinQueue": "ادخل في الطابور",
+  "serviceAbout": "عن الخدمة",
+  "serviceWorkingHours": "ساعات العمل",
+  "serviceTapHint": "اضغط للتفاصيل",
+  "branchMain": "الفرع الرئيسي",
+  "branchDowntown": "فرع وسط البلد",
+  "branchNorth": "فرع الشمال",
+  "branchAirport": "فرع المطار",
+  "branchWest": "فرع الغرب",
+
+  "allServicesTitle": "خدمات قريبة منك",
+  "allServicesSubtitle": "طوابير مباشرة حواليك",
+  "filterAll": "الكل",
+  "popService": "الأكثر طلباً",
+
+  "mapLocate": "حدد مكاني",
+  "mapLocating": "بيحدد مكانك…",
+  "mapLocationUnavailable": "الموقع مقفول أو الإذن مرفوض.",
+  "mapYouAreHere": "إنت هنا",
+  "mapDistanceAway": "على بعد {km}",
+  "mapDriveTime": "~{min} دقيقة",
+  "mapOpenInGoogleMaps": "افتح في خرائط جوجل",
+  "mapOpenInAppleMaps": "افتح في خرائط أبل",
+  "mapDirections": "الاتجاهات",
+  "geoFrom": "مكاني الحالي",
+  "geoTo": "الفرع"
 }
