@@ -13,6 +13,17 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardBusinessesRouteImport } from './routes/_authenticated/dashboard/businesses'
+import { Route as AuthenticatedDashboardCustomersRouteImport } from './routes/_authenticated/dashboard/customers'
+import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard/notifications'
+import { Route as AuthenticatedDashboardReportsRouteImport } from './routes/_authenticated/dashboard/reports'
+import { Route as AuthenticatedDashboardServicesRouteImport } from './routes/_authenticated/dashboard/services'
+import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard/settings'
+import { Route as AuthenticatedDashboardSupportRouteImport } from './routes/_authenticated/dashboard/support'
+import { Route as AuthenticatedDashboardQueuesActiveRouteImport } from './routes/_authenticated/dashboard/queues/active'
+import { Route as AuthenticatedDashboardQueuesCompletedRouteImport } from './routes/_authenticated/dashboard/queues/completed'
+import { Route as AuthenticatedDashboardQueuesNowServingRouteImport } from './routes/_authenticated/dashboard/queues/now-serving'
+import { Route as AuthenticatedDashboardQueuesScheduledRouteImport } from './routes/_authenticated/dashboard/queues/scheduled'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,35 +45,173 @@ const AuthenticatedDashboardIndexRoute =
     path: '/dashboard/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardBusinessesRoute =
+  AuthenticatedDashboardBusinessesRouteImport.update({
+    id: '/dashboard/businesses',
+    path: '/dashboard/businesses',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardCustomersRoute =
+  AuthenticatedDashboardCustomersRouteImport.update({
+    id: '/dashboard/customers',
+    path: '/dashboard/customers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardNotificationsRoute =
+  AuthenticatedDashboardNotificationsRouteImport.update({
+    id: '/dashboard/notifications',
+    path: '/dashboard/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardReportsRoute =
+  AuthenticatedDashboardReportsRouteImport.update({
+    id: '/dashboard/reports',
+    path: '/dashboard/reports',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardServicesRoute =
+  AuthenticatedDashboardServicesRouteImport.update({
+    id: '/dashboard/services',
+    path: '/dashboard/services',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardSettingsRoute =
+  AuthenticatedDashboardSettingsRouteImport.update({
+    id: '/dashboard/settings',
+    path: '/dashboard/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardSupportRoute =
+  AuthenticatedDashboardSupportRouteImport.update({
+    id: '/dashboard/support',
+    path: '/dashboard/support',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardQueuesActiveRoute =
+  AuthenticatedDashboardQueuesActiveRouteImport.update({
+    id: '/dashboard/queues/active',
+    path: '/dashboard/queues/active',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardQueuesCompletedRoute =
+  AuthenticatedDashboardQueuesCompletedRouteImport.update({
+    id: '/dashboard/queues/completed',
+    path: '/dashboard/queues/completed',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardQueuesNowServingRoute =
+  AuthenticatedDashboardQueuesNowServingRouteImport.update({
+    id: '/dashboard/queues/now-serving',
+    path: '/dashboard/queues/now-serving',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardQueuesScheduledRoute =
+  AuthenticatedDashboardQueuesScheduledRouteImport.update({
+    id: '/dashboard/queues/scheduled',
+    path: '/dashboard/queues/scheduled',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/dashboard/businesses': typeof AuthenticatedDashboardBusinessesRoute
+  '/dashboard/customers': typeof AuthenticatedDashboardCustomersRoute
+  '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
+  '/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
+  '/dashboard/services': typeof AuthenticatedDashboardServicesRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/support': typeof AuthenticatedDashboardSupportRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/queues/active': typeof AuthenticatedDashboardQueuesActiveRoute
+  '/dashboard/queues/completed': typeof AuthenticatedDashboardQueuesCompletedRoute
+  '/dashboard/queues/now-serving': typeof AuthenticatedDashboardQueuesNowServingRoute
+  '/dashboard/queues/scheduled': typeof AuthenticatedDashboardQueuesScheduledRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/dashboard/businesses': typeof AuthenticatedDashboardBusinessesRoute
+  '/dashboard/customers': typeof AuthenticatedDashboardCustomersRoute
+  '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
+  '/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
+  '/dashboard/services': typeof AuthenticatedDashboardServicesRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/support': typeof AuthenticatedDashboardSupportRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/queues/active': typeof AuthenticatedDashboardQueuesActiveRoute
+  '/dashboard/queues/completed': typeof AuthenticatedDashboardQueuesCompletedRoute
+  '/dashboard/queues/now-serving': typeof AuthenticatedDashboardQueuesNowServingRoute
+  '/dashboard/queues/scheduled': typeof AuthenticatedDashboardQueuesScheduledRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/dashboard/businesses': typeof AuthenticatedDashboardBusinessesRoute
+  '/_authenticated/dashboard/customers': typeof AuthenticatedDashboardCustomersRoute
+  '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
+  '/_authenticated/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
+  '/_authenticated/dashboard/services': typeof AuthenticatedDashboardServicesRoute
+  '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/support': typeof AuthenticatedDashboardSupportRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/queues/active': typeof AuthenticatedDashboardQueuesActiveRoute
+  '/_authenticated/dashboard/queues/completed': typeof AuthenticatedDashboardQueuesCompletedRoute
+  '/_authenticated/dashboard/queues/now-serving': typeof AuthenticatedDashboardQueuesNowServingRoute
+  '/_authenticated/dashboard/queues/scheduled': typeof AuthenticatedDashboardQueuesScheduledRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/dashboard/businesses'
+    | '/dashboard/customers'
+    | '/dashboard/notifications'
+    | '/dashboard/reports'
+    | '/dashboard/services'
+    | '/dashboard/settings'
+    | '/dashboard/support'
+    | '/dashboard/'
+    | '/dashboard/queues/active'
+    | '/dashboard/queues/completed'
+    | '/dashboard/queues/now-serving'
+    | '/dashboard/queues/scheduled'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard/businesses'
+    | '/dashboard/customers'
+    | '/dashboard/notifications'
+    | '/dashboard/reports'
+    | '/dashboard/services'
+    | '/dashboard/settings'
+    | '/dashboard/support'
+    | '/dashboard'
+    | '/dashboard/queues/active'
+    | '/dashboard/queues/completed'
+    | '/dashboard/queues/now-serving'
+    | '/dashboard/queues/scheduled'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/dashboard/businesses'
+    | '/_authenticated/dashboard/customers'
+    | '/_authenticated/dashboard/notifications'
+    | '/_authenticated/dashboard/reports'
+    | '/_authenticated/dashboard/services'
+    | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/support'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/queues/active'
+    | '/_authenticated/dashboard/queues/completed'
+    | '/_authenticated/dashboard/queues/now-serving'
+    | '/_authenticated/dashboard/queues/scheduled'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -101,15 +250,119 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/businesses': {
+      id: '/_authenticated/dashboard/businesses'
+      path: '/dashboard/businesses'
+      fullPath: '/dashboard/businesses'
+      preLoaderRoute: typeof AuthenticatedDashboardBusinessesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/customers': {
+      id: '/_authenticated/dashboard/customers'
+      path: '/dashboard/customers'
+      fullPath: '/dashboard/customers'
+      preLoaderRoute: typeof AuthenticatedDashboardCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/notifications': {
+      id: '/_authenticated/dashboard/notifications'
+      path: '/dashboard/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/reports': {
+      id: '/_authenticated/dashboard/reports'
+      path: '/dashboard/reports'
+      fullPath: '/dashboard/reports'
+      preLoaderRoute: typeof AuthenticatedDashboardReportsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/services': {
+      id: '/_authenticated/dashboard/services'
+      path: '/dashboard/services'
+      fullPath: '/dashboard/services'
+      preLoaderRoute: typeof AuthenticatedDashboardServicesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/settings': {
+      id: '/_authenticated/dashboard/settings'
+      path: '/dashboard/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/support': {
+      id: '/_authenticated/dashboard/support'
+      path: '/dashboard/support'
+      fullPath: '/dashboard/support'
+      preLoaderRoute: typeof AuthenticatedDashboardSupportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/queues/active': {
+      id: '/_authenticated/dashboard/queues/active'
+      path: '/dashboard/queues/active'
+      fullPath: '/dashboard/queues/active'
+      preLoaderRoute: typeof AuthenticatedDashboardQueuesActiveRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/queues/completed': {
+      id: '/_authenticated/dashboard/queues/completed'
+      path: '/dashboard/queues/completed'
+      fullPath: '/dashboard/queues/completed'
+      preLoaderRoute: typeof AuthenticatedDashboardQueuesCompletedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/queues/now-serving': {
+      id: '/_authenticated/dashboard/queues/now-serving'
+      path: '/dashboard/queues/now-serving'
+      fullPath: '/dashboard/queues/now-serving'
+      preLoaderRoute: typeof AuthenticatedDashboardQueuesNowServingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/queues/scheduled': {
+      id: '/_authenticated/dashboard/queues/scheduled'
+      path: '/dashboard/queues/scheduled'
+      fullPath: '/dashboard/queues/scheduled'
+      preLoaderRoute: typeof AuthenticatedDashboardQueuesScheduledRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardBusinessesRoute: typeof AuthenticatedDashboardBusinessesRoute
+  AuthenticatedDashboardCustomersRoute: typeof AuthenticatedDashboardCustomersRoute
+  AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
+  AuthenticatedDashboardReportsRoute: typeof AuthenticatedDashboardReportsRoute
+  AuthenticatedDashboardServicesRoute: typeof AuthenticatedDashboardServicesRoute
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardSupportRoute: typeof AuthenticatedDashboardSupportRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardQueuesActiveRoute: typeof AuthenticatedDashboardQueuesActiveRoute
+  AuthenticatedDashboardQueuesCompletedRoute: typeof AuthenticatedDashboardQueuesCompletedRoute
+  AuthenticatedDashboardQueuesNowServingRoute: typeof AuthenticatedDashboardQueuesNowServingRoute
+  AuthenticatedDashboardQueuesScheduledRoute: typeof AuthenticatedDashboardQueuesScheduledRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardBusinessesRoute: AuthenticatedDashboardBusinessesRoute,
+  AuthenticatedDashboardCustomersRoute: AuthenticatedDashboardCustomersRoute,
+  AuthenticatedDashboardNotificationsRoute:
+    AuthenticatedDashboardNotificationsRoute,
+  AuthenticatedDashboardReportsRoute: AuthenticatedDashboardReportsRoute,
+  AuthenticatedDashboardServicesRoute: AuthenticatedDashboardServicesRoute,
+  AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+  AuthenticatedDashboardSupportRoute: AuthenticatedDashboardSupportRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedDashboardQueuesActiveRoute:
+    AuthenticatedDashboardQueuesActiveRoute,
+  AuthenticatedDashboardQueuesCompletedRoute:
+    AuthenticatedDashboardQueuesCompletedRoute,
+  AuthenticatedDashboardQueuesNowServingRoute:
+    AuthenticatedDashboardQueuesNowServingRoute,
+  AuthenticatedDashboardQueuesScheduledRoute:
+    AuthenticatedDashboardQueuesScheduledRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

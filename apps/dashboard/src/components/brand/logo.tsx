@@ -9,6 +9,8 @@ type LogoProps = {
   size?: 'xs' | 'sm' | 'md' | 'lg'
   /** Multiplier for the SVG icon inside the box, default 1. Use to make the glyph larger. */
   scale?: number
+  /** Render only the mark (used when the sidebar is collapsed to icons only) */
+  hideWordmark?: boolean
 }
 
 const BASE_BOX = { xs: 32, sm: 48, md: 95, lg: 150 } as const
@@ -89,6 +91,7 @@ export function Logo({
   tone = 'dark',
   size = 'md',
   scale = 1,
+  hideWordmark = false,
 }: LogoProps) {
   const box = BASE_BOX[size]
   const svg = Math.min(Math.round(BASE_SVG[size] * scale), box - 4)
@@ -99,17 +102,19 @@ export function Logo({
     <Link to="/dashboard">
       <div className={cn('flex items-center gap-2', className)}>
         <TaboorMark box={box} svg={svg} offset={offset} tone={tone} />
-        <span
-          className={cn(
-            'font-black tracking-[-0.035em] leading-none whitespace-nowrap transition-colors duration-300 ease-out',
-            tone === 'light'
-              ? 'text-paper hover:text-amber'
-              : 'text-ink hover:text-amber',
-          )}
-          style={{ fontSize: word }}
-        >
-          taboor<span style={{ color: '#F6A253' }}>.</span>
-        </span>
+        {!hideWordmark && (
+          <span
+            className={cn(
+              'font-black tracking-[-0.035em] leading-none whitespace-nowrap transition-colors duration-300 ease-out',
+              tone === 'light'
+                ? 'text-paper hover:text-amber'
+                : 'text-ink hover:text-amber',
+            )}
+            style={{ fontSize: word }}
+          >
+            taboor<span style={{ color: '#F6A253' }}>.</span>
+          </span>
+        )}
       </div>
     </Link>
   )

@@ -1,9 +1,9 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '#/feature/auth/auth-store'
 import { ensureAuthInitialized } from '#/lib/client'
-import { Logo } from '#/components/brand/logo'
-import NavMenu from '#/components/layout/NavMenu'
-import AvatarDropdown from '#/components/AvatarDropdown'
+import AppSidebar from '#/components/layout/AppSidebar'
+import SidebarToggle from '#/components/layout/SidebarToggle'
+import { SidebarInset, SidebarProvider } from '#/components/ui/sidebar'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async () => {
@@ -23,25 +23,16 @@ export const Route = createFileRoute('/_authenticated')({
 
 function AuthenticatedLayout() {
   return (
-    <div className="min-h-dvh w-full">
-      <header className="flex items-center justify-between border-b bg-background px-6 py-3 shadow">
-        {/* Logo / brand */}
-        <Logo size="xs" scale={1.3} />
+    <SidebarProvider>
+      <AppSidebar />
 
-        {/* Navigation links/dropdowns - sibling of logo */}
-        <NavMenu />
+      <SidebarToggle />
 
-        {/* Right side actions - sibling of nav, not inside it */}
-        <div className="flex items-center gap-3">
-          {/* Theme toggle */}
-          {/* Avatar dropdown (profile, logout) */}
-          <AvatarDropdown />
+      <SidebarInset>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          <Outlet />
         </div>
-      </header>
-
-      <main className="px-4">
-        <Outlet />
-      </main>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
