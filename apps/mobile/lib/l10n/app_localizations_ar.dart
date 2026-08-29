@@ -231,6 +231,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tryingText => 'اللحظات...';
 
   @override
+  String get loggingInText => 'جاري تسجيل الدخول...';
+
+  @override
   String get onboardingOneTitle => 'استنى وأنت في بيتك';
 
   @override

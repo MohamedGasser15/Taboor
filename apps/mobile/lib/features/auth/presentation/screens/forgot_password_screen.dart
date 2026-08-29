@@ -4,6 +4,7 @@ import 'package:taboor/core/services/message_service.dart';
 import 'package:taboor/core/themes/app_colors.dart';
 import 'package:taboor/core/utils/app_responsive.dart';
 import 'package:taboor/core/utils/input_formatters.dart';
+import 'package:taboor/core/widgets/loader_icon.dart';
 import 'package:taboor/features/auth/data/auth_api.dart';
 import 'package:taboor/features/auth/presentation/widgets/password_strength_meter.dart';
 import 'package:taboor/features/splash/presentation/widgets/taboor_logo.dart';
@@ -933,15 +934,9 @@ class _StepLoadingButton extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Center(
-        child: SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: AppColors.paper,
-          ),
-        ),
+      child: LoadingButton(
+        label: AppLocalizations.of(context).tryingText,
+        color: AppColors.paper,
       ),
     );
   }

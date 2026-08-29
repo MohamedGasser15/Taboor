@@ -536,6 +536,12 @@ abstract class AppLocalizations {
   /// **'Trying...'**
   String get tryingText;
 
+  /// No description provided for @loggingInText.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in...'**
+  String get loggingInText;
+
   /// No description provided for @onboardingOneTitle.
   ///
   /// In en, this message translates to:

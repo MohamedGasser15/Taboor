@@ -5,6 +5,7 @@ import 'package:taboor/core/services/session_manager.dart';
 import 'package:taboor/core/themes/app_colors.dart';
 import 'package:taboor/core/utils/app_responsive.dart';
 import 'package:taboor/core/utils/input_formatters.dart';
+import 'package:taboor/core/widgets/loader_icon.dart';
 import 'package:taboor/features/auth/data/auth_api.dart';
 import 'package:taboor/features/auth/data/auth_models.dart';
 import 'package:taboor/features/auth/data/country.dart';
@@ -39,6 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscure = true;
   bool _confirmObscure = true;
   bool _isLoading = false;
+  bool _signingInWithGoogle = false;
   String? _emailError;
   String? _fullNameError;
   String? _phoneError;
@@ -64,21 +66,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   /// Quick Google sign-in from the register screen.
   Future<void> _googleLogin() async {
-    if (_isLoading) return;
+    if (_isLoading || _signingInWithGoogle) return;
+    _signingInWithGoogle = true; // guard only — no button spinner.
     final l10n = AppLocalizations.of(context);
-    setState(() => _isLoading = true);
 
     final idToken = await GoogleAuthService.signInWithGoogle();
+    _signingInWithGoogle = false;
     if (!mounted) return;
 
     if (idToken == null) {
-      setState(() => _isLoading = false);
       return; // User cancelled.
     }
 
     final res = await _authApi.externalLogin(idToken);
     if (!mounted) return;
-    setState(() => _isLoading = false);
 
     if (!res.success || res.data?.token.isEmpty != false) {
       MessageService.showError(
@@ -89,14 +90,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     MessageService.showSuccess(context: context, message: l10n.loginSuccess);
+    final baseUser = res.data?.toUser();
+    final user = User(
+      id: baseUser?.id ?? '',
+      fullName: GoogleAuthService.savedDisplayName.isNotEmpty
+          ? GoogleAuthService.savedDisplayName
+          : (baseUser?.email ?? ''),
+      email: GoogleAuthService.savedEmail.isNotEmpty
+          ? GoogleAuthService.savedEmail
+          : (baseUser?.email ?? ''),
+      role: baseUser?.role ?? '',
+    );
     await SessionManager.saveLogin(LoginResponse(
+      user: user,
       token: res.data?.token,
       refreshToken: res.data?.refreshToken,
     ));
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, _, _) => const HomeScreen(),
+        pageBuilder: (_, _, _) => HomeScreen(
+            userName: user.fullName.isEmpty ? user.email : user.fullName),
         transitionsBuilder: (_, animation, _, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 400),
@@ -1095,15 +1109,9 @@ class _StepLoadingButton extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Center(
-        child: SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: AppColors.paper,
-          ),
-        ),
+      child: LoadingButton(
+        label: AppLocalizations.of(context).tryingText,
+        color: AppColors.paper,
       ),
     );
   }

@@ -237,6 +237,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tryingText => 'Trying...';
 
   @override
+  String get loggingInText => 'Signing in...';
+
+  @override
   String get onboardingOneTitle => 'Wait, from the comfort of your home';
 
   @override

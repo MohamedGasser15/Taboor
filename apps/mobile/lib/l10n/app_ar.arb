@@ -89,6 +89,7 @@
   "passwordMatchOk": "كلمتا المرور متطابقتين",
   "latinOnly": "اكتب بإنجليزي (حروف وأرقام انجليزية بس).",
   "tryingText": "اللحظات...",
+  "loggingInText": "جاري تسجيل الدخول...",
 
   "onboardingOneTitle": "استنى وأنت في بيتك",
   "onboardingOneSubtitle": "سجّل مكانك من أي مكان\nواحصل على رقمك الفوري مجاناً",

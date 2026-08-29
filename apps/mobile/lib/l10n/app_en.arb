@@ -89,6 +89,7 @@
   "passwordMatchOk": "Passwords match",
   "latinOnly": "Use English letters and numbers only.",
   "tryingText": "Trying...",
+  "loggingInText": "Signing in...",
 
   "onboardingOneTitle": "Wait, from the comfort of your home",
   "onboardingOneSubtitle": "Reserve your spot from anywhere\nand get your instant number for free",
