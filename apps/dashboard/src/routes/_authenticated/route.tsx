@@ -2,12 +2,9 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '#/feature/auth/auth-store'
 import { ensureAuthInitialized } from '#/lib/client'
 import AppSidebar from '#/components/layout/AppSidebar'
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '#/components/ui/sidebar'
-import { Separator } from '#/components/ui/separator'
+import { PageHeaderSlotProvider } from '#/components/layout/PageHeaderSlot'
+import { SidebarInset, SidebarProvider } from '#/components/ui/sidebar'
+import ShellHeader from '#/components/ShellHeader'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async () => {
@@ -31,17 +28,13 @@ function AuthenticatedLayout() {
       <AppSidebar />
 
       <SidebarInset className="h-svh overflow-y-auto">
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur">
-          <SidebarTrigger />
+        <PageHeaderSlotProvider>
+          <ShellHeader />
 
-          <Separator orientation="vertical" className="h-4" />
-
-          {/* ThemeToggle slot reserved */}
-        </header>
-
-        <div className="flex-1 p-4">
-          <Outlet />
-        </div>
+          <div className="flex-1 p-4">
+            <Outlet />
+          </div>
+        </PageHeaderSlotProvider>
       </SidebarInset>
     </SidebarProvider>
   )

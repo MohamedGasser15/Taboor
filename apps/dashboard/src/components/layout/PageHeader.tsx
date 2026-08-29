@@ -1,4 +1,6 @@
+import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
+import { usePageHeaderSlot } from './PageHeaderSlot'
 
 type PageHeaderProps = {
   title: string
@@ -7,12 +9,16 @@ type PageHeaderProps = {
 }
 
 function PageHeader({ title, description, actions }: PageHeaderProps) {
-  return (
-    <header className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-background/95 px-4 py-3 backdrop-blur">
+  const { container } = usePageHeaderSlot()
+
+  const content = (
+    <div className="flex w-full min-w-0 items-center justify-between gap-2">
       <div className="min-w-0">
-        <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
+        <h1 className="truncate text-base font-semibold tracking-tight">
+          {title}
+        </h1>
         {description && (
-          <p className="mt-0.5 truncate text-sm text-muted-foreground">
+          <p className="truncate text-xs text-muted-foreground">
             {description}
           </p>
         )}
@@ -20,8 +26,11 @@ function PageHeader({ title, description, actions }: PageHeaderProps) {
       {actions && (
         <div className="flex shrink-0 items-center gap-2">{actions}</div>
       )}
-    </header>
+    </div>
   )
+
+  if (!container) return null
+  return createPortal(content, container)
 }
 
 export default PageHeader

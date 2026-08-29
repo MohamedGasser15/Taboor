@@ -10,7 +10,7 @@ function RouteComponent() {
     <>
       <PageHeader
         title="Dashboard"
-        description="Overview of your location's queue."
+        // description="Overview of your location's queue."
       />
       <div className="text-sm text-muted-foreground">
         Dashboard — under construction

@@ -22,6 +22,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarSeparator,
   useSidebar,
 } from '#/components/ui/sidebar'
 import { managementItems, queueItems, systemItems } from './sidebarConfig'
@@ -36,11 +37,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="flex items-center px-2 py-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+      <SidebarHeader className="h-14 justify-center px-2 group-data-[collapsible=icon]:px-0">
+        <div className="flex items-center group-data-[collapsible=icon]:justify-center">
           <Logo size="xs" scale={1.3} hideWordmark={state === 'collapsed'} />
         </div>
       </SidebarHeader>
+      <SidebarSeparator className="mx-0" />
 
       <SidebarContent>
         <SidebarGroup>
