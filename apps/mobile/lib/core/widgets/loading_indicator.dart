@@ -1,5 +1,6 @@
 // core/widgets/loading_indicator.dart
 import 'package:flutter/material.dart';
+import 'package:taboor/core/widgets/loader_icon.dart';
 
 class LoadingIndicator extends StatelessWidget {
   final Color? color;
@@ -14,13 +15,10 @@ class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: CircularProgressIndicator(
-          strokeWidth: 3,
-          color: color ?? Theme.of(context).colorScheme.primary,
-        ),
+      child: LoaderIcon(
+        size: size,
+        color: color ?? Theme.of(context).colorScheme.primary,
+        strokeWidth: 2.5,
       ),
     );
   }
