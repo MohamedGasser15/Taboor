@@ -1,4 +1,6 @@
 // features/auth/data/auth_models.dart
+import 'dart:convert';
+
 class ApiResponse<T> {
   final bool success;
   final String? message;
@@ -119,6 +121,8 @@ class ExternalLoginResponse {
   final bool hasPassword;
   final String token;
   final String refreshToken;
+  final DateTime? refreshTokenExpiry;
+  final User? user;
 
   const ExternalLoginResponse({
     this.email,
@@ -126,6 +130,8 @@ class ExternalLoginResponse {
     this.hasPassword = false,
     this.token = '',
     this.refreshToken = '',
+    this.refreshTokenExpiry,
+    this.user,
   });
 
   factory ExternalLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -135,6 +141,42 @@ class ExternalLoginResponse {
       hasPassword: json['hasPassword'] == true,
       token: json['token'] as String? ?? '',
       refreshToken: json['refreshToken'] as String? ?? '',
+      refreshTokenExpiry: json['refreshTokenExpiry'] == null
+          ? null
+          : DateTime.tryParse(json['refreshTokenExpiry'].toString()),
+      user: json['user'] == null ? null : User.fromJson(json['user']),
     );
+  }
+
+  /// Builds a usable [User] record even when the backend didn't include the
+  /// full user object. Fills id/email from the JWT payload when available.
+  User toUser() {
+    final fromJson = user;
+    if (fromJson != null) return fromJson;
+
+    final payload = _decodeJwtPayload(token);
+    return User(
+      id: payload['sub']?.toString() ?? '',
+      fullName: payload['name']?.toString() ?? '',
+      email: email ?? payload['email']?.toString() ?? '',
+      role: payload['role']?.toString() ?? '',
+    );
+  }
+
+  static Map<String, dynamic> _decodeJwtPayload(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length < 2) return {};
+      final payloadPart =
+          parts[1].replaceAll('-', '+').replaceAll('_', '/');
+      final padded = payloadPart.padRight(
+        payloadPart.length + ((4 - payloadPart.length % 4) % 4),
+        '=',
+      );
+      final decoded = utf8.decode(base64.decode(padded));
+      return jsonDecode(decoded) as Map<String, dynamic>;
+    } catch (_) {
+      return {};
+    }
   }
 }

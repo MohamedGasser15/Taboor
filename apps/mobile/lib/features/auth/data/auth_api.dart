@@ -1,6 +1,7 @@
 // features/auth/data/auth_api.dart
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:taboor/core/constants/api_endpoints.dart';
 import 'package:taboor/features/auth/data/auth_models.dart';
@@ -210,6 +211,9 @@ class AuthApi {
 
   /// Validates a Google ID token and returns session tokens.
   Future<ApiResponse<ExternalLoginResponse>> externalLogin(String idToken) async {
+    const debugTag = 'GOOGLE_LOGIN_API';
+    debugPrint('[$debugTag] calling POST ${ApiEndpoints.googleMobile}');
+    debugPrint('[$debugTag] idToken length=${idToken.length}');
     try {
       final res = await _client
           .post(
@@ -219,8 +223,12 @@ class AuthApi {
           )
           .timeout(_timeout);
 
+      debugPrint('[$debugTag] response status=${res.statusCode}');
+      debugPrint('[$debugTag] response body=${res.body}');
+
       return _parse(res, ExternalLoginResponse.fromJson);
-    } on Exception {
+    } on Exception catch (e) {
+      debugPrint('[$debugTag] EXCEPTION: $e');
       return const ApiResponse(
         success: false,
         error: 'Network error. Please check your connection.',

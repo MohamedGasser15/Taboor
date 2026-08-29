@@ -28,20 +28,44 @@ class GoogleAuthService {
   /// Performs Google Sign-In and returns the ID token, or null when the
   /// user cancels / the flow fails.
   static Future<String?> signInWithGoogle() async {
+    final debugTag = 'GOOGLE_SIGN_IN';
+    debugPrint('[$debugTag] starting sign-in (apple=$_isApple)');
     try {
+      // Always show the account picker — clear any previously signed-in
+      // Google session before starting a fresh sign-in.
+      await _googleSignIn.signOut();
+
       final account = await _googleSignIn
           .signIn()
           .timeout(const Duration(seconds: 30));
-      if (account == null) return null;
+      if (account == null) {
+        debugPrint('[$debugTag] account returned null -> user cancelled');
+        return null;
+      }
+      debugPrint('[$debugTag] account = ${account.email} '
+          '(${account.displayName ?? 'no-name'})');
 
       final auth = await account.authentication;
       final idToken = auth.idToken;
-      // Keep the google account freshly stored so logout stays in sync.
-      if (idToken != null) {
-        await SharedPrefs.setString('google_id_token', idToken);
+      debugPrint('[$debugTag] got idToken? ${idToken != null}'
+          ' length=${idToken?.length ?? 0}');
+      if (idToken == null) {
+        debugPrint('[$debugTag] FAILED: idToken is null '
+            '(likely clientId/serverClientId misconfigured)');
+        return null;
       }
+      // Keep the google account freshly stored so logout stays in sync.
+      await SharedPrefs.setString('google_id_token', idToken);
+      // Remember the display name + email so the profile shows them even
+      // though the backend response doesn't include a full user object.
+      await SharedPrefs.setString(
+        'google_display_name',
+        account.displayName ?? '',
+      );
+      await SharedPrefs.setString('google_email', account.email);
       return idToken;
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('[$debugTag] ERROR: $e\n$st');
       return null;
     }
   }
@@ -54,4 +78,10 @@ class GoogleAuthService {
   /// True when the logged in session came from Google.
   static bool get isGoogleSession =>
       SharedPrefs.getStringValue('google_id_token') != null;
+
+  /// The display name / email saved from the last Google sign-in.
+  static String get savedDisplayName =>
+      SharedPrefs.getStringValue('google_display_name') ?? '';
+  static String get savedEmail =>
+      SharedPrefs.getStringValue('google_email') ?? '';
 }
