@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { cn } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 
@@ -93,6 +95,7 @@ export function Logo({
   scale = 1,
   hideWordmark = false,
 }: LogoProps) {
+  const { t } = useTranslation('common')
   const box = BASE_BOX[size]
   const svg = Math.min(Math.round(BASE_SVG[size] * scale), box - 4)
   const offset = BASE_OFFSET[size]
@@ -112,7 +115,8 @@ export function Logo({
             )}
             style={{ fontSize: word }}
           >
-            taboor<span style={{ color: '#F6A253' }}>.</span>
+            {t('brand')}
+            <span style={{ color: '#F6A253' }}>.</span>
           </span>
         )}
       </div>
