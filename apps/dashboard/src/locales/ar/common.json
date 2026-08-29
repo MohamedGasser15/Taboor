@@ -1,0 +1,53 @@
+{
+  "underConstruction": "{{page}} — قيد الإنشاء",
+  "pages": {
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "description": "نظرة عامة على طابور موقعك."
+    },
+    "nowServing": {
+      "title": "قيد الخدمة",
+      "description": "من يتم تقديم الخدمة له حالياً."
+    },
+    "activeQueues": {
+      "title": "الطوابير النشطة",
+      "description": "الطوابير المفتوحة حالياً في موقعك."
+    },
+    "scheduled": {
+      "title": "الطوابير المجدولة",
+      "description": "الطوابير المحجوزة مسبقاً."
+    },
+    "completed": {
+      "title": "الطوابير المكتملة",
+      "description": "جلسات الطابور المكتملة مؤخراً."
+    },
+    "customers": {
+      "title": "العملاء",
+      "description": "إدارة عملائك وسجلهم."
+    },
+    "services": {
+      "title": "الخدمات",
+      "description": "الخدمات التي يقف عملاؤك في الطابور للحصول عليها."
+    },
+    "businesses": {
+      "title": "الأنشطة التجارية",
+      "description": "المواقع والأنشطة التجارية على المنصة."
+    },
+    "reports": {
+      "title": "التقارير",
+      "description": "التحليلات والرؤى الخاصة بموقعك."
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "description": "التنبيهات والتحديثات لموقعك."
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "description": "تفضيلات حسابك وموقعك."
+    },
+    "support": {
+      "title": "الدعم",
+      "description": "المساعدة وموارد التواصل."
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "toggleSidebar": "Toggle sidebar",
+  "groups": {
+    "overview": "Overview",
+    "queues": "Queues",
+    "management": "Management",
+    "system": "System"
+  },
+  "items": {
+    "dashboard": "Dashboard",
+    "nowServing": "Now Serving",
+    "activeQueues": "Active Queues",
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "customers": "Customers",
+    "services": "Services",
+    "businesses": "Businesses",
+    "reports": "Reports",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "support": "Support"
+  },
+  "account": {
+    "label": "Account",
+    "billing": "Billing",
+    "notifications": "Notifications",
+    "signOut": "Sign out",
+    "menuAria": "Open account menu"
+  },
+  "language": {
+    "label": "Language"
+  }
+}

@@ -1,15 +1,13 @@
-import { z } from "zod";
+import { z } from 'zod'
+import type { TFunction } from 'i18next'
 
-export const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .email("please enter a valid email address"),
+export const createLoginSchema = (t: TFunction) =>
+  z.object({
+    email: z.string().trim().email(t('form.emailInvalid')),
+    password: z
+      .string()
+      .min(8, t('form.passwordMin'))
+      .regex(/[A-Z]/, { message: t('form.passwordUppercase') }),
+  })
 
-  password: z
-    .string()
-    .min(8, "password has to be at least 8 characters")
-    .regex(/[A-Z]/, { message: "Must contain at least one uppercase letter" })
-});
-
-export type LoginFormValues = z.infer<typeof loginSchema>;
+export type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>

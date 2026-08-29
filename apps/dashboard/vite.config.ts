@@ -23,7 +23,13 @@ const config = defineConfig({
             styles: ['normal'],
             subset: 'latin',
             variable: true
-          }
+          },
+          {
+            name: 'Tajawal',
+            styles: ['normal'],
+            subset: 'arabic',
+            weights: [400, 500, 700, 900],
+          },
         ],
       },
     }),

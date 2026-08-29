@@ -21,6 +21,7 @@ body {
   --font-heading: var(--font-sans);
   --font-sans:
     'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-tajawal: 'Tajawal', ui-sans-serif, system-ui, sans-serif;
   --color-ink: #0b4c56;
   --color-deep-teal: #103f4b;
   --color-teal: #159f99;
@@ -136,6 +137,20 @@ body {
   --sidebar-accent-foreground: oklch(0.951 0.018 175.309); /* softTeal */
   --sidebar-border: oklch(0.384 0.062 210.834); /* ink */
   --sidebar-ring: oklch(0.636 0.106 189.977); /* teal */
+}
+
+html[dir='rtl'] {
+  font-family:
+    'Tajawal',
+    'Inter Variable',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+[dir='rtl'] .icon-flip {
+  transform: scaleX(-1);
 }
 
 @layer base {

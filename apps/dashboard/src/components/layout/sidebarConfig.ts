@@ -1,50 +1,58 @@
-import { BarChart3Icon, BellIcon, CalendarClockIcon, CheckCircle2Icon, Clock3Icon, LifeBuoyIcon, ListOrderedIcon, SettingsIcon, StoreIcon, TicketIcon, UsersIcon } from "lucide-react"
-import type { LucideIcon  } from "lucide-react";
+import {
+  BarChart3Icon,
+  BellIcon,
+  CalendarClockIcon,
+  CheckCircle2Icon,
+  Clock3Icon,
+  LifeBuoyIcon,
+  ListOrderedIcon,
+  SettingsIcon,
+  StoreIcon,
+  TicketIcon,
+  UsersIcon,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-type NavItem = {
-  title: string
+export type NavItem = {
+  key: string
   url: string
   icon: LucideIcon
   badge?: string
 }
 
 export const queueItems: NavItem[] = [
+  { key: 'nowServing', url: '/dashboard/queues/now-serving', icon: Clock3Icon },
   {
-    title: 'Now Serving',
-    url: '/dashboard/queues/now-serving',
-    icon: Clock3Icon,
-  },
-  {
-    title: 'Active Queues',
+    key: 'activeQueues',
     url: '/dashboard/queues/active',
     icon: ListOrderedIcon,
   },
   {
-    title: 'Scheduled',
+    key: 'scheduled',
     url: '/dashboard/queues/scheduled',
     icon: CalendarClockIcon,
   },
   {
-    title: 'Completed',
+    key: 'completed',
     url: '/dashboard/queues/completed',
     icon: CheckCircle2Icon,
   },
 ]
 
 export const managementItems: NavItem[] = [
-  { title: 'Customers', url: '/dashboard/customers', icon: UsersIcon },
-  { title: 'Services', url: '/dashboard/services', icon: TicketIcon },
-  { title: 'Businesses', url: '/dashboard/businesses', icon: StoreIcon },
-  { title: 'Reports', url: '/dashboard/reports', icon: BarChart3Icon },
+  { key: 'customers', url: '/dashboard/customers', icon: UsersIcon },
+  { key: 'services', url: '/dashboard/services', icon: TicketIcon },
+  { key: 'businesses', url: '/dashboard/businesses', icon: StoreIcon },
+  { key: 'reports', url: '/dashboard/reports', icon: BarChart3Icon },
 ]
 
 export const systemItems: NavItem[] = [
   {
-    title: 'Notifications',
+    key: 'notifications',
     url: '/dashboard/notifications',
     icon: BellIcon,
     badge: '3',
   },
-  { title: 'Settings', url: '/dashboard/settings', icon: SettingsIcon },
-  { title: 'Support', url: '/dashboard/support', icon: LifeBuoyIcon },
+  { key: 'settings', url: '/dashboard/settings', icon: SettingsIcon },
+  { key: 'support', url: '/dashboard/support', icon: LifeBuoyIcon },
 ]

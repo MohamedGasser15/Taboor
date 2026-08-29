@@ -1,0 +1,53 @@
+{
+  "underConstruction": "{{page}} — under construction",
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Overview of your location's queue."
+    },
+    "nowServing": {
+      "title": "Now Serving",
+      "description": "Who is currently being served."
+    },
+    "activeQueues": {
+      "title": "Active Queues",
+      "description": "Queues currently open at your location."
+    },
+    "scheduled": {
+      "title": "Scheduled Queues",
+      "description": "Queues booked in advance."
+    },
+    "completed": {
+      "title": "Completed Queues",
+      "description": "Recently finished queue sessions."
+    },
+    "customers": {
+      "title": "Customers",
+      "description": "Manage your customers and their history."
+    },
+    "services": {
+      "title": "Services",
+      "description": "The services your customers queue for."
+    },
+    "businesses": {
+      "title": "Businesses",
+      "description": "Locations and businesses on the platform."
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Analytics and insights for your location."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Alerts and updates for your location."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Preferences for your account and location."
+    },
+    "support": {
+      "title": "Support",
+      "description": "Help and contact resources."
+    }
+  }
+}

@@ -1,10 +1,13 @@
 import {
   BadgeCheckIcon,
   BellIcon,
+  CheckIcon,
   ChevronsUpDownIcon,
   CreditCardIcon,
+  LanguagesIcon,
   LogOutIcon,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +15,14 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
 import { Avatar, AvatarFallback } from '../ui/avatar'
+import { useDirection } from '#/hooks/use-direction'
 import { useLogout } from '#/feature/auth/hooks/use-logout'
 import { useAuthStore } from '#/feature/auth/auth-store'
 
@@ -29,6 +36,8 @@ function getInitials(name: string): string {
 function NavUser() {
   const logout = useLogout()
   const user = useAuthStore((s) => s.user)
+  const { t, i18n } = useTranslation('navbar')
+  const direction = useDirection()
 
   return (
     <SidebarMenu>
@@ -38,7 +47,7 @@ function NavUser() {
             render={
               <SidebarMenuButton
                 size="lg"
-                tooltip="Account"
+                tooltip={t('account.label')}
                 className="h-12 group-data-[collapsible=icon]:justify-center"
               />
             }
@@ -48,18 +57,18 @@ function NavUser() {
                 {getInitials(user?.fullName ?? '')}
               </AvatarFallback>
             </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+            <div className="grid flex-1 text-start text-sm leading-tight group-data-[collapsible=icon]:hidden">
               <span className="truncate font-medium">
-                {user?.fullName ?? 'Account'}
+                {user?.fullName ?? t('account.label')}
               </span>
               <span className="truncate text-xs text-muted-foreground">
                 {user?.email}
               </span>
             </div>
-            <ChevronsUpDownIcon className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
+            <ChevronsUpDownIcon className="ms-auto size-4 group-data-[collapsible=icon]:hidden" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            side="right"
+            side={direction === 'rtl' ? 'left' : 'right'}
             align="end"
             sideOffset={10}
             className="w-56"
@@ -68,7 +77,7 @@ function NavUser() {
               <DropdownMenuLabel>
                 <div className="flex flex-col">
                   <span className="truncate">
-                    {user?.fullName ?? 'Account'}
+                    {user?.fullName ?? t('account.label')}
                   </span>
                   <span className="truncate text-xs font-normal text-muted-foreground">
                     {user?.email}
@@ -77,16 +86,38 @@ function NavUser() {
               </DropdownMenuLabel>
               <DropdownMenuItem>
                 <BadgeCheckIcon />
-                Account
+                {t('account.label')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />
-                Billing
+                {t('account.billing')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon />
-                Notifications
+                {t('account.notifications')}
               </DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <LanguagesIcon />
+                  {t('language.label')}
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent
+                  side={direction === 'rtl' ? 'left' : 'right'}
+                >
+                  <DropdownMenuItem onClick={() => i18n.changeLanguage('en')}>
+                    English
+                    {i18n.language === 'en' && (
+                      <CheckIcon className="ms-auto size-4" />
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => i18n.changeLanguage('ar')}>
+                    العربية
+                    {i18n.language.startsWith('ar') && (
+                      <CheckIcon className="ms-auto size-4" />
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -94,7 +125,7 @@ function NavUser() {
               onClick={() => logout.mutate()}
             >
               <LogOutIcon />
-              Sign Out
+              {t('account.signOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

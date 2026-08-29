@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import PageHeader from '#/components/layout/PageHeader'
 
 export const Route = createFileRoute(
@@ -8,14 +9,17 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
+  const { t } = useTranslation('common')
+  const title = t('pages.scheduled.title')
+
   return (
     <>
       <PageHeader
-        title="Scheduled Queues"
-        description="Queues booked in advance."
+        title={title}
+        description={t('pages.scheduled.description')}
       />
       <div className="text-sm text-muted-foreground">
-        Scheduled Queues — under construction
+        {t('underConstruction', { page: title })}
       </div>
     </>
   )

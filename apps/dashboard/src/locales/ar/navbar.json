@@ -1,0 +1,33 @@
+{
+  "toggleSidebar": "تبديل الشريط الجانبي",
+  "groups": {
+    "overview": "نظرة عامة",
+    "queues": "الطوابير",
+    "management": "الإدارة",
+    "system": "النظام"
+  },
+  "items": {
+    "dashboard": "لوحة التحكم",
+    "nowServing": "قيد الخدمة",
+    "activeQueues": "الطوابير النشطة",
+    "scheduled": "المجدولة",
+    "completed": "المكتملة",
+    "customers": "العملاء",
+    "services": "الخدمات",
+    "businesses": "الأنشطة التجارية",
+    "reports": "التقارير",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات",
+    "support": "الدعم"
+  },
+  "account": {
+    "label": "الحساب",
+    "billing": "الفواتير",
+    "notifications": "الإشعارات",
+    "signOut": "تسجيل الخروج",
+    "menuAria": "فتح قائمة الحساب"
+  },
+  "language": {
+    "label": "اللغة"
+  }
+}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Ticket } from 'lucide-react'
 
 const NEXT_TICKETS = [
@@ -6,12 +7,14 @@ const NEXT_TICKETS = [
 ]
 
 export default function NowServingBoard() {
+  const { t } = useTranslation('auth')
+
   return (
     <div className="w-full max-w-sm rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-black/20 backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2 text-xs font-medium tracking-wide text-white/70 uppercase">
           <Ticket className="size-4" />
-          Now serving
+          {t('board.nowServing')}
         </span>
         <span className="relative flex size-2.5">
           <span className="absolute inline-flex h-full w-full rounded-full bg-amber opacity-75 motion-safe:animate-ping" />
@@ -25,7 +28,7 @@ export default function NowServingBoard() {
         </div>
         <div className="pb-1">
           <p className="text-sm font-semibold text-white">Station 2</p>
-          <p className="text-xs text-white/60">Serving now</p>
+          <p className="text-xs text-white/60">{t('board.servingNow')}</p>
         </div>
       </div>
 

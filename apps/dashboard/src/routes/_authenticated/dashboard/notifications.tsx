@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import PageHeader from '#/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_authenticated/dashboard/notifications')(
@@ -8,14 +9,17 @@ export const Route = createFileRoute('/_authenticated/dashboard/notifications')(
 )
 
 function RouteComponent() {
+  const { t } = useTranslation('common')
+  const title = t('pages.notifications.title')
+
   return (
     <>
       <PageHeader
-        title="Notifications"
-        description="Alerts and updates for your location."
+        title={title}
+        description={t('pages.notifications.description')}
       />
       <div className="text-sm text-muted-foreground">
-        Notifications — under construction
+        {t('underConstruction', { page: title })}
       </div>
     </>
   )

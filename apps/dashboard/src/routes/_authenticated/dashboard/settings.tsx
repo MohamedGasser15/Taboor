@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import PageHeader from '#/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_authenticated/dashboard/settings')({
@@ -6,14 +7,14 @@ export const Route = createFileRoute('/_authenticated/dashboard/settings')({
 })
 
 function RouteComponent() {
+  const { t } = useTranslation('common')
+  const title = t('pages.settings.title')
+
   return (
     <>
-      <PageHeader
-        title="Settings"
-        description="Preferences for your account and location."
-      />
+      <PageHeader title={title} description={t('pages.settings.description')} />
       <div className="text-sm text-muted-foreground">
-        Settings — under construction
+        {t('underConstruction', { page: title })}
       </div>
     </>
   )
