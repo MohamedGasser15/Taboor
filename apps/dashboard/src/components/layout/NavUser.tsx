@@ -13,22 +13,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar'
-import { Avatar, AvatarFallback } from './ui/avatar'
+} from '../ui/dropdown-menu'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
+import { Avatar, AvatarFallback } from '../ui/avatar'
 import { useLogout } from '#/feature/auth/hooks/use-logout'
 import { useAuthStore } from '#/feature/auth/auth-store'
 
-const SideBarMenuFooter = () => {
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return ''
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[1][0]).toUpperCase()
+}
+
+function NavUser() {
   const logout = useLogout()
   const user = useAuthStore((s) => s.user)
-
-  function getInitials(name: string): string {
-    const parts = name.trim().split(/\s+/).filter(Boolean)
-    if (parts.length === 0) return ''
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-    return (parts[0][0] + parts[1][0]).toUpperCase()
-  }
 
   return (
     <SidebarMenu>
@@ -36,7 +36,11 @@ const SideBarMenuFooter = () => {
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <SidebarMenuButton size="lg" tooltip="Account" className="h-12" />
+              <SidebarMenuButton
+                size="lg"
+                tooltip="Account"
+                className="h-12 group-data-[collapsible=icon]:justify-center"
+              />
             }
           >
             <Avatar size="sm">
@@ -44,7 +48,7 @@ const SideBarMenuFooter = () => {
                 {getInitials(user?.fullName ?? '')}
               </AvatarFallback>
             </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
+            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
               <span className="truncate font-medium">
                 {user?.fullName ?? 'Account'}
               </span>
@@ -52,7 +56,7 @@ const SideBarMenuFooter = () => {
                 {user?.email}
               </span>
             </div>
-            <ChevronsUpDownIcon className="ml-auto size-4" />
+            <ChevronsUpDownIcon className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             side="right"
@@ -99,4 +103,4 @@ const SideBarMenuFooter = () => {
   )
 }
 
-export default SideBarMenuFooter
+export default NavUser

@@ -25,7 +25,7 @@ import {
   useSidebar,
 } from '#/components/ui/sidebar'
 import { managementItems, queueItems, systemItems } from './sidebarConfig'
-import SideBarMenuFooter from '../SideBarMenuFooter'
+import NavUser from './NavUser'
 
 export function AppSidebar() {
   const { state } = useSidebar()
@@ -35,9 +35,9 @@ export function AppSidebar() {
     pathname === url || pathname.startsWith(`${url}/`)
 
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center px-2 py-1">
+        <div className="flex items-center px-2 py-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
           <Logo size="xs" scale={1.3} hideWordmark={state === 'collapsed'} />
         </div>
       </SidebarHeader>
@@ -140,7 +140,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <SideBarMenuFooter />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   )

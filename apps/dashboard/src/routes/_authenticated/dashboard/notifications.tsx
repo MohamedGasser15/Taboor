@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import PageHeader from '#/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_authenticated/dashboard/notifications')(
   {
@@ -8,8 +9,14 @@ export const Route = createFileRoute('/_authenticated/dashboard/notifications')(
 
 function RouteComponent() {
   return (
-    <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-      Notifications — under construction
-    </div>
+    <>
+      <PageHeader
+        title="Notifications"
+        description="Alerts and updates for your location."
+      />
+      <div className="text-sm text-muted-foreground">
+        Notifications — under construction
+      </div>
+    </>
   )
 }

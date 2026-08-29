@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import PageHeader from '#/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_authenticated/dashboard/services')({
   component: RouteComponent,
@@ -6,8 +7,14 @@ export const Route = createFileRoute('/_authenticated/dashboard/services')({
 
 function RouteComponent() {
   return (
-    <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-      Services — under construction
-    </div>
+    <>
+      <PageHeader
+        title="Services"
+        description="The services your customers queue for."
+      />
+      <div className="text-sm text-muted-foreground">
+        Services — under construction
+      </div>
+    </>
   )
 }

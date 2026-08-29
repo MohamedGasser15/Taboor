@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import PageHeader from '#/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_authenticated/dashboard/settings')({
   component: RouteComponent,
@@ -6,8 +7,14 @@ export const Route = createFileRoute('/_authenticated/dashboard/settings')({
 
 function RouteComponent() {
   return (
-    <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-      Settings — under construction
-    </div>
+    <>
+      <PageHeader
+        title="Settings"
+        description="Preferences for your account and location."
+      />
+      <div className="text-sm text-muted-foreground">
+        Settings — under construction
+      </div>
+    </>
   )
 }
