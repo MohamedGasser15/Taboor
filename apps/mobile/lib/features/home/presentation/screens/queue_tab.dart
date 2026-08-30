@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:taboor/core/themes/app_colors.dart';
 import 'package:taboor/core/themes/app_text_styles.dart';
-import 'package:taboor/core/utils/app_responsive.dart';
 import 'package:taboor/l10n/app_localizations.dart';
 
 /// Customer's live queue tab.
@@ -18,22 +17,12 @@ class QueueTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final horizontal = AppResponsive.horizontalPadding(context);
-    final topInset = MediaQuery.viewPaddingOf(context).top;
 
     return SafeArea(
       top: false,
-      child: Padding(
-        padding: EdgeInsets.only(top: 24 + topInset),
-        child: _hasActiveTicket
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontal.left,
-                ),
-                child: _LiveStatus(l10n: l10n),
-              )
-            : _EmptyQueue(l10n: l10n),
-      ),
+      child: _hasActiveTicket
+          ? _LiveStatus(l10n: l10n)
+          : _EmptyQueue(l10n: l10n),
     );
   }
 }
@@ -45,16 +34,48 @@ class _LiveStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topInset = MediaQuery.viewPaddingOf(context).top;
     return ListView(
+      padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 24),
       children: [
-        Text(
-          l10n.navQueue,
-          style: AppTextStyles.heading(size: 22),
+        // ===== Header =====
+        Row(
+          children: [
+            Text(
+              l10n.navQueue,
+              style: AppTextStyles.heading(size: 24),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.success.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.bolt_rounded,
+                      color: AppColors.success, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    l10n.queueNowServing,
+                    style: AppTextStyles.label(
+                      color: AppColors.success,
+                      weight: FontWeight.w700,
+                      size: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 20),
-        // رقم التذكرة الكبير
+
+        // ===== رقم التذكرة الكبير =====
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 28),
+          padding: const EdgeInsets.symmetric(vertical: 30),
           decoration: BoxDecoration(
             color: AppColors.ink,
             borderRadius: BorderRadius.circular(26),
@@ -70,7 +91,7 @@ class _LiveStatus extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
+                  horizontal: 14,
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
@@ -85,12 +106,12 @@ class _LiveStatus extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               const Text(
                 'A-12',
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 56,
+                  fontSize: 60,
                   fontWeight: FontWeight.w800,
                   color: AppColors.paper,
                   height: 1,
@@ -100,7 +121,15 @@ class _LiveStatus extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
-        // العداد المباشر
+
+        // ===== العنوان: "بيستقبل دلوقتي" =====
+        Text(
+          l10n.queueNowServing,
+          style: AppTextStyles.heading(size: 16),
+        ),
+        const SizedBox(height: 10),
+
+        // ===== العداد المباشر =====
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -112,28 +141,6 @@ class _LiveStatus extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      color: AppColors.success,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.queueNowServing,
-                    style: AppTextStyles.body(
-                      color: AppColors.gray600,
-                      weight: FontWeight.w500,
-                      size: 14,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
@@ -142,7 +149,7 @@ class _LiveStatus extends StatelessWidget {
                       children: [
                         Text(
                           l10n.queuePeopleAhead(2),
-                          style: AppTextStyles.heading(size: 24),
+                          style: AppTextStyles.heading(size: 28),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -155,14 +162,27 @@ class _LiveStatus extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Text(
-                    'A-07',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.teal,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        l10n.ticketNumberLabel,
+                        style: AppTextStyles.label(
+                          color: AppColors.gray500,
+                          size: 10,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'A-07',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.teal,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -180,21 +200,30 @@ class _LiveStatus extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // نبذة عن "دورك قرب"
+
+        // ===== نبذة "دورك قرب" =====
         Container(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: AppColors.softTeal,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
-              const Icon(Icons.notifications_active_rounded,
-                  color: AppColors.teal),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.teal.withValues(alpha: 0.14),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.notifications_active_rounded,
+                    color: AppColors.teal, size: 20),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  l10n.alertLeaveTitle,
+                  '${l10n.alertLeaveTitle} — ${l10n.alertOnlyTwo}',
                   style: AppTextStyles.body(
                     color: AppColors.ink,
                     weight: FontWeight.w600,
@@ -205,6 +234,7 @@ class _LiveStatus extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 12),
       ],
     );
   }

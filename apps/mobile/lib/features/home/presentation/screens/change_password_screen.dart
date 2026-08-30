@@ -110,68 +110,74 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.profileChangePasswordSubtitle,
-                style: AppTextStyles.body(
-                  color: AppColors.gray600,
-                  size: 14,
-                  height: 1.5,
+
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppColors.paper,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.gray200),
                 ),
-              ),
-              const SizedBox(height: 24),
-              _PasswordField(
-                controller: _oldController,
-                label: l10n.oldPasswordLabel,
-                hint: l10n.oldPasswordHint,
-                obscure: _oldObscure,
-                errorText: _oldError,
-                onToggleVisibility: () =>
-                    setState(() => _oldObscure = !_oldObscure),
-                onChanged: (_) {
-                  if (_oldError != null) setState(() {});
-                },
-              ),
-              const SizedBox(height: 18),
-              _PasswordField(
-                controller: _newController,
-                label: l10n.newPasswordLabel2,
-                hint: l10n.passwordHint,
-                obscure: _newObscure,
-                errorText: _newError,
-                onToggleVisibility: () =>
-                    setState(() => _newObscure = !_newObscure),
-                onChanged: (_) {
-                  if (_newError != null) setState(() {});
-                },
-              ),
-              const SizedBox(height: 14),
-              ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _newController,
-                builder: (context, value, _) =>
-                    PasswordStrengthMeter(password: value.text),
-              ),
-              const SizedBox(height: 18),
-              _PasswordField(
-                controller: _confirmController,
-                label: l10n.confirmPasswordLabel,
-                hint: l10n.passwordHint,
-                obscure: _confirmObscure,
-                errorText: _confirmError,
-                onToggleVisibility: () =>
-                    setState(() => _confirmObscure = !_confirmObscure),
-                onChanged: (_) {
-                  if (_confirmError != null) setState(() {});
-                },
-              ),
-              const SizedBox(height: 10),
-              ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _confirmController,
-                builder: (context, value, _) => Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8),
-                  child: PasswordMatchIndicator(
-                    password: _newController.text,
-                    confirm: value.text,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _PasswordField(
+                      controller: _oldController,
+                      label: l10n.oldPasswordLabel,
+                      hint: l10n.oldPasswordHint,
+                      obscure: _oldObscure,
+                      errorText: _oldError,
+                      onToggleVisibility: () =>
+                          setState(() => _oldObscure = !_oldObscure),
+                      onChanged: (_) {
+                        if (_oldError != null) setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 18),
+                    _PasswordField(
+                      controller: _newController,
+                      label: l10n.newPasswordLabel2,
+                      hint: l10n.passwordHint,
+                      obscure: _newObscure,
+                      errorText: _newError,
+                      onToggleVisibility: () =>
+                          setState(() => _newObscure = !_newObscure),
+                      onChanged: (_) {
+                        if (_newError != null) setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: _newController,
+                      builder: (context, value, _) =>
+                          PasswordStrengthMeter(password: value.text),
+                    ),
+                    const SizedBox(height: 18),
+                    _PasswordField(
+                      controller: _confirmController,
+                      label: l10n.confirmPasswordLabel,
+                      hint: l10n.passwordHint,
+                      obscure: _confirmObscure,
+                      errorText: _confirmError,
+                      onToggleVisibility: () =>
+                          setState(() => _confirmObscure = !_confirmObscure),
+                      onChanged: (_) {
+                        if (_confirmError != null) setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: _confirmController,
+                      builder: (context, value, _) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: PasswordMatchIndicator(
+                          password: _newController.text,
+                          confirm: value.text,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),

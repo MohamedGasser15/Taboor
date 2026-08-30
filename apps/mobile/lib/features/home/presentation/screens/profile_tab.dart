@@ -199,40 +199,14 @@ class _ProfileTabState extends State<ProfileTab> {
                 70,
               ),
               children: [
-                _ProfileHeader(name: name, email: _email),
-                const SizedBox(height: 26),
+                _ProfileHeader(name: name, email: _email, phone: _phone),
+                const SizedBox(height: 22),
 
                 // ===== Account =====
                 _SectionLabel(l10n.profileAccount),
                 const SizedBox(height: 10),
-                _SettingsGroup(
-                  children: [
-                    _SettingsTile(
-                      icon: Icons.badge_outlined,
-                      title: l10n.profileFullName,
-                      subtitle: _fullName != null && _fullName!.isNotEmpty
-                          ? _fullName
-                          : null,
-                      onTap: _openEditProfile,
-                    ),
-                    _SettingsDivider(),
-                    _SettingsTile(
-                      icon: Icons.mail_outline_rounded,
-                      title: l10n.profileEmail,
-                      subtitle:
-                          _email != null && _email!.isNotEmpty ? _email : null,
-                      onTap: _openEditProfile,
-                    ),
-                    if (_phone != null && _phone!.isNotEmpty) ...[
-                      _SettingsDivider(),
-                      _SettingsTile(
-                        icon: Icons.phone_outlined,
-                        title: l10n.profilePhone,
-                        subtitle: _phone,
-                        onTap: _openEditProfile,
-                      ),
-                    ],
-                  ],
+                _AccountSummaryCard(
+                  onTap: _openEditProfile,
                 ),
                 const SizedBox(height: 20),
 
@@ -320,69 +294,105 @@ class _ProfileTabState extends State<ProfileTab> {
 // ===== Header =====
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.name, required this.email});
+  const _ProfileHeader({required this.name, required this.email, this.phone});
 
   final String? name;
   final String? email;
+  final String? phone;
 
   @override
   Widget build(BuildContext context) {
     final nameValue = name ?? '';
     final hasName = nameValue.trim().isNotEmpty;
+    final hasPhone = phone != null && phone!.trim().isNotEmpty;
 
-    return Row(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: AppColors.softTeal,
-            shape: BoxShape.circle,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.paper,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.gray200),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.ink.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
-          child: Center(
-            child: hasName
-                ? Text(
-                    _initials(nameValue),
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.teal,
-                    ),
-                  )
-                : const Icon(Icons.person_rounded,
-                    color: AppColors.teal, size: 30),
-          ),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                nameValue.isEmpty
-                    ? AppLocalizations.of(context).navProfile
-                    : nameValue,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.heading(size: 18),
-              ),
-              if (email != null && email!.isNotEmpty) ...[
-                const SizedBox(height: 3),
-                Text(
-                  email!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.body(
-                    color: AppColors.gray600,
-                    size: 13,
-                  ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Avatar with double ring to match app's softTeal/teal language
+          Container(
+            width: 78,
+            height: 78,
+            decoration: BoxDecoration(
+              color: AppColors.softTeal,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 3),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.teal.withValues(alpha: 0.12),
+                  blurRadius: 14,
+                  offset: const Offset(0, 5),
                 ),
               ],
-            ],
+            ),
+            child: Center(
+              child: hasName
+                  ? Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            _initials(nameValue),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontFamily: 'Tajawal',
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.teal,
+                              height: 1,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        )
+                  : const Icon(Icons.person_rounded,
+                      color: AppColors.teal, size: 34),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  nameValue.isEmpty
+                      ? AppLocalizations.of(context).navProfile
+                      : nameValue,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.heading(size: 19),
+                ),
+                const SizedBox(height: 8),
+                if (email != null && email!.isNotEmpty)
+                  _HeaderInfoRow(
+                    icon: Icons.mail_outline_rounded,
+                    text: email!,
+                  ),
+                if (email != null &&
+                    email!.isNotEmpty &&
+                    hasPhone)
+                  const SizedBox(height: 6),
+                if (hasPhone)
+                  _HeaderInfoRow(
+                    icon: Icons.phone_outlined,
+                    text: phone!,
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -392,6 +402,132 @@ class _ProfileHeader extends StatelessWidget {
     final first = parts.first.characters.first;
     final last = parts.length > 1 ? parts.last.characters.first : '';
     return first.toUpperCase() + last.toUpperCase();
+  }
+}
+
+class _HeaderInfoRow extends StatelessWidget {
+  const _HeaderInfoRow({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 26,
+          height: 26,
+          decoration: BoxDecoration(
+            color: AppColors.softTeal,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 14, color: AppColors.teal),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.body(
+              color: AppColors.gray700,
+              size: 13,
+              weight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AccountSummaryCard extends StatelessWidget {
+  const _AccountSummaryCard({
+    required this.onTap,
+  });
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final subtitle = isArabic
+        ? 'حدث اسمك وبريدك ورقم هاتفك'
+        : 'Update your name, email and phone';
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.paper,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.gray200),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.softTeal,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.person_outline_rounded,
+                  color: AppColors.teal,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.editProfile,
+                      style: AppTextStyles.body(
+                        color: AppColors.ink,
+                        weight: FontWeight.w700,
+                        size: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.body(
+                        color: AppColors.gray600,
+                        size: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.softTeal,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.edit_outlined,
+                  color: AppColors.teal,
+                  size: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
