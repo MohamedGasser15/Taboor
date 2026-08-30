@@ -5,7 +5,10 @@
     "overview": "نظرة عامة",
     "queues": "الطوابير",
     "management": "الإدارة",
-    "system": "النظام"
+    "system": "النظام",
+    "platform": "المنصة",
+    "analytics": "التحليلات",
+    "ops": "التشغيل"
   },
   "items": {
     "dashboard": "لوحة التحكم",
@@ -19,7 +22,15 @@
     "reports": "التقارير",
     "notifications": "الإشعارات",
     "settings": "الإعدادات",
-    "support": "الدعم"
+    "support": "الدعم",
+    "plans": "الخطط",
+    "tenants": "المستأجرون",
+    "subscriptions": "الاشتراكات",
+    "auditLogs": "سجلات التدقيق",
+    "platformReports": "التقارير",
+    "platformSettings": "الإعدادات",
+    "supportTickets": "تذاكر الدعم",
+    "activity": "النشاط"
   },
   "account": {
     "label": "الحساب",

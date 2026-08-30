@@ -49,6 +49,38 @@
     "support": {
       "title": "Support",
       "description": "Help and contact resources."
+    },
+    "plans": {
+      "title": "Plans",
+      "description": "Manage pricing tiers and platform plans."
+    },
+    "tenants": {
+      "title": "Tenants",
+      "description": "All tenants on the platform — platform admin only."
+    },
+    "subscriptions": {
+      "title": "Subscriptions",
+      "description": "Tenant → plan assignments and billing state."
+    },
+    "auditLogs": {
+      "title": "Audit Logs",
+      "description": "Immutable log of every platform admin mutation."
+    },
+    "platformReports": {
+      "title": "Platform Reports",
+      "description": "Cross-tenant revenue and growth analytics."
+    },
+    "platformSettings": {
+      "title": "Platform Settings",
+      "description": "Global platform configuration and feature flags."
+    },
+    "supportTickets": {
+      "title": "Support Tickets",
+      "description": "Ops queue — tenant-reported issues and triage."
+    },
+    "activity": {
+      "title": "Activity",
+      "description": "Recent platform activity and events."
     }
   }
 }

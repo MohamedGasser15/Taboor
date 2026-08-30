@@ -12,6 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedPlatformAdminRouteRouteImport } from './routes/_authenticated/_platformAdmin/route'
+import { Route as AuthenticatedPlatformAdminActivityRouteImport } from './routes/_authenticated/_platformAdmin/activity'
+import { Route as AuthenticatedPlatformAdminAuditLogsRouteImport } from './routes/_authenticated/_platformAdmin/audit-logs'
+import { Route as AuthenticatedPlatformAdminPlansRouteImport } from './routes/_authenticated/_platformAdmin/plans'
+import { Route as AuthenticatedPlatformAdminPlatformReportsRouteImport } from './routes/_authenticated/_platformAdmin/platform-reports'
+import { Route as AuthenticatedPlatformAdminPlatformSettingsRouteImport } from './routes/_authenticated/_platformAdmin/platform-settings'
+import { Route as AuthenticatedPlatformAdminSubscriptionsRouteImport } from './routes/_authenticated/_platformAdmin/subscriptions'
+import { Route as AuthenticatedPlatformAdminSupportTicketsRouteImport } from './routes/_authenticated/_platformAdmin/support-tickets'
+import { Route as AuthenticatedPlatformAdminTenantsRouteImport } from './routes/_authenticated/_platformAdmin/tenants'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardBusinessesRouteImport } from './routes/_authenticated/dashboard/businesses'
 import { Route as AuthenticatedDashboardCustomersRouteImport } from './routes/_authenticated/dashboard/customers'
@@ -39,6 +48,59 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPlatformAdminRouteRoute =
+  AuthenticatedPlatformAdminRouteRouteImport.update({
+    id: '/_platformAdmin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminActivityRoute =
+  AuthenticatedPlatformAdminActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminAuditLogsRoute =
+  AuthenticatedPlatformAdminAuditLogsRouteImport.update({
+    id: '/audit-logs',
+    path: '/audit-logs',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminPlansRoute =
+  AuthenticatedPlatformAdminPlansRouteImport.update({
+    id: '/plans',
+    path: '/plans',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminPlatformReportsRoute =
+  AuthenticatedPlatformAdminPlatformReportsRouteImport.update({
+    id: '/platform-reports',
+    path: '/platform-reports',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminPlatformSettingsRoute =
+  AuthenticatedPlatformAdminPlatformSettingsRouteImport.update({
+    id: '/platform-settings',
+    path: '/platform-settings',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminSubscriptionsRoute =
+  AuthenticatedPlatformAdminSubscriptionsRouteImport.update({
+    id: '/subscriptions',
+    path: '/subscriptions',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminSupportTicketsRoute =
+  AuthenticatedPlatformAdminSupportTicketsRouteImport.update({
+    id: '/support-tickets',
+    path: '/support-tickets',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
+const AuthenticatedPlatformAdminTenantsRoute =
+  AuthenticatedPlatformAdminTenantsRouteImport.update({
+    id: '/tenants',
+    path: '/tenants',
+    getParentRoute: () => AuthenticatedPlatformAdminRouteRoute,
+  } as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/dashboard/',
@@ -115,6 +177,14 @@ const AuthenticatedDashboardQueuesScheduledRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/activity': typeof AuthenticatedPlatformAdminActivityRoute
+  '/audit-logs': typeof AuthenticatedPlatformAdminAuditLogsRoute
+  '/plans': typeof AuthenticatedPlatformAdminPlansRoute
+  '/platform-reports': typeof AuthenticatedPlatformAdminPlatformReportsRoute
+  '/platform-settings': typeof AuthenticatedPlatformAdminPlatformSettingsRoute
+  '/subscriptions': typeof AuthenticatedPlatformAdminSubscriptionsRoute
+  '/support-tickets': typeof AuthenticatedPlatformAdminSupportTicketsRoute
+  '/tenants': typeof AuthenticatedPlatformAdminTenantsRoute
   '/dashboard/businesses': typeof AuthenticatedDashboardBusinessesRoute
   '/dashboard/customers': typeof AuthenticatedDashboardCustomersRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -131,6 +201,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/activity': typeof AuthenticatedPlatformAdminActivityRoute
+  '/audit-logs': typeof AuthenticatedPlatformAdminAuditLogsRoute
+  '/plans': typeof AuthenticatedPlatformAdminPlansRoute
+  '/platform-reports': typeof AuthenticatedPlatformAdminPlatformReportsRoute
+  '/platform-settings': typeof AuthenticatedPlatformAdminPlatformSettingsRoute
+  '/subscriptions': typeof AuthenticatedPlatformAdminSubscriptionsRoute
+  '/support-tickets': typeof AuthenticatedPlatformAdminSupportTicketsRoute
+  '/tenants': typeof AuthenticatedPlatformAdminTenantsRoute
   '/dashboard/businesses': typeof AuthenticatedDashboardBusinessesRoute
   '/dashboard/customers': typeof AuthenticatedDashboardCustomersRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -149,6 +227,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/_platformAdmin': typeof AuthenticatedPlatformAdminRouteRouteWithChildren
+  '/_authenticated/_platformAdmin/activity': typeof AuthenticatedPlatformAdminActivityRoute
+  '/_authenticated/_platformAdmin/audit-logs': typeof AuthenticatedPlatformAdminAuditLogsRoute
+  '/_authenticated/_platformAdmin/plans': typeof AuthenticatedPlatformAdminPlansRoute
+  '/_authenticated/_platformAdmin/platform-reports': typeof AuthenticatedPlatformAdminPlatformReportsRoute
+  '/_authenticated/_platformAdmin/platform-settings': typeof AuthenticatedPlatformAdminPlatformSettingsRoute
+  '/_authenticated/_platformAdmin/subscriptions': typeof AuthenticatedPlatformAdminSubscriptionsRoute
+  '/_authenticated/_platformAdmin/support-tickets': typeof AuthenticatedPlatformAdminSupportTicketsRoute
+  '/_authenticated/_platformAdmin/tenants': typeof AuthenticatedPlatformAdminTenantsRoute
   '/_authenticated/dashboard/businesses': typeof AuthenticatedDashboardBusinessesRoute
   '/_authenticated/dashboard/customers': typeof AuthenticatedDashboardCustomersRoute
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -167,6 +254,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/activity'
+    | '/audit-logs'
+    | '/plans'
+    | '/platform-reports'
+    | '/platform-settings'
+    | '/subscriptions'
+    | '/support-tickets'
+    | '/tenants'
     | '/dashboard/businesses'
     | '/dashboard/customers'
     | '/dashboard/notifications'
@@ -183,6 +278,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/activity'
+    | '/audit-logs'
+    | '/plans'
+    | '/platform-reports'
+    | '/platform-settings'
+    | '/subscriptions'
+    | '/support-tickets'
+    | '/tenants'
     | '/dashboard/businesses'
     | '/dashboard/customers'
     | '/dashboard/notifications'
@@ -200,6 +303,15 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/_platformAdmin'
+    | '/_authenticated/_platformAdmin/activity'
+    | '/_authenticated/_platformAdmin/audit-logs'
+    | '/_authenticated/_platformAdmin/plans'
+    | '/_authenticated/_platformAdmin/platform-reports'
+    | '/_authenticated/_platformAdmin/platform-settings'
+    | '/_authenticated/_platformAdmin/subscriptions'
+    | '/_authenticated/_platformAdmin/support-tickets'
+    | '/_authenticated/_platformAdmin/tenants'
     | '/_authenticated/dashboard/businesses'
     | '/_authenticated/dashboard/customers'
     | '/_authenticated/dashboard/notifications'
@@ -242,6 +354,69 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/_platformAdmin': {
+      id: '/_authenticated/_platformAdmin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/_platformAdmin/activity': {
+      id: '/_authenticated/_platformAdmin/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminActivityRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/audit-logs': {
+      id: '/_authenticated/_platformAdmin/audit-logs'
+      path: '/audit-logs'
+      fullPath: '/audit-logs'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminAuditLogsRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/plans': {
+      id: '/_authenticated/_platformAdmin/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminPlansRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/platform-reports': {
+      id: '/_authenticated/_platformAdmin/platform-reports'
+      path: '/platform-reports'
+      fullPath: '/platform-reports'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminPlatformReportsRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/platform-settings': {
+      id: '/_authenticated/_platformAdmin/platform-settings'
+      path: '/platform-settings'
+      fullPath: '/platform-settings'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminPlatformSettingsRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/subscriptions': {
+      id: '/_authenticated/_platformAdmin/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminSubscriptionsRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/support-tickets': {
+      id: '/_authenticated/_platformAdmin/support-tickets'
+      path: '/support-tickets'
+      fullPath: '/support-tickets'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminSupportTicketsRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
+    }
+    '/_authenticated/_platformAdmin/tenants': {
+      id: '/_authenticated/_platformAdmin/tenants'
+      path: '/tenants'
+      fullPath: '/tenants'
+      preLoaderRoute: typeof AuthenticatedPlatformAdminTenantsRouteImport
+      parentRoute: typeof AuthenticatedPlatformAdminRouteRoute
     }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
@@ -330,7 +505,43 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedPlatformAdminRouteRouteChildren {
+  AuthenticatedPlatformAdminActivityRoute: typeof AuthenticatedPlatformAdminActivityRoute
+  AuthenticatedPlatformAdminAuditLogsRoute: typeof AuthenticatedPlatformAdminAuditLogsRoute
+  AuthenticatedPlatformAdminPlansRoute: typeof AuthenticatedPlatformAdminPlansRoute
+  AuthenticatedPlatformAdminPlatformReportsRoute: typeof AuthenticatedPlatformAdminPlatformReportsRoute
+  AuthenticatedPlatformAdminPlatformSettingsRoute: typeof AuthenticatedPlatformAdminPlatformSettingsRoute
+  AuthenticatedPlatformAdminSubscriptionsRoute: typeof AuthenticatedPlatformAdminSubscriptionsRoute
+  AuthenticatedPlatformAdminSupportTicketsRoute: typeof AuthenticatedPlatformAdminSupportTicketsRoute
+  AuthenticatedPlatformAdminTenantsRoute: typeof AuthenticatedPlatformAdminTenantsRoute
+}
+
+const AuthenticatedPlatformAdminRouteRouteChildren: AuthenticatedPlatformAdminRouteRouteChildren =
+  {
+    AuthenticatedPlatformAdminActivityRoute:
+      AuthenticatedPlatformAdminActivityRoute,
+    AuthenticatedPlatformAdminAuditLogsRoute:
+      AuthenticatedPlatformAdminAuditLogsRoute,
+    AuthenticatedPlatformAdminPlansRoute: AuthenticatedPlatformAdminPlansRoute,
+    AuthenticatedPlatformAdminPlatformReportsRoute:
+      AuthenticatedPlatformAdminPlatformReportsRoute,
+    AuthenticatedPlatformAdminPlatformSettingsRoute:
+      AuthenticatedPlatformAdminPlatformSettingsRoute,
+    AuthenticatedPlatformAdminSubscriptionsRoute:
+      AuthenticatedPlatformAdminSubscriptionsRoute,
+    AuthenticatedPlatformAdminSupportTicketsRoute:
+      AuthenticatedPlatformAdminSupportTicketsRoute,
+    AuthenticatedPlatformAdminTenantsRoute:
+      AuthenticatedPlatformAdminTenantsRoute,
+  }
+
+const AuthenticatedPlatformAdminRouteRouteWithChildren =
+  AuthenticatedPlatformAdminRouteRoute._addFileChildren(
+    AuthenticatedPlatformAdminRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedPlatformAdminRouteRoute: typeof AuthenticatedPlatformAdminRouteRouteWithChildren
   AuthenticatedDashboardBusinessesRoute: typeof AuthenticatedDashboardBusinessesRoute
   AuthenticatedDashboardCustomersRoute: typeof AuthenticatedDashboardCustomersRoute
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
@@ -346,6 +557,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedPlatformAdminRouteRoute:
+    AuthenticatedPlatformAdminRouteRouteWithChildren,
   AuthenticatedDashboardBusinessesRoute: AuthenticatedDashboardBusinessesRoute,
   AuthenticatedDashboardCustomersRoute: AuthenticatedDashboardCustomersRoute,
   AuthenticatedDashboardNotificationsRoute:

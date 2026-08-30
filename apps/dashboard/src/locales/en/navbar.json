@@ -5,7 +5,10 @@
     "overview": "Overview",
     "queues": "Queues",
     "management": "Management",
-    "system": "System"
+    "system": "System",
+    "platform": "Platform",
+    "analytics": "Analytics",
+    "ops": "Ops"
   },
   "items": {
     "dashboard": "Dashboard",
@@ -19,7 +22,15 @@
     "reports": "Reports",
     "notifications": "Notifications",
     "settings": "Settings",
-    "support": "Support"
+    "support": "Support",
+    "plans": "Plans",
+    "tenants": "Tenants",
+    "subscriptions": "Subscriptions",
+    "auditLogs": "Audit Logs",
+    "platformReports": "Reports",
+    "platformSettings": "Settings",
+    "supportTickets": "Support Tickets",
+    "activity": "Activity"
   },
   "account": {
     "label": "Account",

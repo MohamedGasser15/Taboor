@@ -1,4 +1,11 @@
-export type UserRole = "User" | "Customer" | "Admin"
+export type UserRole =
+  | "Admin"
+  | "Customer"
+  | "User"
+  | "Taboor Admin"
+  | "Taboor Customer"
+  | "Taboor User"
+  | "PlatformAdmin"
 
 export interface AppUser {
   id: string,

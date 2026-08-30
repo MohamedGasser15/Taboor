@@ -22,6 +22,7 @@ export default function LoginForm() {
   const navigate = useNavigate()
   const login = useLogin()
   const [showPassword, setShowPassword] = useState(false)
+  const [notAuthorized, setNotAuthorized] = useState(false)
   const { t } = useTranslation('auth')
 
   const resolver = useMemo(() => zodResolver(createLoginSchema(t)), [t])
@@ -35,11 +36,30 @@ export default function LoginForm() {
   })
 
   const onSubmit = (values: LoginFormValues) => {
+    setNotAuthorized(false)
     login.mutate(values, {
-      onSuccess: () => {
-        navigate({
-          to: '/dashboard',
-        })
+      onSuccess: async (data) => {
+        // Exact backend strings only: "Admin", "Customer", "User"
+        if (data.user.role === "User") {
+          setNotAuthorized(true)
+          // revoke the just-issued refresh cookie so session doesn't persist
+          const { useAuthStore } = await import("../auth-store")
+          const { apiClient } = await import("#/lib/client")
+          useAuthStore.getState().clearAuth()
+          try {
+            await apiClient.post("/Auth/logout")
+          } catch {
+            // ignore logout failure — we already cleared local auth
+          }
+          return
+        }
+
+        if (data.user.role === "Admin") {
+          navigate({ to: "/plans" })
+        } else {
+          // Customer
+          navigate({ to: "/dashboard" })
+        }
       },
     })
   }
@@ -161,7 +181,13 @@ export default function LoginForm() {
             )}
           </Button>
 
-          {login.isError && (
+          {notAuthorized && (
+            <p className="text-sm text-destructive" role="alert">
+              {t('form.notAuthorized')}
+            </p>
+          )}
+
+          {login.isError && !notAuthorized && (
             <p className="text-sm text-destructive" role="alert">
               {t('form.invalidCredentials')}
             </p>

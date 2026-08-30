@@ -1,10 +1,6 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import { Collapsible } from '@base-ui/react/collapsible'
-import {
-  Building2Icon,
-  ChevronRightIcon,
-  LayoutDashboardIcon,
-} from 'lucide-react'
+import { ChevronRightIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Logo } from '#/components/brand/logo'
@@ -27,10 +23,14 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '#/components/ui/sidebar'
-import { managementItems, queueItems, systemItems } from './sidebarConfig'
+import type { SidebarConfig } from './sidebarConfig'
 import NavUser from './NavUser'
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  config: SidebarConfig
+}
+
+export function AppSidebar({ config }: AppSidebarProps) {
   const { state } = useSidebar()
   const { pathname } = useLocation()
   const direction = useDirection()
@@ -51,100 +51,79 @@ export function AppSidebar() {
       <SidebarSeparator className="mx-0" />
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>{t('groups.overview')}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link to="/dashboard" />}
-                  isActive={pathname === '/dashboard'}
-                  tooltip={t('items.dashboard')}
-                >
-                  <LayoutDashboardIcon />
-                  <span>{t('items.dashboard')}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {config.map((section) => {
+          if (section.type === 'collapsible') {
+            return (
+              <SidebarGroup key={section.labelKey}>
+                <SidebarGroupLabel>
+                  {t(section.labelKey)}
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <Collapsible.Root
+                      defaultOpen
+                      className="group/collapsible"
+                    >
+                      <SidebarMenuItem>
+                        <Collapsible.Trigger
+                          render={
+                            <SidebarMenuButton
+                              tooltip={t(section.triggerKey)}
+                            />
+                          }
+                        >
+                          <section.icon />
+                          <span>{t(section.triggerKey)}</span>
+                          <ChevronRightIcon className="icon-flip ms-auto transition-transform duration-200 group-data-open/collapsible:rotate-90" />
+                        </Collapsible.Trigger>
+                        <Collapsible.Panel>
+                          <SidebarMenuSub>
+                            {section.items.map((item) => (
+                              <SidebarMenuSubItem key={item.key}>
+                                <SidebarMenuSubButton
+                                  render={<Link to={item.url} />}
+                                  isActive={isActive(item.url)}
+                                >
+                                  <item.icon />
+                                  <span>{itemLabel(item.key)}</span>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </Collapsible.Panel>
+                      </SidebarMenuItem>
+                    </Collapsible.Root>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )
+          }
 
-        <SidebarGroup>
-          <SidebarGroupLabel>{t('groups.queues')}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <Collapsible.Root defaultOpen className="group/collapsible">
-                <SidebarMenuItem>
-                  <Collapsible.Trigger
-                    render={<SidebarMenuButton tooltip={t('groups.queues')} />}
-                  >
-                    <Building2Icon />
-                    <span>{t('groups.queues')}</span>
-                    <ChevronRightIcon className="icon-flip ms-auto transition-transform duration-200 group-data-open/collapsible:rotate-90" />
-                  </Collapsible.Trigger>
-                  <Collapsible.Panel>
-                    <SidebarMenuSub>
-                      {queueItems.map((item) => (
-                        <SidebarMenuSubItem key={item.key}>
-                          <SidebarMenuSubButton
-                            render={<Link to={item.url} />}
-                            isActive={isActive(item.url)}
-                          >
-                            <item.icon />
-                            <span>{itemLabel(item.key)}</span>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </Collapsible.Panel>
-                </SidebarMenuItem>
-              </Collapsible.Root>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>{t('groups.management')}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {managementItems.map((item) => (
-                <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton
-                    render={<Link to={item.url} />}
-                    isActive={isActive(item.url)}
-                    tooltip={itemLabel(item.key)}
-                  >
-                    <item.icon />
-                    <span>{itemLabel(item.key)}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>{t('groups.system')}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {systemItems.map((item) => (
-                <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton
-                    render={<Link to={item.url} />}
-                    isActive={isActive(item.url)}
-                    tooltip={itemLabel(item.key)}
-                  >
-                    <item.icon />
-                    <span>{itemLabel(item.key)}</span>
-                    {item.badge && (
-                      <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
-                    )}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          return (
+            <SidebarGroup key={section.labelKey}>
+              <SidebarGroupLabel>{t(section.labelKey)}</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {section.items.map((item) => (
+                    <SidebarMenuItem key={item.key}>
+                      <SidebarMenuButton
+                        render={<Link to={item.url} />}
+                        isActive={isActive(item.url)}
+                        tooltip={itemLabel(item.key)}
+                      >
+                        <item.icon />
+                        <span>{itemLabel(item.key)}</span>
+                        {item.badge && (
+                          <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                        )}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )
+        })}
       </SidebarContent>
 
       <SidebarFooter>
