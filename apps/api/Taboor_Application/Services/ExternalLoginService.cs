@@ -133,11 +133,11 @@ namespace Taboor_Application.Services
         var createResult = await _userManager.CreateAsync(newUser);
         if (createResult.Succeeded)
         {
-          if (!await _roleManager.RoleExistsAsync(SD.User))
+          if (!await _roleManager.RoleExistsAsync(SD.Customer))
           {
-            await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+            await _roleManager.CreateAsync(new ApplicationRole { Name = SD.Customer });
           }
-          await _userManager.AddToRoleAsync(newUser, SD.User);
+          await _userManager.AddToRoleAsync(newUser, SD.Customer);
           await _userManager.AddLoginAsync(newUser, info);
 
           return await BuildAuthResultAsync(newUser, true, returnUrl);
@@ -196,11 +196,11 @@ namespace Taboor_Application.Services
           return new ExternalLoginCallbackResultDTO { Message = "User creation failed" };
         }
 
-        if (!await _roleManager.RoleExistsAsync(SD.User))
+        if (!await _roleManager.RoleExistsAsync(SD.Customer))
         {
-          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.Customer });
         }
-        await _userManager.AddToRoleAsync(user, SD.User);
+        await _userManager.AddToRoleAsync(user, SD.Customer);
 
         var loginResult = await _userManager.AddLoginAsync(user, info);
         if (!loginResult.Succeeded)
@@ -303,11 +303,11 @@ namespace Taboor_Application.Services
           return new ExternalLoginCallbackResultDTO { Message = "User creation failed" };
         }
 
-        if (!await _roleManager.RoleExistsAsync(SD.User))
+        if (!await _roleManager.RoleExistsAsync(SD.Customer))
         {
-          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.Customer });
         }
-        await _userManager.AddToRoleAsync(newUser, SD.User);
+        await _userManager.AddToRoleAsync(newUser, SD.Customer);
         await _userManager.AddLoginAsync(newUser, new UserLoginInfo("Google", providerKey, "Google"));
 
         return await BuildAuthResultAsync(newUser, true, null);
@@ -406,11 +406,11 @@ namespace Taboor_Application.Services
           return new ExternalLoginCallbackResultDTO { Message = $"User creation failed: {errors}" };
         }
 
-        if (!await _roleManager.RoleExistsAsync(SD.User))
+        if (!await _roleManager.RoleExistsAsync(SD.Customer))
         {
-          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.Customer });
         }
-        await _userManager.AddToRoleAsync(newUser, SD.User);
+        await _userManager.AddToRoleAsync(newUser, SD.Customer);
         await _userManager.AddLoginAsync(newUser, new UserLoginInfo("Facebook", providerKey, "Facebook"));
 
         return await BuildAuthResultAsync(newUser, true, null);

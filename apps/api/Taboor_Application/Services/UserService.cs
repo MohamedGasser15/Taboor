@@ -363,12 +363,12 @@ namespace Taboor_Application.Services
       var result = await _userManager.CreateAsync(user, password);
       if (result.Succeeded)
       {
-        if (!await _roleManager.RoleExistsAsync(SD.User))
+        if (!await _roleManager.RoleExistsAsync(SD.Customer))
         {
-          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.User });
+          await _roleManager.CreateAsync(new ApplicationRole { Name = SD.Customer });
         }
 
-        await _userManager.AddToRoleAsync(user, SD.User);
+        await _userManager.AddToRoleAsync(user, SD.Customer);
       }
 
       return result;
