@@ -15,6 +15,7 @@ namespace Taboor_Application.Config
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             services.AddScoped<IExternalLoginService, ExternalLoginService>();
+            services.AddScoped<IPlanService, PlanService>();
 
             return services;
         }
