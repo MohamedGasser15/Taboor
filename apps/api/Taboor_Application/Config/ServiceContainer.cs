@@ -1,6 +1,5 @@
-using Taboor_Application.ServiceInterfaces;
-using Taboor_Application.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Taboor_Application.Services;
 
 namespace Taboor_Application.Config
 {
@@ -9,13 +8,12 @@ namespace Taboor_Application.Config
         public static IServiceCollection AddApplicationServices(
             this IServiceCollection services)
         {
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IEmailTemplateService, EmailTemplateService>();
-            services.AddScoped<IExternalLoginService, ExternalLoginService>();
-            services.AddScoped<IPlanService, PlanService>();
+            // Auto-register all application services matching their interfaces (Scoped)
+            services.Scan(scan => scan
+                .FromAssembliesOf(typeof(AuthService))
+                .AddClasses(classes => classes.InNamespaces("Taboor_Application.Services"))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
             return services;
         }
