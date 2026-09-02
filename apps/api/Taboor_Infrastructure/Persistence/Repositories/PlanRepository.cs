@@ -54,5 +54,14 @@ namespace Taboor_Infrastructure.Persistence.Repositories
 
             return await query.AnyAsync(p => p.Name.ToLower() == trimmedName, cancellationToken);
         }
+
+        public async Task<bool> HasSubscriptionsAsync(int planId, CancellationToken cancellationToken = default)
+        {
+            // Note: When the Subscription entity is created in the next phase,
+            // this will check `_context.Subscriptions.AnyAsync(s => s.PlanId == planId, cancellationToken)`.
+            // Currently no subscriptions exist.
+            await Task.CompletedTask;
+            return false;
+        }
     }
 }

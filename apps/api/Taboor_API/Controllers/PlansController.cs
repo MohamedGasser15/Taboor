@@ -12,7 +12,7 @@ namespace Taboor_API.Controllers
   /// </summary>
   [Route("api/[controller]")]
   [ApiController]
-  [Authorize(Roles = SD.PlatformAdmin)]
+  [Authorize(Roles = $"{SD.PlatformAdmin},Admin,PlatformAdmin")]
   public class PlansController : ControllerBase
   {
     private readonly IPlanService _planService;
@@ -24,30 +24,29 @@ namespace Taboor_API.Controllers
       _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <summary>
-    /// Retrieves all subscription plans, optionally filtered by active status.
-    /// </summary>
-    /// <param name="activeOnly">Optional filter: true for active only, false for inactive only, null for all.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] bool? activeOnly, CancellationToken cancellationToken)
-    {
-      try
-      {
-        _logger.LogInformation("GET /api/Plans requested (activeOnly: {ActiveOnly})", activeOnly);
-        var response = await _planService.GetAllPlansAsync(activeOnly, cancellationToken);
-        return StatusCode((int)response.StatusCode, response);
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(ex, "Unexpected error retrieving plans");
-        return StatusCode(500, new ProblemDetails
+        /// <summary>
+        /// Retrieves all subscription plans.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        [HttpGet]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-          Title = "Internal server error",
-          Detail = "An error occurred while retrieving plans."
-        });
-      }
-    }
+            try
+            {
+                _logger.LogInformation("GET /api/Plans requested");
+                var response = await _planService.GetAllPlansAsync(cancellationToken);
+                return StatusCode((int)response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error retrieving plans");
+                return StatusCode(500, new ProblemDetails
+                {
+                    Title = "Internal server error",
+                    Detail = "An error occurred while retrieving plans."
+                });
+            }
+        }
 
     /// <summary>
     /// Retrieves a single plan by its ID.
@@ -164,29 +163,54 @@ namespace Taboor_API.Controllers
       }
     }
 
-    /// <summary>
-    /// Soft-disables a subscription plan (plans are never hard-deleted).
-    /// </summary>
-    /// <param name="id">The unique identifier of the plan.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpPatch("{id:int}/deactivate")]
-    public async Task<IActionResult> Deactivate([FromRoute] int id, CancellationToken cancellationToken)
-    {
-      try
-      {
-        _logger.LogInformation("PATCH /api/Plans/{Id}/deactivate requested", id);
-        var response = await _planService.DeactivatePlanAsync(id, cancellationToken);
-        return StatusCode((int)response.StatusCode, response);
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(ex, "Unexpected error deactivating plan with ID: {Id}", id);
-        return StatusCode(500, new ProblemDetails
+        /// <summary>
+        /// Soft-disables a subscription plan.
+        /// </summary>
+        /// <param name="id">The unique identifier of the plan.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        [HttpPatch("{id:int}/deactivate")]
+        public async Task<IActionResult> Deactivate([FromRoute] int id, CancellationToken cancellationToken)
         {
-          Title = "Internal server error",
-          Detail = "An error occurred while deactivating the plan."
-        });
-      }
+            try
+            {
+                _logger.LogInformation("PATCH /api/Plans/{Id}/deactivate requested", id);
+                var response = await _planService.DeactivatePlanAsync(id, cancellationToken);
+                return StatusCode((int)response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error deactivating plan with ID: {Id}", id);
+                return StatusCode(500, new ProblemDetails
+                {
+                    Title = "Internal server error",
+                    Detail = "An error occurred while deactivating the plan."
+                });
+            }
+        }
+
+        /// <summary>
+        /// Permanently deletes an inactive plan that has no associated subscriptions.
+        /// </summary>
+        /// <param name="id">The unique identifier of the plan.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                _logger.LogInformation("DELETE /api/Plans/{Id} requested", id);
+                var response = await _planService.DeletePlanAsync(id, cancellationToken);
+                return StatusCode((int)response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error deleting plan with ID: {Id}", id);
+                return StatusCode(500, new ProblemDetails
+                {
+                    Title = "Internal server error",
+                    Detail = "An error occurred while deleting the plan."
+                });
+            }
+        }
     }
-  }
 }

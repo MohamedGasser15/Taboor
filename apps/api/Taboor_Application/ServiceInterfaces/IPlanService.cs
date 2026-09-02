@@ -9,9 +9,9 @@ namespace Taboor_Application.ServiceInterfaces
     public interface IPlanService
     {
         /// <summary>
-        /// Retrieves all subscription plans, optionally filtered by active status.
+        /// Retrieves all subscription plans.
         /// </summary>
-        Task<ApiResponse<IReadOnlyList<PlanDTO>>> GetAllPlansAsync(bool? activeOnly = null, CancellationToken cancellationToken = default);
+        Task<ApiResponse<IReadOnlyList<PlanDTO>>> GetAllPlansAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves a single plan by its ID.
@@ -34,8 +34,13 @@ namespace Taboor_Application.ServiceInterfaces
         Task<ApiResponse<object>> ActivatePlanAsync(int id, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Soft-disables a plan (plans are never hard-deleted).
+        /// Soft-disables a plan.
         /// </summary>
         Task<ApiResponse<object>> DeactivatePlanAsync(int id, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Permanently deletes an inactive plan that has no associated subscriptions.
+        /// </summary>
+        Task<ApiResponse<object>> DeletePlanAsync(int id, CancellationToken cancellationToken = default);
     }
 }

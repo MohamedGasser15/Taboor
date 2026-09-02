@@ -30,5 +30,13 @@ namespace Taboor_Domain.Repositories.IRepository
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True if a duplicate name exists, otherwise false.</returns>
         Task<bool> NameExistsAsync(string name, int? excludeId = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Checks whether any active or historical subscriptions exist for the specified plan ID.
+        /// </summary>
+        /// <param name="planId">The plan ID.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>True if the plan has associated subscriptions, otherwise false.</returns>
+        Task<bool> HasSubscriptionsAsync(int planId, CancellationToken cancellationToken = default);
     }
 }

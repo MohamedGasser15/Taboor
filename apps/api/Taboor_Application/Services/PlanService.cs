@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using Taboor_Application.Common;
@@ -29,32 +30,15 @@ namespace Taboor_Application.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<ApiResponse<IReadOnlyList<PlanDTO>>> GetAllPlansAsync(bool? activeOnly = null, CancellationToken cancellationToken = default)
+        public async Task<ApiResponse<IReadOnlyList<PlanDTO>>> GetAllPlansAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                _logger.LogInformation("Retrieving plans (activeOnly: {ActiveOnly})", activeOnly);
+                _logger.LogInformation("Retrieving all plans");
 
                 var repo = _uow.Repository<IPlanRepository>();
-                IReadOnlyList<Plan> plans;
-
-                if (activeOnly.HasValue)
-                {
-                    if (activeOnly.Value)
-                    {
-                        plans = await repo.GetActivePlansAsync(cancellationToken);
-                    }
-                    else
-                    {
-                        var allPlans = await repo.ListAllAsync(cancellationToken);
-                        plans = allPlans.Where(p => !p.IsActive).OrderBy(p => p.Price).ToList();
-                    }
-                }
-                else
-                {
-                    var allPlans = await repo.ListAllAsync(cancellationToken);
-                    plans = allPlans.OrderBy(p => p.Price).ToList();
-                }
+                var allPlans = await repo.ListAllAsync(cancellationToken);
+                var plans = allPlans.OrderBy(p => p.Price).ToList();
 
                 var dtos = _mapper.Map<IReadOnlyList<PlanDTO>>(plans);
                 return ApiResponse<IReadOnlyList<PlanDTO>>.SuccessResponse(dtos);
@@ -273,6 +257,69 @@ namespace Taboor_Application.Services
             {
                 _logger.LogError(ex, "Error occurred while deactivating plan with ID: {Id}", id);
                 return ApiResponse<object>.FailResponse("Failed to deactivate plan.");
+            }
+        }
+
+        public async Task<ApiResponse<object>> DeletePlanAsync(int id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                _logger.LogInformation("Deleting plan ID: {Id}", id);
+
+                var repo = _uow.Repository<IPlanRepository>();
+                var plan = await repo.GetByIdAsync(id, cancellationToken);
+                if (plan == null)
+                {
+                    _logger.LogWarning("Plan with ID {Id} not found for deletion", id);
+                    var response = ApiResponse<object>.FailResponse("Plan not found.");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    return response;
+                }
+
+                // 1. Business Rule: Only inactive plans can be deleted
+                if (plan.IsActive)
+                {
+                    _logger.LogWarning("Deletion rejected: Plan ID {Id} is active", id);
+                    var response = ApiResponse<object>.FailResponse(
+                        "Only inactive plans can be deleted. Please deactivate the plan first.",
+                        new List<string> { "Active plans cannot be deleted." }
+                    );
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    return response;
+                }
+
+                // 2. Relational Check: Plan must have no associated subscriptions
+                if (await repo.HasSubscriptionsAsync(id, cancellationToken))
+                {
+                    _logger.LogWarning("Deletion rejected: Plan ID {Id} has associated subscriptions", id);
+                    var response = ApiResponse<object>.FailResponse(
+                        "Cannot delete this plan because it has associated subscriptions.",
+                        new List<string> { "Plans with active or historical subscriptions cannot be deleted." }
+                    );
+                    response.StatusCode = HttpStatusCode.Conflict;
+                    return response;
+                }
+
+                await repo.DeleteAsync(plan, cancellationToken);
+                await _uow.SaveAsync();
+
+                _logger.LogInformation("Plan ID {Id} deleted successfully", id);
+                return ApiResponse<object>.SuccessResponse(null, "Plan deleted successfully.");
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Database constraint violation while deleting plan with ID: {Id}", id);
+                var response = ApiResponse<object>.FailResponse(
+                    "Cannot delete this plan due to database foreign key constraints.",
+                    new List<string> { "This plan is referenced by other database records." }
+                );
+                response.StatusCode = HttpStatusCode.Conflict;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting plan with ID: {Id}", id);
+                return ApiResponse<object>.FailResponse("Failed to delete plan.");
             }
         }
     }
