@@ -30,8 +30,4 @@ export interface RefreshResponse {
   user: AppUser;
 }
 
-export interface ApiResponse<T> {
-  data: T,
-  message: string;
-  success: boolean
-}
+export type { ApiResponse } from '#/types/api'

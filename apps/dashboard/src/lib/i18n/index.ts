@@ -20,7 +20,7 @@ void i18n
     resources,
     fallbackLng: 'en',
     supportedLngs: ['en', 'ar'],
-    ns: ['common', 'auth', 'navbar'],
+    ns: ['common', 'auth', 'navbar', 'plans'],
     defaultNS: 'common',
     detection: {
       order: ['localStorage', 'navigator'],
