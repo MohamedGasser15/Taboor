@@ -8,6 +8,8 @@
     <!-- Location for nearby services + travel estimates -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- Camera for scanning QR codes -->
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:label="taboor"

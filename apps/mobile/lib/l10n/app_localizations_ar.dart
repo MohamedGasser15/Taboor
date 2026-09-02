@@ -386,7 +386,78 @@ class AppLocalizationsAr extends AppLocalizations {
   String get alertsEmptyTitle => 'كله تمام';
 
   @override
+  String get alertNewBadge => 'جديد';
+
+  @override
   String get alertsEmptySubtitle => 'تنبيهات دورك الذكية هتظهر هنا';
+
+  @override
+  String get alertTurnStarted => 'دورك قرب';
+
+  @override
+  String alertTurnStartedBody(Object service) {
+    return 'قدامك 2 بس في $service. خليك جاهز!';
+  }
+
+  @override
+  String get alertQueueOpen => 'احنا فتحنا';
+
+  @override
+  String alertQueueOpenBody(Object service) {
+    return '$service بيستقبل العملاء دلوقتي.';
+  }
+
+  @override
+  String get alertQueueJoin => 'دخلت الطابور';
+
+  @override
+  String alertQueueJoinBody(Object number, Object service) {
+    return 'رقمك $number في $service.';
+  }
+
+  @override
+  String get alertTimeToGo => 'وقت الخروج';
+
+  @override
+  String alertTimeToGoBody(Object service) {
+    return 'انت التالي في $service! اخرج دلوقتي.';
+  }
+
+  @override
+  String get alertThankYou => 'شكراً لزيارتك';
+
+  @override
+  String alertThankYouBody(Object service) {
+    return 'نتشرف بزيارتك تاني في $service.';
+  }
+
+  @override
+  String get alertJustNow => 'الآن';
+
+  @override
+  String alertMinutesAgo(Object min) {
+    return 'من $min دقيقة';
+  }
+
+  @override
+  String alertHoursAgo(Object h) {
+    return 'من $h ساعات';
+  }
+
+  @override
+  String get alertToday => 'اليوم';
+
+  @override
+  String get alertYesterday => 'أمس';
+
+  @override
+  String get alertOlder => 'قبل كده';
+
+  @override
+  String get alertNoAlertsTitle => 'مفيش تنبيهات لسه';
+
+  @override
+  String get alertNoAlertsBody => 'لما خدمة تبعتلك إشعار، هتظهر هنا.';
 
   @override
   String get profileAccount => 'الحساب';
@@ -477,6 +548,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get editProfile => 'تعديل الحساب';
+
+  @override
+  String get editProfileHint => 'حدث اسمك وبريدك ورقم هاتفك';
 
   @override
   String get editProfileSave => 'حفظ التغييرات';

@@ -251,7 +251,7 @@ Future<void> _addBranchPins() async {
       ..lineTo(circleCenter.dx + 36.5, circleCenter.dy + 15)
       ..close();
 
-    // 💡 السر هنا: دمج المسارين في شكل واحد ممتد عشان نلغي أي خطوط تقاطع نهائياً
+    // دمج المسارين في شكل واحد ممتد لإلغاء أي خطوط تقاطع نهائياً
     final unifiedPinPath = Path.combine(
       PathOperation.union,
       circlePath,
@@ -418,7 +418,8 @@ Future<void> _addBranchPins() async {
             minChildSize: 0.28,
             maxChildSize: 0.85,
             snap: true,
-            snapSizes: const [0.42, 0.62, 0.85],
+            snapSizes: const [0.42],
+            snapAnimationDuration: const Duration(milliseconds: 150),
             builder: (context, scrollController) {
               return Container(
                 decoration: BoxDecoration(
@@ -441,29 +442,28 @@ Future<void> _addBranchPins() async {
                     ),
                   ],
                 ),
-                child: Column(
+                child: ListView(
+                  controller: scrollController,
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    12,
+                    20,
+                    MediaQuery.of(context).padding.bottom + 12,
+                  ),
                   children: [
-                    const SizedBox(height: 10),
-                    Container(
-                      width: 52,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: AppColors.gray300,
-                        borderRadius: BorderRadius.circular(4),
+                    Center(
+                      child: Container(
+                        width: 52,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: AppColors.gray300,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: ListView(
-                        controller: scrollController,
-                        padding: EdgeInsets.fromLTRB(
-                          20,
-                          18,
-                          20,
-                          MediaQuery.of(context).padding.bottom + 12,
-                        ),
-                        children: [
-                          // ===== Sheet header: service icon + name =====
-                          Row(
+                    const SizedBox(height: 16),
+                    // ===== Sheet header: service icon + name =====
+                    Row(
                             children: [
                               Container(
                                 width: 52,
@@ -648,10 +648,7 @@ Future<void> _addBranchPins() async {
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              );
+                    );
             },
           ),
         ],
@@ -710,14 +707,21 @@ class _BranchCard extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: selected ? accent.withValues(alpha: 0.08) : AppColors.gray100,
+            color: selected ? accent.withValues(alpha: 0.04) : AppColors.paper,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: selected ? accent : AppColors.gray200,
-              width: selected ? 1.6 : 1,
+              color: selected ? accent : AppColors.gray200.withValues(alpha: 0.8),
+              width: selected ? 1.8 : 1,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -726,17 +730,17 @@ class _BranchCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 42,
-                    height: 42,
+                    width: 44,
+                    height: 44,
                     decoration: BoxDecoration(
-                      color: selected ? accent : AppColors.softTeal,
-                      borderRadius: BorderRadius.circular(13),
+                      color: selected ? accent.withValues(alpha: 0.12) : AppColors.gray100,
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     child: Icon(
                       index == 0
                           ? Icons.storefront_rounded
                           : Icons.store_mall_directory_rounded,
-                      color: selected ? AppColors.paper : accent,
+                      color: selected ? accent : AppColors.gray600,
                       size: 22,
                     ),
                   ),
@@ -752,22 +756,23 @@ class _BranchCard extends StatelessWidget {
                           style: AppTextStyles.body(
                             color: AppColors.ink,
                             weight: FontWeight.w700,
-                            size: 14,
+                            size: 14.5,
                           ),
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              branch.isOpen
-                                  ? Icons.check_circle_rounded
-                                  : Icons.cancel_rounded,
-                              size: 13,
-                              color: branch.isOpen
-                                  ? AppColors.success
-                                  : AppColors.gray400,
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: branch.isOpen
+                                    ? AppColors.success
+                                    : AppColors.gray400,
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: 6),
                             Text(
                               branch.isOpen
                                   ? l10n.serviceOpenNow
@@ -776,8 +781,8 @@ class _BranchCard extends StatelessWidget {
                                 color: branch.isOpen
                                     ? AppColors.success
                                     : AppColors.gray500,
-                                size: 12,
-                                weight: FontWeight.w500,
+                                size: 11.5,
+                                weight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -794,7 +799,7 @@ class _BranchCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
 
               // ===== Info chips: distance, waiting, drive time =====
               Wrap(
@@ -809,7 +814,7 @@ class _BranchCard extends StatelessWidget {
                     visible: branch.distanceKm != null,
                   ),
                   _InfoChip(
-                    icon: Icons.groups_rounded,
+                    icon: Icons.groups_outlined,
                     text: l10n.peopleWaiting(branch.waiting),
                     visible: true,
                   ),
@@ -824,18 +829,18 @@ class _BranchCard extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
 
               // ===== Footer: waiting time + maps button =====
               Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
+                      horizontal: 12,
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.12),
+                      color: selected ? accent.withValues(alpha: 0.1) : AppColors.gray100,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -844,7 +849,7 @@ class _BranchCard extends StatelessWidget {
                         Text(
                           l10n.queueMinutes(branch.waiting * 4),
                           style: AppTextStyles.body(
-                            color: accent,
+                            color: selected ? accent : AppColors.ink,
                             weight: FontWeight.w800,
                             size: 15,
                           ),
@@ -865,7 +870,7 @@ class _BranchCard extends StatelessWidget {
                       onTap: onOpenMaps,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
+                          horizontal: 14,
                           vertical: 9,
                         ),
                         decoration: BoxDecoration(
@@ -935,21 +940,17 @@ class _InfoChip extends StatelessWidget {
     if (!visible || text.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: highlight
-            ? AppColors.teal.withValues(alpha: 0.1)
-            : AppColors.paper,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(
-          color: highlight ? AppColors.teal : AppColors.gray200,
-          width: highlight ? 1.2 : 1,
-        ),
+            ? AppColors.teal.withValues(alpha: 0.12)
+            : AppColors.gray100,
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: highlight ? AppColors.teal : AppColors.gray500),
+          Icon(icon, size: 13, color: highlight ? AppColors.teal : AppColors.gray600),
           const SizedBox(width: 4),
           Flexible(
             child: Text(
@@ -957,7 +958,7 @@ class _InfoChip extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.body(
-                color: highlight ? AppColors.teal : AppColors.gray600,
+                color: highlight ? AppColors.teal : AppColors.gray700,
                 size: 11,
                 weight: highlight ? FontWeight.w600 : FontWeight.w500,
               ),

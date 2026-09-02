@@ -824,11 +824,125 @@ abstract class AppLocalizations {
   /// **'You\'re all caught up'**
   String get alertsEmptyTitle;
 
+  /// No description provided for @alertNewBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get alertNewBadge;
+
   /// No description provided for @alertsEmptySubtitle.
   ///
   /// In en, this message translates to:
   /// **'Smart alerts about your turn will show up here'**
   String get alertsEmptySubtitle;
+
+  /// No description provided for @alertTurnStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your turn is coming up'**
+  String get alertTurnStarted;
+
+  /// No description provided for @alertTurnStartedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Only 2 people ahead at {service}. Be ready!'**
+  String alertTurnStartedBody(Object service);
+
+  /// No description provided for @alertQueueOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re open'**
+  String get alertQueueOpen;
+
+  /// No description provided for @alertQueueOpenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{service} is now accepting customers.'**
+  String alertQueueOpenBody(Object service);
+
+  /// No description provided for @alertQueueJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'You joined the queue'**
+  String get alertQueueJoin;
+
+  /// No description provided for @alertQueueJoinBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your number is {number} at {service}.'**
+  String alertQueueJoinBody(Object number, Object service);
+
+  /// No description provided for @alertTimeToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to head out'**
+  String get alertTimeToGo;
+
+  /// No description provided for @alertTimeToGoBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re next at {service}! Leave now.'**
+  String alertTimeToGoBody(Object service);
+
+  /// No description provided for @alertThankYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for visiting'**
+  String get alertThankYou;
+
+  /// No description provided for @alertThankYouBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Hope to see you again at {service}.'**
+  String alertThankYouBody(Object service);
+
+  /// No description provided for @alertJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get alertJustNow;
+
+  /// No description provided for @alertMinutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} min ago'**
+  String alertMinutesAgo(Object min);
+
+  /// No description provided for @alertHoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{h} h ago'**
+  String alertHoursAgo(Object h);
+
+  /// No description provided for @alertToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get alertToday;
+
+  /// No description provided for @alertYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get alertYesterday;
+
+  /// No description provided for @alertOlder.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get alertOlder;
+
+  /// No description provided for @alertNoAlertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts yet'**
+  String get alertNoAlertsTitle;
+
+  /// No description provided for @alertNoAlertsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When a service sends you a notification, it appears here.'**
+  String get alertNoAlertsBody;
 
   /// No description provided for @profileAccount.
   ///
@@ -1009,6 +1123,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit account'**
   String get editProfile;
+
+  /// No description provided for @editProfileHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your name, email and phone'**
+  String get editProfileHint;
 
   /// No description provided for @editProfileSave.
   ///

@@ -392,8 +392,80 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alertsEmptyTitle => 'You\'re all caught up';
 
   @override
+  String get alertNewBadge => 'New';
+
+  @override
   String get alertsEmptySubtitle =>
       'Smart alerts about your turn will show up here';
+
+  @override
+  String get alertTurnStarted => 'Your turn is coming up';
+
+  @override
+  String alertTurnStartedBody(Object service) {
+    return 'Only 2 people ahead at $service. Be ready!';
+  }
+
+  @override
+  String get alertQueueOpen => 'We\'re open';
+
+  @override
+  String alertQueueOpenBody(Object service) {
+    return '$service is now accepting customers.';
+  }
+
+  @override
+  String get alertQueueJoin => 'You joined the queue';
+
+  @override
+  String alertQueueJoinBody(Object number, Object service) {
+    return 'Your number is $number at $service.';
+  }
+
+  @override
+  String get alertTimeToGo => 'Time to head out';
+
+  @override
+  String alertTimeToGoBody(Object service) {
+    return 'You\'re next at $service! Leave now.';
+  }
+
+  @override
+  String get alertThankYou => 'Thanks for visiting';
+
+  @override
+  String alertThankYouBody(Object service) {
+    return 'Hope to see you again at $service.';
+  }
+
+  @override
+  String get alertJustNow => 'Just now';
+
+  @override
+  String alertMinutesAgo(Object min) {
+    return '$min min ago';
+  }
+
+  @override
+  String alertHoursAgo(Object h) {
+    return '$h h ago';
+  }
+
+  @override
+  String get alertToday => 'Today';
+
+  @override
+  String get alertYesterday => 'Yesterday';
+
+  @override
+  String get alertOlder => 'Earlier';
+
+  @override
+  String get alertNoAlertsTitle => 'No alerts yet';
+
+  @override
+  String get alertNoAlertsBody =>
+      'When a service sends you a notification, it appears here.';
 
   @override
   String get profileAccount => 'Account';
@@ -486,6 +558,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editProfile => 'Edit account';
+
+  @override
+  String get editProfileHint => 'Update your name, email and phone';
 
   @override
   String get editProfileSave => 'Save changes';
