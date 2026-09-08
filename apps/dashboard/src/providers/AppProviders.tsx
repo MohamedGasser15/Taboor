@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { useDirection } from '#/hooks/use-direction'
 import { queryClient } from '#/lib/query-client'
 import { TooltipProvider } from '#/components/ui/tooltip'
+import { Toaster } from '#/components/ui/toast'
 import '#/lib/i18n'
 
 function DirectionAwareProviders({ children }: { children: ReactNode }) {
@@ -11,7 +12,10 @@ function DirectionAwareProviders({ children }: { children: ReactNode }) {
 
   return (
     <DirectionProvider direction={direction}>
-      <TooltipProvider>{children}</TooltipProvider>
+      <TooltipProvider>
+        {children}
+        <Toaster />
+      </TooltipProvider>
     </DirectionProvider>
   )
 }

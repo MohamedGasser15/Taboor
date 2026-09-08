@@ -1,8 +1,4 @@
-import {
-  createFileRoute,
-  redirect,
-  useLocation,
-} from '@tanstack/react-router'
+import { createFileRoute, redirect, useLocation } from '@tanstack/react-router'
 import { useAuthStore } from '#/feature/auth/auth-store'
 import { ensureAuthInitialized } from '#/lib/client'
 import { DashboardShell } from '#/components/layout/DashboardShell'
@@ -26,7 +22,7 @@ export const Route = createFileRoute('/_authenticated')({
     }
 
     // Exact backend strings only: "Admin", "Customer", "User"
-    if (user?.role === "User") {
+    if (user?.role === 'User') {
       useAuthStore.getState().clearAuth()
       throw redirect({ to: '/login' })
     }

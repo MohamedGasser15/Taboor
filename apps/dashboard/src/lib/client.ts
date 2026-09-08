@@ -95,9 +95,9 @@ async function refreshAccessToken(): Promise<string> {
 
       // Exact backend strings only: "Admin", "Customer", "User"
       // If refresh belongs to a "User" (mobile-only account), don't restore dashboard session
-      if ((user as { role?: string })?.role === "User") {
+      if (user.role === 'User') {
         useAuthStore.getState().clearAuth()
-        throw new Error("User role not allowed on dashboard")
+        throw new Error('User role not allowed on dashboard')
       }
 
       useAuthStore.getState().setAccessToken(newAccessToken, user)

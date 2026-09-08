@@ -11,9 +11,7 @@ import { AlertCircle, Plus, RefreshCw } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-export const Route = createFileRoute(
-  '/_authenticated/_platformAdmin/plans',
-)({
+export const Route = createFileRoute('/_authenticated/_platformAdmin/plans')({
   component: PlansPage,
 })
 
@@ -25,13 +23,7 @@ function PlansPage() {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null)
 
-  const {
-    data: plans,
-    isLoading,
-    isError,
-    refetch,
-    isFetching,
-  } = usePlans()
+  const { data: plans, isLoading, isError, refetch, isFetching } = usePlans()
 
   const filteredPlans = useMemo(() => {
     if (!plans) return []

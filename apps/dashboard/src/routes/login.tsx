@@ -15,7 +15,7 @@ export const Route = createFileRoute('/login')({
     if (isAuthenticated) {
       // Exact backend strings only: "Admin", "Customer", "User"
       // User is not allowed on dashboard web — stay on login (will be cleared below if somehow authenticated)
-      if (user?.role === "User") {
+      if (user?.role === 'User') {
         useAuthStore.getState().clearAuth()
         return
       }

@@ -78,5 +78,15 @@
     "successCreate": "Plan created successfully",
     "successUpdate": "Plan updated successfully",
     "saveError": "An error occurred while saving the plan"
+  },
+  "toasts": {
+    "created": "Plan created successfully",
+    "updated": "Plan updated successfully",
+    "activated": "Plan activated successfully",
+    "deactivated": "Plan deactivated successfully",
+    "deleted": "Plan deleted successfully",
+    "deleteError": "Failed to delete plan",
+    "undo": "Undo",
+    "restored": "Plan restored successfully"
   }
 }

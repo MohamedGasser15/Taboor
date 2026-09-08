@@ -40,25 +40,25 @@ export default function LoginForm() {
     login.mutate(values, {
       onSuccess: async (data) => {
         // Exact backend strings only: "Admin", "Customer", "User"
-        if (data.user.role === "User") {
+        if (data.user.role === 'User') {
           setNotAuthorized(true)
           // revoke the just-issued refresh cookie so session doesn't persist
-          const { useAuthStore } = await import("../auth-store")
-          const { apiClient } = await import("#/lib/client")
+          const { useAuthStore } = await import('../auth-store')
+          const { apiClient } = await import('#/lib/client')
           useAuthStore.getState().clearAuth()
           try {
-            await apiClient.post("/Auth/logout")
+            await apiClient.post('/Auth/logout')
           } catch {
             // ignore logout failure — we already cleared local auth
           }
           return
         }
 
-        if (data.user.role === "Admin") {
-          navigate({ to: "/plans" })
+        if (data.user.role === 'Admin') {
+          navigate({ to: '/plans' })
         } else {
           // Customer
-          navigate({ to: "/dashboard" })
+          navigate({ to: '/dashboard' })
         }
       },
     })

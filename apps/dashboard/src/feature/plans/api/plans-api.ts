@@ -19,7 +19,10 @@ export const plansApi = {
   },
 
   updatePlan: async (id: number, data: UpdatePlanInput): Promise<Plan> => {
-    const response = await apiClient.put<ApiResponse<Plan>>(`/Plans/${id}`, data)
+    const response = await apiClient.put<ApiResponse<Plan>>(
+      `/Plans/${id}`,
+      data,
+    )
     return response.data.data
   },
 

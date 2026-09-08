@@ -1,5 +1,6 @@
 import { Button } from '#/components/ui/button'
 import { Spinner } from '#/components/ui/spinner'
+import { toast } from '#/components/ui/toast'
 import {
   Building2,
   Clock,
@@ -12,9 +13,11 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
 import { BillingCycle } from '../plans-types'
 import type { Plan } from '../plans-types'
 import {
+  PLANS_QUERY_KEY,
   useActivatePlan,
   useDeactivatePlan,
   useDeletePlan,
@@ -28,6 +31,7 @@ interface PlanCardProps {
 
 export function PlanCard({ plan, onEdit }: PlanCardProps) {
   const { t } = useTranslation('plans')
+  const queryClient = useQueryClient()
   const activatePlan = useActivatePlan()
   const deactivatePlan = useDeactivatePlan()
   const deletePlan = useDeletePlan()
@@ -40,25 +44,111 @@ export function PlanCard({ plan, onEdit }: PlanCardProps) {
   const handleToggleStatus = () => {
     setDeleteError(null)
     if (plan.isActive) {
-      deactivatePlan.mutate(plan.id)
+      deactivatePlan.mutate(plan.id, {
+        onSuccess: () => {
+          toast.add({
+            title: t('toasts.deactivated'),
+            type: 'success',
+          })
+        },
+        onError: (error) => {
+          const err = error as AxiosError<{
+            message?: string
+            errors?: string[]
+          }>
+          const msg =
+            err.response?.data.errors?.[0] ??
+            err.response?.data.message ??
+            t('form.saveError')
+          toast.add({
+            title: t('form.saveError'),
+            description: msg,
+            type: 'error',
+          })
+        },
+      })
     } else {
-      activatePlan.mutate(plan.id)
+      activatePlan.mutate(plan.id, {
+        onSuccess: () => {
+          toast.add({
+            title: t('toasts.activated'),
+            type: 'success',
+          })
+        },
+        onError: (error) => {
+          const err = error as AxiosError<{
+            message?: string
+            errors?: string[]
+          }>
+          const msg =
+            err.response?.data.errors?.[0] ??
+            err.response?.data.message ??
+            t('form.saveError')
+          toast.add({
+            title: t('form.saveError'),
+            description: msg,
+            type: 'error',
+          })
+        },
+      })
     }
   }
 
   const handleDelete = () => {
     setDeleteError(null)
-    deletePlan.mutate(plan.id, {
-      onSuccess: () => {
-        setIsConfirmingDelete(false)
-      },
-      onError: (error) => {
-        const err = error as AxiosError<{ message?: string; errors?: string[] }>
-        const msg =
-          err.response?.data?.errors?.[0] ??
-          err.response?.data?.message ??
-          t('form.saveError')
-        setDeleteError(msg)
+    setIsConfirmingDelete(false)
+
+    // Snapshot previous plans from query cache
+    const previousPlans = queryClient.getQueryData<Plan[]>(PLANS_QUERY_KEY)
+
+    // Optimistically remove the plan from the cache
+    queryClient.setQueryData<Plan[]>(PLANS_QUERY_KEY, (old) => {
+      return old ? old.filter((p) => p.id !== plan.id) : []
+    })
+
+    let hasUndone = false
+
+    // Delay actual deletion by 5s to allow undo
+    const timeoutId = setTimeout(() => {
+      if (hasUndone) return
+      deletePlan.mutate(plan.id, {
+        onError: (error) => {
+          // Roll back cache on error
+          queryClient.setQueryData(PLANS_QUERY_KEY, previousPlans)
+          const err = error as AxiosError<{
+            message?: string
+            errors?: string[]
+          }>
+          const msg =
+            err.response?.data.errors?.[0] ??
+            err.response?.data.message ??
+            t('toasts.deleteError')
+          toast.add({
+            title: t('toasts.deleteError'),
+            description: msg,
+            type: 'error',
+          })
+        },
+      })
+    }, 5000)
+
+    // Show toast with Undo action
+    const toastId = toast.add({
+      title: t('toasts.deleted'),
+      type: 'success',
+      actionProps: {
+        children: t('toasts.undo'),
+        onClick: () => {
+          hasUndone = true
+          clearTimeout(timeoutId)
+          toast.close(toastId)
+          // Restore cache
+          queryClient.setQueryData(PLANS_QUERY_KEY, previousPlans)
+          toast.add({
+            title: t('toasts.restored'),
+            type: 'success',
+          })
+        },
       },
     })
   }
