@@ -55,15 +55,10 @@ export function AppSidebar({ config }: AppSidebarProps) {
           if (section.type === 'collapsible') {
             return (
               <SidebarGroup key={section.labelKey}>
-                <SidebarGroupLabel>
-                  {t(section.labelKey)}
-                </SidebarGroupLabel>
+                <SidebarGroupLabel>{t(section.labelKey)}</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    <Collapsible.Root
-                      defaultOpen
-                      className="group/collapsible"
-                    >
+                    <Collapsible.Root defaultOpen className="group/collapsible">
                       <SidebarMenuItem>
                         <Collapsible.Trigger
                           render={
@@ -103,7 +98,7 @@ export function AppSidebar({ config }: AppSidebarProps) {
             <SidebarGroup key={section.labelKey}>
               <SidebarGroupLabel>{t(section.labelKey)}</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="gap-1">
                   {section.items.map((item) => (
                     <SidebarMenuItem key={item.key}>
                       <SidebarMenuButton
