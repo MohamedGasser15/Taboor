@@ -15,7 +15,6 @@ import {
   SheetTitle,
 } from '#/components/ui/sheet'
 import { Spinner } from '#/components/ui/spinner'
-import { toast } from '#/components/ui/toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -110,10 +109,6 @@ export function PlanFormSheet({
         { id: plan.id, data: payload },
         {
           onSuccess: () => {
-            toast.add({
-              title: t('toasts.updated'),
-              type: 'success',
-            })
             onOpenChange(false)
           },
           onError: (error) => {
@@ -126,21 +121,12 @@ export function PlanFormSheet({
               err.response?.data.message ??
               t('form.saveError')
             setErrorMessage(msg)
-            toast.add({
-              title: t('form.saveError'),
-              description: msg,
-              type: 'error',
-            })
           },
         },
       )
     } else {
       createPlan.mutate(payload, {
         onSuccess: () => {
-          toast.add({
-            title: t('toasts.created'),
-            type: 'success',
-          })
           onOpenChange(false)
         },
         onError: (error) => {
@@ -153,11 +139,6 @@ export function PlanFormSheet({
             err.response?.data.message ??
             t('form.saveError')
           setErrorMessage(msg)
-          toast.add({
-            title: t('form.saveError'),
-            description: msg,
-            type: 'error',
-          })
         },
       })
     }

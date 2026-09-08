@@ -1,6 +1,5 @@
 import { Button } from '#/components/ui/button'
 import { Spinner } from '#/components/ui/spinner'
-import { toast } from '#/components/ui/toast'
 import {
   Building2,
   Clock,
@@ -13,16 +12,9 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQueryClient } from '@tanstack/react-query'
 import { BillingCycle } from '../plans-types'
 import type { Plan } from '../plans-types'
-import {
-  PLANS_QUERY_KEY,
-  useActivatePlan,
-  useDeactivatePlan,
-  useDeletePlan,
-} from '../hooks/use-plans'
-import type { AxiosError } from 'axios'
+import { useDeletePlanWithUndo, useTogglePlanStatus } from '../hooks/use-plans'
 
 interface PlanCardProps {
   plan: Plan
@@ -31,126 +23,14 @@ interface PlanCardProps {
 
 export function PlanCard({ plan, onEdit }: PlanCardProps) {
   const { t } = useTranslation('plans')
-  const queryClient = useQueryClient()
-  const activatePlan = useActivatePlan()
-  const deactivatePlan = useDeactivatePlan()
-  const deletePlan = useDeletePlan()
+  const { toggleStatus, isToggling } = useTogglePlanStatus()
+  const { deleteWithUndo, isDeleting } = useDeletePlanWithUndo()
 
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
-
-  const isToggling = activatePlan.isPending || deactivatePlan.isPending
-
-  const handleToggleStatus = () => {
-    setDeleteError(null)
-    if (plan.isActive) {
-      deactivatePlan.mutate(plan.id, {
-        onSuccess: () => {
-          toast.add({
-            title: t('toasts.deactivated'),
-            type: 'success',
-          })
-        },
-        onError: (error) => {
-          const err = error as AxiosError<{
-            message?: string
-            errors?: string[]
-          }>
-          const msg =
-            err.response?.data.errors?.[0] ??
-            err.response?.data.message ??
-            t('form.saveError')
-          toast.add({
-            title: t('form.saveError'),
-            description: msg,
-            type: 'error',
-          })
-        },
-      })
-    } else {
-      activatePlan.mutate(plan.id, {
-        onSuccess: () => {
-          toast.add({
-            title: t('toasts.activated'),
-            type: 'success',
-          })
-        },
-        onError: (error) => {
-          const err = error as AxiosError<{
-            message?: string
-            errors?: string[]
-          }>
-          const msg =
-            err.response?.data.errors?.[0] ??
-            err.response?.data.message ??
-            t('form.saveError')
-          toast.add({
-            title: t('form.saveError'),
-            description: msg,
-            type: 'error',
-          })
-        },
-      })
-    }
-  }
 
   const handleDelete = () => {
-    setDeleteError(null)
     setIsConfirmingDelete(false)
-
-    // Snapshot previous plans from query cache
-    const previousPlans = queryClient.getQueryData<Plan[]>(PLANS_QUERY_KEY)
-
-    // Optimistically remove the plan from the cache
-    queryClient.setQueryData<Plan[]>(PLANS_QUERY_KEY, (old) => {
-      return old ? old.filter((p) => p.id !== plan.id) : []
-    })
-
-    let hasUndone = false
-
-    // Delay actual deletion by 5s to allow undo
-    const timeoutId = setTimeout(() => {
-      if (hasUndone) return
-      deletePlan.mutate(plan.id, {
-        onError: (error) => {
-          // Roll back cache on error
-          queryClient.setQueryData(PLANS_QUERY_KEY, previousPlans)
-          const err = error as AxiosError<{
-            message?: string
-            errors?: string[]
-          }>
-          const msg =
-            err.response?.data.errors?.[0] ??
-            err.response?.data.message ??
-            t('toasts.deleteError')
-          toast.add({
-            title: t('toasts.deleteError'),
-            description: msg,
-            type: 'error',
-          })
-        },
-      })
-    }, 5000)
-
-    // Show toast with Undo action
-    const toastId = toast.add({
-      title: t('toasts.deleted'),
-      type: 'success',
-      actionProps: {
-        children: t('toasts.undo'),
-        onClick: () => {
-          hasUndone = true
-          clearTimeout(timeoutId)
-          toast.close(toastId)
-          // Restore cache
-          queryClient.setQueryData(PLANS_QUERY_KEY, previousPlans)
-          toast.add({
-            title: t('toasts.restored'),
-            type: 'success',
-          })
-        },
-      },
-    })
+    deleteWithUndo(plan)
   }
 
   const derivedQueues = plan.maxBranches * plan.maxServicesPerBranch
@@ -277,12 +157,6 @@ export function PlanCard({ plan, onEdit }: PlanCardProps) {
 
       {/* Action Buttons & Delete Confirmation */}
       <div className="mt-6 space-y-2 border-t border-border/80 pt-4">
-        {deleteError && (
-          <p className="text-xs text-destructive" role="alert">
-            {deleteError}
-          </p>
-        )}
-
         {isConfirmingDelete ? (
           <div className="flex flex-col gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs">
             <p className="font-medium text-destructive">
@@ -294,23 +168,16 @@ export function PlanCard({ plan, onEdit }: PlanCardProps) {
                 size="sm"
                 className="h-8 flex-1 text-xs"
                 onClick={handleDelete}
-                disabled={deletePlan.isPending}
+                disabled={isDeleting}
               >
-                {deletePlan.isPending ? (
-                  <Spinner className="size-3.5" />
-                ) : (
-                  t('delete')
-                )}
+                {isDeleting ? <Spinner className="size-3.5" /> : t('delete')}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 className="h-8 flex-1 text-xs"
-                onClick={() => {
-                  setIsConfirmingDelete(false)
-                  setDeleteError(null)
-                }}
-                disabled={deletePlan.isPending}
+                onClick={() => setIsConfirmingDelete(false)}
+                disabled={isDeleting}
               >
                 {t('form.cancel')}
               </Button>
@@ -336,7 +203,7 @@ export function PlanCard({ plan, onEdit }: PlanCardProps) {
                   ? 'text-destructive hover:bg-destructive/10 hover:text-destructive'
                   : 'text-teal hover:bg-soft-teal'
               }`}
-              onClick={handleToggleStatus}
+              onClick={() => toggleStatus(plan)}
               disabled={isToggling}
             >
               {isToggling ? (

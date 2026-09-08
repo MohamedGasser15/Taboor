@@ -131,7 +131,11 @@ export const platformNavConfig: SidebarConfig = [
     labelKey: 'groups.analytics',
     items: [
       { key: 'platformReports', url: '/platform-reports', icon: BarChart3Icon },
-      { key: 'platformSettings', url: '/platform-settings', icon: SettingsIcon },
+      {
+        key: 'platformSettings',
+        url: '/platform-settings',
+        icon: SettingsIcon,
+      },
     ],
   },
   {
