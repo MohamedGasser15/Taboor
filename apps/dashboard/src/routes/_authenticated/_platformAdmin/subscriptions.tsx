@@ -2,7 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import PageHeader from '#/components/layout/PageHeader'
 
-export const Route = createFileRoute('/_authenticated/_platformAdmin/subscriptions')({
+export const Route = createFileRoute(
+  '/_authenticated/_platformAdmin/subscriptions',
+)({
   component: RouteComponent,
 })
 
@@ -16,7 +18,10 @@ function RouteComponent() {
       />
       <div className="rounded-lg border bg-card p-6">
         <h3 className="font-semibold">Subscriptions (Dummy)</h3>
-        <p className="mt-2 text-sm text-muted-foreground">Tracks tenant → plan assignments. Dummy data to distinguish platform shell.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Tracks tenant → plan assignments. Dummy data to distinguish platform
+          shell.
+        </p>
         <div className="mt-4 overflow-hidden rounded-md border">
           <div className="grid grid-cols-3 bg-muted p-2 text-xs font-medium">
             <span>Tenant</span>

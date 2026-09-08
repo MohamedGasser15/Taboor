@@ -207,6 +207,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("Dashboard");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

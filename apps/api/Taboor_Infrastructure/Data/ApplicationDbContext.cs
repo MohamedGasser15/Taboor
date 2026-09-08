@@ -20,6 +20,7 @@ namespace Taboor_Infrastructure.DB
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<OtpCode> OtpCodes { get; set; }
+        public DbSet<Plan> Plans { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

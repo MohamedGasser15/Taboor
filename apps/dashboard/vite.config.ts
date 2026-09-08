@@ -22,7 +22,7 @@ const config = defineConfig({
             name: 'Inter Variable',
             styles: ['normal'],
             subset: 'latin',
-            variable: true
+            variable: true,
           },
           {
             name: 'Tajawal',
@@ -33,7 +33,7 @@ const config = defineConfig({
         ],
       },
     }),
-    mkcert()
+    mkcert(),
   ],
 })
 

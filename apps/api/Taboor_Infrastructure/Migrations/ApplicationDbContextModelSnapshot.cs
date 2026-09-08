@@ -295,6 +295,58 @@ namespace Taboor_Infrastructure.Migrations
                     b.ToTable("OtpCodes");
                 });
 
+            modelBuilder.Entity("Taboor_Domain.Entities.Plan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BillingCycle")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("MaxBranches")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxServices")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxServicesPerBranch")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Plans", (string)null);
+                });
+
             modelBuilder.Entity("Taboor_Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
